@@ -38,7 +38,7 @@ export default function Dashboard() {
           <p>{displayDate()}</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <ProgressRing progress={data?.xpProgress || 0} size={64} stroke={5} color="#0D9488" />
+          <ProgressRing progress={data?.xpProgress || 0} size={64} stroke={5} color="#C9A227" />
           <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
             <div>Level {data?.level}</div>
             <div>
@@ -79,7 +79,7 @@ export default function Dashboard() {
         <div className="glass chart-card">
           <h3>Today&apos;s Progress</h3>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <ProgressRing progress={data?.dailyProgress || 0} size={100} stroke={8} color="#22C55E" />
+            <ProgressRing progress={data?.dailyProgress || 0} size={100} stroke={8} color="#3D8B5F" />
             <div>
               <p style={{ fontSize: '1.5rem', fontWeight: 700 }}>
                 {data?.habitsCompletedToday}/{data?.habitsTotal}
