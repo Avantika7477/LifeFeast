@@ -38,7 +38,7 @@ export default function Dashboard() {
           <p>{displayDate()}</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <ProgressRing progress={data?.xpProgress || 0} size={64} stroke={5} color="#4F46E5" />
+          <ProgressRing progress={data?.xpProgress || 0} size={64} stroke={5} color="#0D9488" />
           <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
             <div>Level {data?.level}</div>
             <div>

@@ -17,7 +17,7 @@ import {
 import { progressAPI } from '../api';
 import Loader from '../components/common/Loader';
 
-const COLORS = ['#4F46E5', '#22C55E', '#F59E0B', '#EF4444', '#06B6D4', '#EC4899', '#8B5CF6', '#14B8A6', '#3B82F6'];
+const COLORS = ['#0D9488', '#38BDF8', '#F59E0B', '#F87171', '#06B6D4', '#2DD4BF', '#0284C7', '#14B8A6', '#67E8F9'];
 
 export default function Analytics() {
   const [data, setData] = useState(null);
@@ -82,7 +82,7 @@ export default function Analytics() {
               <XAxis dataKey="label" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" fontSize={12} domain={[0, 100]} />
               <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8 }} />
-              <Line type="monotone" dataKey="completion" stroke="#4F46E5" strokeWidth={2} dot={{ fill: '#22C55E' }} />
+              <Line type="monotone" dataKey="completion" stroke="#0D9488" strokeWidth={2} dot={{ fill: '#38BDF8' }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -95,7 +95,7 @@ export default function Analytics() {
               <XAxis dataKey="label" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" fontSize={12} domain={[0, 100]} />
               <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8 }} />
-              <Bar dataKey="completion" fill="#4F46E5" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="completion" fill="#0D9488" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

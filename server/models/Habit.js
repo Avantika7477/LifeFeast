@@ -32,7 +32,7 @@ const habitSchema = new mongoose.Schema(
     },
     target: { type: Number, default: 1 }, // times per day
     reminderTime: { type: String, default: '' }, // HH:mm
-    color: { type: String, default: '#4F46E5' },
+    color: { type: String, default: '#0D9488' },
     icon: { type: String, default: '🎯' },
     completions: [completionSchema],
     currentStreak: { type: Number, default: 0 },

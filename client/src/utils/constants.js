@@ -22,7 +22,7 @@ export const CATEGORY_COLORS = {
   Finance: '#F59E0B',
   Meditation: '#06B6D4',
   Reading: '#EC4899',
-  Business: '#6366F1',
+  Business: '#0D9488',
   Personal: '#14B8A6',
 };
 
