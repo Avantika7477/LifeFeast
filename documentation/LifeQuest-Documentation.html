@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LifeQuest — Complete Project Documentation</title>
+  <style>
+    :root {
+      --ink: #1a1f2e;
+      --muted: #4a5568;
+      --accent: #0d9488;
+      --line: #e2e8f0;
+      --bg-soft: #f0fdfa;
+      --code-bg: #f1f5f9;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--ink);
+      line-height: 1.55;
+      font-size: 11pt;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-size: 26pt;
+      color: var(--accent);
+      margin: 0 0 8px;
+      border-bottom: 3px solid var(--accent);
+      padding-bottom: 10px;
+    }
+    h2 {
+      font-size: 16pt;
+      color: #0f766e;
+      margin: 28px 0 10px;
+      page-break-after: avoid;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 4px;
+    }
+    h3 {
+      font-size: 12.5pt;
+      color: #134e4a;
+      margin: 18px 0 8px;
+      page-break-after: avoid;
+    }
+    h4 {
+      font-size: 11pt;
+      margin: 14px 0 6px;
+      color: var(--ink);
+    }
+    p, li { margin: 6px 0; }
+    .subtitle { color: var(--muted); font-size: 12pt; margin-bottom: 20px; }
+    .cover {
+      text-align: center;
+      padding: 60px 20px 40px;
+      page-break-after: always;
+    }
+    .cover h1 {
+      font-size: 32pt;
+      border: none;
+      margin-bottom: 12px;
+    }
+    .cover .badge {
+      display: inline-block;
+      background: var(--bg-soft);
+      color: #0f766e;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin: 8px 0 20px;
+    }
+    .toc { page-break-after: always; }
+    .toc ol { padding-left: 22px; }
+    .toc li { margin: 8px 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 16px;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 7px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #ccfbf1;
+      color: #134e4a;
+      font-weight: 600;
+    }
+    tr:nth-child(even) td { background: #f8fafc; }
+    code, .mono {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 9.5pt;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 9pt;
+      overflow: hidden;
+      white-space: pre-wrap;
+      page-break-inside: avoid;
+    }
+    .box {
+      background: var(--bg-soft);
+      border-left: 4px solid var(--accent);
+      padding: 10px 14px;
+      margin: 12px 0;
+      border-radius: 0 6px 6px 0;
+      page-break-inside: avoid;
+    }
+    .note {
+      background: #fff7ed;
+      border-left: 4px solid #f59e0b;
+      padding: 10px 14px;
+      margin: 12px 0;
+    }
+    .section { page-break-before: always; }
+    .section:first-of-type { page-break-before: auto; }
+    .line-table td:first-child { white-space: nowrap; width: 70px; font-family: Consolas, monospace; }
+    .line-table td:nth-child(2) { width: 38%; font-family: Consolas, monospace; font-size: 8.5pt; }
+    ul.compact li { margin: 3px 0; }
+    .footer-note { color: var(--muted); font-size: 9.5pt; margin-top: 24px; }
+  </style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>LifeQuest</h1>
+  <div class="badge">Gamified Habit Tracker</div>
+  <p class="subtitle">Complete Project Documentation</p>
+  <p>For coders <strong>and</strong> non-technical readers</p>
+  <p style="margin-top:40px;color:#4a5568;">
+    Full-stack web application<br/>
+    React (Vite) · Express.js · MongoDB · JWT
+  </p>
+  <p style="margin-top:50px;font-size:10pt;color:#64748b;">
+    Generated documentation guide · Inside LifeQuest folder<br/>
+    File: <code>LifeQuest-Documentation.pdf</code>
+  </p>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li>What is LifeQuest? (Non-technical overview)</li>
+    <li>How to explain this project (presentation script)</li>
+    <li>Architecture &amp; how the pieces talk</li>
+    <li>Tech stack &amp; setup</li>
+    <li>Folder &amp; file map</li>
+    <li>Features ↔ code map</li>
+    <li>Backend — line-by-line explanations</li>
+    <li>Frontend — line-by-line explanations</li>
+    <li>Gamification rules (XP, levels, badges, streaks)</li>
+    <li>API reference (all endpoints)</li>
+    <li>Database models summary</li>
+    <li>Demo accounts &amp; environment</li>
+    <li>Glossary (tech words in plain English)</li>
+  </ol>
+</div>
+
+<!-- 1 -->
+<div class="section">
+  <h2>1. What is LifeQuest? (Non-technical overview)</h2>
+  <p>
+    <strong>LifeQuest</strong> turns your daily life into a game. Instead of only writing a to-do list,
+    you track habits, earn points (XP), level up, unlock badges, finish daily missions,
+    and compete on a leaderboard — like a role-playing game for real habits.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Real life</th><th>In LifeQuest</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Good habits (exercise, study, read)</td><td>Habits you create and mark complete</td></tr>
+      <tr><td>Getting better over time</td><td>XP (experience points) and levels</td></tr>
+      <tr><td>Rewards for consistency</td><td>Coins and badges</td></tr>
+      <tr><td>Daily goals</td><td>Missions</td></tr>
+      <tr><td>Comparing with friends</td><td>Leaderboard</td></tr>
+      <tr><td>To-do list</td><td>Tasks (daily / weekly / monthly)</td></tr>
+      <tr><td>Diary + how you feel</td><td>Journal with mood tracker</td></tr>
+      <tr><td>Reminders and achievements</td><td>Notifications</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box">
+    <strong>Simple user journey:</strong><br/>
+    Sign up → Create habits → Mark them done each day → Earn XP → Level up →
+    Unlock badges → Complete missions → Climb the leaderboard.
+  </div>
+
+  <h3>Three main parts</h3>
+  <ol>
+    <li><strong>Frontend (client)</strong> — the website you see in the browser (usually port 5173).</li>
+    <li><strong>Backend (server)</strong> — the “brain” that checks login, saves data, awards XP (port 5000).</li>
+    <li><strong>Database (MongoDB)</strong> — permanent storage for users, habits, tasks, journals, etc.</li>
+  </ol>
+</div>
+
+<!-- 2 -->
+<div class="section">
+  <h2>2. How to explain this project (presentation script)</h2>
+  <p>Use this when presenting to teachers, interviewers, or non-tech audiences:</p>
+  <div class="box">
+    “LifeQuest is a <strong>full-stack gamified habit tracker</strong>.
+    Users track habits, complete daily missions, and earn XP, coins, and badges —
+    like an RPG for real life.<br/><br/>
+    The <strong>frontend</strong> is React with Vite: pages for dashboard, habits, calendar,
+    analytics, tasks, journal, notifications, settings, and an admin panel.<br/><br/>
+    The <strong>backend</strong> is Express with MongoDB: JWT login, REST APIs for every feature,
+    and gamification logic for streaks, levels, and badges.<br/><br/>
+    When you complete a habit, the server updates the database, awards XP, may level you up,
+    updates your streak, and can unlock achievements.”
+  </div>
+
+  <h3>One-sentence pitch</h3>
+  <p><em>LifeQuest makes building good habits fun by turning progress into levels, rewards, and friendly competition.</em></p>
+</div>
+
+<!-- 3 -->
+<div class="section">
+  <h2>3. Architecture &amp; how the pieces talk</h2>
+  <pre>
+Browser (React app on port 5173)
+        │  JSON requests (Axios) + JWT token
+        ▼
+Express API (server/index.js on port 5000)
+        │  middleware/auth.js checks the token
+        ▼
+Routes  →  Controllers (business rules)
+                │
+                ▼
+           Models (Mongoose schemas)
+                │
+                ▼
+           MongoDB (lifequest database)
+  </pre>
+
+  <h3>Request example (plain English)</h3>
+  <ol>
+    <li>User clicks “Complete habit” on the Habits page.</li>
+    <li>Frontend calls <code>POST /api/habits/:id/complete</code> with the login token.</li>
+    <li><code>protect</code> middleware verifies the token and loads the user.</li>
+    <li><code>completeHabit</code> controller updates the habit, XP, streak, progress, badges.</li>
+    <li>Server returns new stats; UI shows XP / level-up overlay.</li>
+  </ol>
+</div>
+
+<!-- 4 -->
+<div class="section">
+  <h2>4. Tech stack &amp; setup</h2>
+  <table>
+    <thead><tr><th>Layer</th><th>Technologies</th></tr></thead>
+    <tbody>
+      <tr><td>Frontend</td><td>React 19, Vite, React Router, Axios, Framer Motion, Recharts, Lucide icons, date-fns</td></tr>
+      <tr><td>Backend</td><td>Node.js, Express 5, Mongoose, bcryptjs, jsonwebtoken, cors, dotenv, express-validator, nodemailer</td></tr>
+      <tr><td>Database</td><td>MongoDB</td></tr>
+      <tr><td>Auth</td><td>JWT (JSON Web Token) stored in browser localStorage</td></tr>
+    </tbody>
+  </table>
+
+  <h3>How to run</h3>
+  <pre>
+# From LifeQuest root
+npm run install:all
+
+# Seed demo users
+npm run seed
+
+# Terminal 1 — API
+npm run dev:server     →  http://localhost:5000
+
+# Terminal 2 — UI
+npm run dev:client     →  http://localhost:5173
+  </pre>
+</div>
+
+<!-- 5 -->
+<div class="section">
+  <h2>5. Folder &amp; file map</h2>
+  <table>
+    <thead><tr><th>Path</th><th>Plain English purpose</th></tr></thead>
+    <tbody>
+      <tr><td><code>client/</code></td><td>Website UI (React SPA)</td></tr>
+      <tr><td><code>client/src/pages/</code></td><td>Full screens: Dashboard, Habits, Login…</td></tr>
+      <tr><td><code>client/src/components/</code></td><td>Reusable UI: modal, loader, habit card, layout</td></tr>
+      <tr><td><code>client/src/context/</code></td><td>Shared state: logged-in user, dark/light theme</td></tr>
+      <tr><td><code>client/src/api/</code></td><td>Functions that call the backend</td></tr>
+      <tr><td><code>client/src/styles/</code></td><td>Global look &amp; feel (glassmorphism theme)</td></tr>
+      <tr><td><code>server/</code></td><td>API server</td></tr>
+      <tr><td><code>server/routes/</code></td><td>URL → which function runs</td></tr>
+      <tr><td><code>server/controllers/</code></td><td>Actual business logic</td></tr>
+      <tr><td><code>server/models/</code></td><td>Shape of data saved in MongoDB</td></tr>
+      <tr><td><code>server/middleware/</code></td><td>Security checks before requests</td></tr>
+      <tr><td><code>server/utils/</code></td><td>Helpers: tokens, badges, streaks</td></tr>
+      <tr><td><code>documentation/</code></td><td>This guide’s source HTML + PDF generator (not app runtime code)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 6 -->
+<div class="section">
+  <h2>6. Features ↔ code map</h2>
+  <table>
+    <thead><tr><th>Feature</th><th>Frontend</th><th>Backend</th></tr></thead>
+    <tbody>
+      <tr><td>Login / Register / Reset</td><td>pages/auth/*, AuthContext</td><td>authRoutes, authController</td></tr>
+      <tr><td>Dashboard</td><td>pages/Dashboard.jsx</td><td>progress/dashboard</td></tr>
+      <tr><td>Habits CRUD + complete</td><td>Habits.jsx, HabitCard, HabitFormModal</td><td>habitRoutes, habitController</td></tr>
+      <tr><td>Calendar</td><td>pages/Calendar.jsx</td><td>progress/calendar</td></tr>
+      <tr><td>Analytics charts</td><td>pages/Analytics.jsx</td><td>progress/analytics</td></tr>
+      <tr><td>Missions</td><td>pages/Missions.jsx</td><td>missionRoutes</td></tr>
+      <tr><td>Leaderboard + friends</td><td>pages/Leaderboard.jsx</td><td>leaderboardRoutes</td></tr>
+      <tr><td>Tasks</td><td>pages/Tasks.jsx</td><td>taskRoutes, taskController</td></tr>
+      <tr><td>Journal + mood</td><td>pages/Journal.jsx</td><td>journalRoutes</td></tr>
+      <tr><td>Notifications</td><td>pages/Notifications.jsx</td><td>notificationRoutes</td></tr>
+      <tr><td>Settings / theme</td><td>Settings.jsx, ThemeContext</td><td>auth profile endpoints</td></tr>
+      <tr><td>Admin panel</td><td>pages/Admin.jsx</td><td>adminRoutes + admin middleware</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 7 BACKEND -->
+<div class="section">
+  <h2>7. Backend — line-by-line explanations</h2>
+
+  <h3>7.1 server/index.js — the server starts here</h3>
+  <table class="line-table">
+    <thead><tr><th>Line(s)</th><th>Code idea</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>1–13</td><td>import express, cors, routes…</td><td>Load libraries and every feature’s route file</td></tr>
+      <tr><td>15</td><td>dotenv.config()</td><td>Read secrets from <code>server/.env</code> (PORT, MongoDB, JWT)</td></tr>
+      <tr><td>16</td><td>connectDB()</td><td>Open connection to MongoDB</td></tr>
+      <tr><td>18</td><td>const app = express()</td><td>Create the web application object</td></tr>
+      <tr><td>20</td><td>app.use(cors(…))</td><td>Allow the React app (port 5173) to call this API</td></tr>
+      <tr><td>21</td><td>express.json({ limit: '2mb' })</td><td>Accept JSON request bodies up to 2 MB</td></tr>
+      <tr><td>23</td><td>GET /api/health</td><td>Health check: “Is the API alive?”</td></tr>
+      <tr><td>25–33</td><td>app.use('/api/…')</td><td>Mount auth, habits, tasks, progress, journal, notifications, missions, leaderboard, admin</td></tr>
+      <tr><td>35–38</td><td>error middleware</td><td>Catch crashes → return HTTP 500 + message</td></tr>
+      <tr><td>40–41</td><td>app.listen(PORT)</td><td>Start listening (default <strong>5000</strong>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.2 server/config/db.js — database connection</h3>
+  <table class="line-table">
+    <thead><tr><th>Line(s)</th><th>Code idea</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>1–2</td><td>import mongoose, dotenv</td><td>MongoDB ODM + env loader</td></tr>
+      <tr><td>4</td><td>dotenv.config()</td><td>Load MONGODB_URI</td></tr>
+      <tr><td>6–14</td><td>connectDB async</td><td>Connect; log host on success; exit process on failure</td></tr>
+      <tr><td>16</td><td>export default</td><td>So index.js can call connectDB()</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.3 server/middleware/auth.js — security gate</h3>
+  <div class="box">Analogy: <code>protect</code> is the bouncer checking your wristband. <code>admin</code> is VIP-only access.</div>
+  <table class="line-table">
+    <thead><tr><th>Line(s)</th><th>Code idea</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>4–8</td><td>protect reads Bearer token</td><td>Look for <code>Authorization: Bearer &lt;token&gt;</code></td></tr>
+      <tr><td>10–12</td><td>no token → 401</td><td>Not logged in</td></tr>
+      <tr><td>15–16</td><td>jwt.verify + find user</td><td>Validate token; load user without password field</td></tr>
+      <tr><td>17–19</td><td>inactive / missing</td><td>Reject deactivated accounts</td></tr>
+      <tr><td>20</td><td>next()</td><td>Allow the request to continue</td></tr>
+      <tr><td>21–23</td><td>catch</td><td>Bad or expired token → 401</td></tr>
+      <tr><td>26–29</td><td>admin</td><td>Only role === 'admin' may pass; else 403</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.4 server/routes/taskRoutes.js — example of routing</h3>
+  <p>(This is the small file that maps URLs to task functions.)</p>
+  <table class="line-table">
+    <thead><tr><th>Line</th><th>Code idea</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>import express</td><td>Need Express to create a router</td></tr>
+      <tr><td>2</td><td>import getTasks, createTask…</td><td>Bring in controller functions</td></tr>
+      <tr><td>3</td><td>import protect</td><td>Require login for every task call</td></tr>
+      <tr><td>5</td><td>const router = …</td><td>Create a mini URL map</td></tr>
+      <tr><td>6</td><td>router.use(protect)</td><td>All routes below need a valid JWT</td></tr>
+      <tr><td>7</td><td>GET / and POST /</td><td>List tasks / create task</td></tr>
+      <tr><td>8</td><td>PUT /:id and DELETE /:id</td><td>Update or delete one task by id</td></tr>
+      <tr><td>10</td><td>export default</td><td>Mounted in index.js at <code>/api/tasks</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.5 Other route files (same idea)</h3>
+  <table>
+    <thead><tr><th>File</th><th>Base URL</th><th>Job</th></tr></thead>
+    <tbody>
+      <tr><td>authRoutes.js</td><td>/api/auth</td><td>Register, login, profile, password, export, delete account</td></tr>
+      <tr><td>habitRoutes.js</td><td>/api/habits</td><td>CRUD + POST /:id/complete</td></tr>
+      <tr><td>progressRoutes.js</td><td>/api/progress</td><td>Dashboard, calendar, day detail, analytics</td></tr>
+      <tr><td>journalRoutes.js</td><td>/api/journal</td><td>List, by date, upsert, delete</td></tr>
+      <tr><td>notificationRoutes.js</td><td>/api/notifications</td><td>Inbox, mark read, generate daily</td></tr>
+      <tr><td>missionRoutes.js</td><td>/api/missions</td><td>List &amp; complete daily missions</td></tr>
+      <tr><td>leaderboardRoutes.js</td><td>/api/leaderboard</td><td>Global / friends boards, add friend</td></tr>
+      <tr><td>adminRoutes.js</td><td>/api/admin</td><td>Admin-only users, analytics, badges, reports</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.6 server/models/User.js — the player profile</h3>
+  <table>
+    <thead><tr><th>Concept</th><th>Fields / methods</th><th>Plain English</th></tr></thead>
+    <tbody>
+      <tr><td>Identity</td><td>name, email, password</td><td>Who the person is</td></tr>
+      <tr><td>Role</td><td>user / admin</td><td>Normal user vs administrator</td></tr>
+      <tr><td>Game stats</td><td>xp, level, coins</td><td>Progress and rewards</td></tr>
+      <tr><td>Streaks</td><td>currentStreak, longestStreak, lastActiveDate</td><td>How consistently they show up</td></tr>
+      <tr><td>Social / rewards</td><td>badges, friends</td><td>Achievements and friends list</td></tr>
+      <tr><td>Settings</td><td>theme, isActive</td><td>Dark/light + account enabled</td></tr>
+      <tr><td>Password reset</td><td>resetPasswordToken, resetPasswordExpire</td><td>Forgot-password flow</td></tr>
+      <tr><td>pre('save')</td><td>bcrypt.hash</td><td>Never store plain-text passwords</td></tr>
+      <tr><td>matchPassword</td><td>bcrypt.compare</td><td>Check password at login</td></tr>
+      <tr><td>getXpForLevel / addXp</td><td>level math</td><td>When XP crosses threshold → level++ and +50 coins</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.7 server/models/Habit.js</h3>
+  <ul class="compact">
+    <li>Belongs to a <strong>user</strong> (foreign key).</li>
+    <li><strong>category</strong>: Health, Fitness, Study, Coding, Finance, Meditation, Reading, Business, Personal.</li>
+    <li><strong>difficulty</strong>: Easy / Medium / Hard → XP 10 / 20 / 40.</li>
+    <li><strong>target</strong>: times per day; <strong>completions</strong>: list of YYYY-MM-DD dates done.</li>
+    <li>Tracks <strong>currentStreak</strong>, <strong>longestStreak</strong>, <strong>totalCompletions</strong>.</li>
+    <li><code>getXpReward()</code> returns XP based on difficulty.</li>
+  </ul>
+
+  <h3>7.8 server/models/Task.js</h3>
+  <ul class="compact">
+    <li><code>type</code>: daily | weekly | monthly</li>
+    <li><code>priority</code>: low | medium | high</li>
+    <li><code>status</code>: todo | in-progress | completed</li>
+    <li>Optional <code>deadline</code> and <code>notes</code></li>
+  </ul>
+
+  <h3>7.9 Other models</h3>
+  <table>
+    <thead><tr><th>Model</th><th>Job</th></tr></thead>
+    <tbody>
+      <tr><td>Journal</td><td>One diary entry per user per day + mood emoji + tags (unique user+date)</td></tr>
+      <tr><td>Mission</td><td>Daily quest with coinReward / xpReward / completed flag</td></tr>
+      <tr><td>Notification</td><td>Inbox: reminder, motivation, achievement, missed, system</td></tr>
+      <tr><td>Progress</td><td>Daily snapshot for charts: completionRate, xpEarned, coinsEarned</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.10 Controllers — what each file does</h3>
+  <table>
+    <thead><tr><th>Controller</th><th>Responsibility</th></tr></thead>
+    <tbody>
+      <tr><td>authController.js</td><td>Register, login, getMe (+ quote), update profile, change/forgot/reset password, delete account, export data</td></tr>
+      <tr><td>habitController.js</td><td>List/create/update/delete habits; <strong>completeHabit</strong> awards XP, updates streaks, progress, badges</td></tr>
+      <tr><td>taskController.js</td><td>Filter list by type/status; create/update/delete own tasks only</td></tr>
+      <tr><td>progressController.js</td><td>Dashboard stats, calendar heatmap data, day detail, analytics aggregates</td></tr>
+      <tr><td>journalController.js</td><td>List, get-by-date, upsert, delete journal entries</td></tr>
+      <tr><td>notificationController.js</td><td>List, mark read, mark all, delete, generate daily notifications</td></tr>
+      <tr><td>missionController.js</td><td>Ensure daily missions exist; complete for rewards</td></tr>
+      <tr><td>leaderboardController.js</td><td>Global &amp; friends rankings; add friend by email</td></tr>
+      <tr><td>adminController.js</td><td>Manage users, platform analytics, badge overview, reports</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.11 taskController.js — line meaning</h3>
+  <table class="line-table">
+    <thead><tr><th>Lines</th><th>Function</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>3–13</td><td>getTasks</td><td>Find this user’s tasks; optional filters type/status; sort by deadline</td></tr>
+      <tr><td>15–23</td><td>createTask</td><td>Create task owned by logged-in user; return 201</td></tr>
+      <tr><td>25–37</td><td>updateTask</td><td>Update only if id + user match; 404 if missing</td></tr>
+      <tr><td>39–46</td><td>deleteTask</td><td>Delete only own task; confirm message</td></tr>
+    </tbody>
+  </table>
+
+  <h3>7.12 habitController completeHabit (core game loop)</h3>
+  <ol>
+    <li>Find the habit belonging to the user.</li>
+    <li>If already completed today → uncomplete (remove XP/streak effects).</li>
+    <li>Else add today’s completion, increase totals, call <code>updateUserStreak</code>.</li>
+    <li>Award XP via <code>user.addXp</code>; may level up and grant coins.</li>
+    <li>Update daily Progress snapshot.</li>
+    <li>Run <code>checkAndUnlockBadges</code>.</li>
+    <li>Return habit + rewards so UI can celebrate.</li>
+  </ol>
+
+  <h3>7.13 utils/helpers.js &amp; gamification.js</h3>
+  <ul class="compact">
+    <li><strong>generateToken(id)</strong> — create JWT for login sessions.</li>
+    <li><strong>todayStr / formatDate / daysBetween</strong> — date helpers (YYYY-MM-DD).</li>
+    <li><strong>BADGE_DEFS / MISSION_TEMPLATES / MOTIVATIONAL_QUOTES</strong> — content definitions.</li>
+    <li><strong>checkAndUnlockBadges</strong> — streak &amp; category milestones → badge + notification.</li>
+    <li><strong>updateUserStreak</strong> — if active yesterday, streak++; else reset to 1.</li>
+  </ul>
+
+  <h3>7.14 server/seed.js</h3>
+  <p>Creates starter accounts so demos work immediately:</p>
+  <ul>
+    <li>Admin: <code>admin@lifequest.app</code> / <code>admin123</code></li>
+    <li>Demo: <code>demo@lifequest.app</code> / <code>demo123</code></li>
+  </ul>
+</div>
+
+<!-- 8 FRONTEND -->
+<div class="section">
+  <h2>8. Frontend — line-by-line explanations</h2>
+
+  <h3>8.1 client/src/main.jsx — React starts here</h3>
+  <table class="line-table">
+    <thead><tr><th>Line(s)</th><th>Code idea</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>1–4</td><td>imports</td><td>React, App component, global CSS</td></tr>
+      <tr><td>6–10</td><td>createRoot(#root).render</td><td>Put the app into the HTML page’s root div (StrictMode helps catch issues)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.2 client/src/App.jsx — page map (router)</h3>
+  <table>
+    <thead><tr><th>Part</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>Imports</td><td>All pages + AuthProvider + ThemeProvider + guards</td></tr>
+      <tr><td>PublicOnly</td><td>If already logged in, don’t show login/register — go to dashboard</td></tr>
+      <tr><td>/login, /register, /forgot-password</td><td>Public auth screens</td></tr>
+      <tr><td>ProtectedRoute + AppLayout</td><td>Must be logged in; shows sidebar shell</td></tr>
+      <tr><td>Inner routes</td><td>dashboard, habits, calendar, analytics, missions, leaderboard, tasks, journal, notifications, settings</td></tr>
+      <tr><td>/admin + adminOnly</td><td>Administrators only</td></tr>
+      <tr><td>/ and *</td><td>Default / unknown URLs → dashboard</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.3 client/src/api/client.js</h3>
+  <table class="line-table">
+    <thead><tr><th>Line(s)</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>3</td><td>Read VITE_API_URL (fallback localhost:5000/api)</td></tr>
+      <tr><td>5–8</td><td>Create Axios instance with JSON headers</td></tr>
+      <tr><td>10–14</td><td>Request interceptor: attach JWT from localStorage key <code>lq_token</code></td></tr>
+      <tr><td>16–28</td><td>If API returns 401, clear login and redirect to /login</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.4 client/src/api/index.js</h3>
+  <p>Named helpers so pages stay clean:</p>
+  <ul class="compact">
+    <li><code>authAPI</code>, <code>habitAPI</code>, <code>taskAPI</code>, <code>progressAPI</code></li>
+    <li><code>journalAPI</code>, <code>notificationAPI</code>, <code>missionAPI</code></li>
+    <li><code>leaderboardAPI</code>, <code>adminAPI</code></li>
+  </ul>
+
+  <h3>8.5 AuthContext.jsx — “Who am I?”</h3>
+  <table>
+    <thead><tr><th>Piece</th><th>Plain English</th></tr></thead>
+    <tbody>
+      <tr><td>user state from localStorage</td><td>Stay logged in after page refresh</td></tr>
+      <tr><td>showToast</td><td>Temporary success/error banner (~3.2s)</td></tr>
+      <tr><td>persist(token, user)</td><td>Save token + user after login/register</td></tr>
+      <tr><td>refreshUser</td><td>Call /auth/me to refresh profile + quote</td></tr>
+      <tr><td>login / register / logout</td><td>Auth actions used by pages</td></tr>
+      <tr><td>isAdmin</td><td>user.role === 'admin'</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.6 ThemeContext.jsx</h3>
+  <ul class="compact">
+    <li>Reads theme from localStorage or user profile.</li>
+    <li>Sets <code>data-theme</code> on &lt;html&gt; so CSS switches dark/light.</li>
+    <li>toggleTheme also saves preference to the server when logged in.</li>
+  </ul>
+
+  <h3>8.7 ProtectedRoute.jsx</h3>
+  <ol>
+    <li>Still loading → show Loader.</li>
+    <li>No user → redirect to /login.</li>
+    <li>adminOnly but not admin → /dashboard.</li>
+    <li>Else render child routes via &lt;Outlet /&gt;.</li>
+  </ol>
+
+  <h3>8.8 Common components</h3>
+  <table>
+    <thead><tr><th>Component</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>Loader.jsx</td><td>Full-page spinner with optional text</td></tr>
+      <tr><td>Modal.jsx</td><td>Reusable dialog wrapper</td></tr>
+      <tr><td>Toast.jsx</td><td>Shows AuthContext toast messages</td></tr>
+      <tr><td>ProgressRing.jsx</td><td>Circular SVG progress for habit completion</td></tr>
+      <tr><td>LevelUpOverlay.jsx</td><td>Celebration animation when user levels up</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.9 Habit UI</h3>
+  <ul class="compact">
+    <li><strong>HabitCard</strong> — shows one habit, complete/edit/delete, progress ring.</li>
+    <li><strong>HabitFormModal</strong> — create/edit form (name, category, difficulty, target, reminder).</li>
+  </ul>
+
+  <h3>8.10 AppLayout.jsx</h3>
+  <p>Main shell: sidebar navigation, header with user stats, theme toggle, logout, and the page content area.</p>
+
+  <h3>8.11 Pages (screens)</h3>
+  <table>
+    <thead><tr><th>Page</th><th>What the user sees / does</th></tr></thead>
+    <tbody>
+      <tr><td>Dashboard</td><td>Level, XP, streak, coins, daily/monthly progress, quote</td></tr>
+      <tr><td>Habits</td><td>Manage and complete habits</td></tr>
+      <tr><td>Calendar</td><td>Month view with completion % and day details</td></tr>
+      <tr><td>Analytics</td><td>Charts (Recharts): trends, pie, heatmap</td></tr>
+      <tr><td>Missions</td><td>Daily quests with XP/coin rewards</td></tr>
+      <tr><td>Leaderboard</td><td>Global &amp; friends rankings</td></tr>
+      <tr><td>Tasks</td><td>Daily/weekly/monthly task board</td></tr>
+      <tr><td>Journal</td><td>Diary + mood + tags</td></tr>
+      <tr><td>Notifications</td><td>Inbox read/unread/delete</td></tr>
+      <tr><td>Settings</td><td>Profile, theme, password, export, delete account</td></tr>
+      <tr><td>Admin</td><td>Users, analytics, badges, reports</td></tr>
+      <tr><td>Login / Register / ForgotPassword</td><td>Public authentication flows</td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.12 utils/constants.js</h3>
+  <p>Shared lists: categories, difficulties, XP map, category colors, moods, and date format helpers used across the UI.</p>
+
+  <h3>8.13 styles/global.css</h3>
+  <p>
+    Large design-system stylesheet (~1000+ lines): CSS variables for dark/light themes,
+    glassmorphism panels, layout, buttons, cards used for interactive forms, sidebar, charts wrappers.
+    Non-tech view: this file is the “look and feel” of the whole app.
+  </p>
+</div>
+
+<!-- 9 -->
+<div class="section">
+  <h2>9. Gamification rules</h2>
+  <h3>XP by difficulty</h3>
+  <table>
+    <thead><tr><th>Difficulty</th><th>XP</th></tr></thead>
+    <tbody>
+      <tr><td>Easy</td><td>10</td></tr>
+      <tr><td>Medium</td><td>20</td></tr>
+      <tr><td>Hard</td><td>40</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Levels</h3>
+  <p>XP needed for level L uses roughly: <code>floor(100 × L^1.5)</code> (cumulative threshold). Crossing a new level grants <strong>+50 coins</strong>.</p>
+
+  <h3>Streaks</h3>
+  <ul>
+    <li>Complete something on consecutive calendar days → streak grows.</li>
+    <li>Miss a day → streak resets to 1 on next activity.</li>
+    <li>Longest streak is remembered separately.</li>
+  </ul>
+
+  <h3>Badges (examples)</h3>
+  <table>
+    <thead><tr><th>Badge</th><th>Unlock idea</th></tr></thead>
+    <tbody>
+      <tr><td>7 / 30 / 100 Day Streak</td><td>Maintain streak milestones</td></tr>
+      <tr><td>Early Bird</td><td>Complete a habit before 8 AM</td></tr>
+      <tr><td>Book Worm / Gym Hero / Coding Master / Meditation Monk</td><td>10+ completions in that category</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 10 -->
+<div class="section">
+  <h2>10. API reference (all endpoints)</h2>
+  <p>Base URL: <code>http://localhost:5000/api</code>. Protected routes need header: <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+
+  <h3>Auth</h3>
+  <table>
+    <thead><tr><th>Method</th><th>Path</th><th>Auth?</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>POST</td><td>/auth/register</td><td>No</td><td>Create account</td></tr>
+      <tr><td>POST</td><td>/auth/login</td><td>No</td><td>Login → token</td></tr>
+      <tr><td>POST</td><td>/auth/forgot-password</td><td>No</td><td>Start reset</td></tr>
+      <tr><td>POST</td><td>/auth/reset-password</td><td>No</td><td>Finish reset</td></tr>
+      <tr><td>GET</td><td>/auth/me</td><td>Yes</td><td>Current user + quote</td></tr>
+      <tr><td>PUT</td><td>/auth/profile</td><td>Yes</td><td>Update profile/theme</td></tr>
+      <tr><td>PUT</td><td>/auth/change-password</td><td>Yes</td><td>Change password</td></tr>
+      <tr><td>DELETE</td><td>/auth/account</td><td>Yes</td><td>Delete account</td></tr>
+      <tr><td>GET</td><td>/auth/export</td><td>Yes</td><td>Export user data</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Habits</h3>
+  <table>
+    <thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td>/habits</td><td>List habits (+ completedToday)</td></tr>
+      <tr><td>POST</td><td>/habits</td><td>Create</td></tr>
+      <tr><td>GET/PUT/DELETE</td><td>/habits/:id</td><td>Read / update / delete</td></tr>
+      <tr><td>POST</td><td>/habits/:id/complete</td><td>Toggle today’s completion + rewards</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tasks</h3>
+  <table>
+    <thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td>/tasks</td><td>List (optional ?type &amp; ?status)</td></tr>
+      <tr><td>POST</td><td>/tasks</td><td>Create</td></tr>
+      <tr><td>PUT</td><td>/tasks/:id</td><td>Update</td></tr>
+      <tr><td>DELETE</td><td>/tasks/:id</td><td>Delete</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Progress</h3>
+  <table>
+    <thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td>/progress/dashboard</td><td>Home stats</td></tr>
+      <tr><td>GET</td><td>/progress/calendar</td><td>Month data (?year &amp; month)</td></tr>
+      <tr><td>GET</td><td>/progress/calendar/:date</td><td>One day detail</td></tr>
+      <tr><td>GET</td><td>/progress/analytics</td><td>Chart aggregates</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Journal / Notifications / Missions / Leaderboard / Admin</h3>
+  <ul class="compact">
+    <li><strong>Journal:</strong> GET /, GET /:date, POST / (upsert), DELETE /:id</li>
+    <li><strong>Notifications:</strong> GET /, PUT /:id/read, PUT /read-all, DELETE /:id, POST /generate-daily</li>
+    <li><strong>Missions:</strong> GET /, POST /:id/complete</li>
+    <li><strong>Leaderboard:</strong> GET /global, GET /friends, POST /friends { email }</li>
+    <li><strong>Admin:</strong> users list/toggle/delete, analytics, badges, reports (admin role)</li>
+    <li><strong>Health:</strong> GET /health → { status: ok }</li>
+  </ul>
+</div>
+
+<!-- 11 -->
+<div class="section">
+  <h2>11. Database models summary</h2>
+  <pre>
+User ──&lt; Habit
+  │
+  ├──&lt; Task
+  ├──&lt; Journal (unique per date)
+  ├──&lt; Mission (unique per date+title)
+  ├──&lt; Notification
+  ├──&lt; Progress (unique per date)
+  └──  friends[] → other Users
+  </pre>
+  <p>All user-owned documents store <code>user: ObjectId</code> so one person cannot edit another person’s data.</p>
+</div>
+
+<!-- 12 -->
+<div class="section">
+  <h2>12. Demo accounts &amp; environment</h2>
+  <h3>Demo accounts (after <code>npm run seed</code>)</h3>
+  <table>
+    <thead><tr><th>Role</th><th>Email</th><th>Password</th></tr></thead>
+    <tbody>
+      <tr><td>Admin</td><td>admin@lifequest.app</td><td>admin123</td></tr>
+      <tr><td>Demo</td><td>demo@lifequest.app</td><td>demo123</td></tr>
+    </tbody>
+  </table>
+
+  <h3>server/.env</h3>
+  <pre>
+PORT=5000
+MONGODB_URI=mongodb://127.0.0.1:27017/lifequest
+JWT_SECRET=your_secret
+JWT_EXPIRE=7d
+CLIENT_URL=http://localhost:5173
+  </pre>
+
+  <h3>client/.env</h3>
+  <pre>
+VITE_API_URL=http://localhost:5000/api
+  </pre>
+</div>
+
+<!-- 13 -->
+<div class="section">
+  <h2>13. Glossary (tech words in plain English)</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Simple meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Frontend</td><td>What users see and click</td></tr>
+      <tr><td>Backend / API</td><td>Server that stores data and enforces rules</td></tr>
+      <tr><td>Database</td><td>Long-term storage (MongoDB here)</td></tr>
+      <tr><td>JWT</td><td>Digital pass proving you logged in</td></tr>
+      <tr><td>Route</td><td>A URL path that triggers a function</td></tr>
+      <tr><td>Controller</td><td>Code that performs the action for a route</td></tr>
+      <tr><td>Model / Schema</td><td>Blueprint for one type of saved record</td></tr>
+      <tr><td>Middleware</td><td>Code that runs before the main action (e.g. auth check)</td></tr>
+      <tr><td>CRUD</td><td>Create, Read, Update, Delete</td></tr>
+      <tr><td>SPA</td><td>Single Page App — one site that changes screens without full reloads</td></tr>
+      <tr><td>XP / Level / Badge</td><td>Game-style progress, rank, and achievement</td></tr>
+      <tr><td>Streak</td><td>Number of days in a row you stayed active</td></tr>
+      <tr><td>REST</td><td>Common style of API using GET/POST/PUT/DELETE</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <strong>Where this PDF lives:</strong> at the LifeQuest folder root as
+    <code>LifeQuest-Documentation.pdf</code>, separate from runtime app code in
+    <code>client/</code> and <code>server/</code>. Source HTML and generator sit in
+    <code>documentation/</code> (not required to run the app).
+  </div>
+
+  <p class="footer-note">
+    End of LifeQuest Complete Project Documentation. Use this PDF to study, present, or onboard others.
+  </p>
+</div>
+
+</body>
+</html>

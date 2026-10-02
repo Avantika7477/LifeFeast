@@ -1,0 +1,9 @@
+{
+  "name": "lifequest-documentation",
+  "private": true,
+  "type": "module",
+  "description": "Source HTML + PDF generator for LifeQuest docs (not part of the running app)",
+  "scripts": {
+    "pdf": "node generate-pdf.mjs"
+  }
+}
