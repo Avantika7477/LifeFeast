@@ -17,7 +17,7 @@ import {
 import { progressAPI } from '../api';
 import Loader from '../components/common/Loader';
 
-const COLORS = ['#C9A227', '#3D8B5F', '#D97706', '#C45C5C', '#5CB07A', '#E0C35A', '#2F6B4A', '#8A6B12', '#B7A88A'];
+const COLORS = ['#D4AF37', '#3F9A66', '#E09A2E', '#D16A6A', '#58B87F', '#ECC75A', '#2F7A52', '#9A7B1A', '#CBBFA6'];
 
 export default function Analytics() {
   const [data, setData] = useState(null);
@@ -82,7 +82,7 @@ export default function Analytics() {
               <XAxis dataKey="label" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" fontSize={12} domain={[0, 100]} />
               <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8 }} />
-              <Line type="monotone" dataKey="completion" stroke="#C9A227" strokeWidth={2} dot={{ fill: '#3D8B5F' }} />
+              <Line type="monotone" dataKey="completion" stroke="#D4AF37" strokeWidth={2} dot={{ fill: '#3F9A66' }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -95,7 +95,7 @@ export default function Analytics() {
               <XAxis dataKey="label" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" fontSize={12} domain={[0, 100]} />
               <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8 }} />
-              <Bar dataKey="completion" fill="#C9A227" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="completion" fill="#D4AF37" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -108,7 +108,7 @@ export default function Analytics() {
               <XAxis dataKey="label" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" fontSize={12} domain={[0, 100]} />
               <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8 }} />
-              <Bar dataKey="completion" fill="#3D8B5F" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="completion" fill="#3F9A66" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

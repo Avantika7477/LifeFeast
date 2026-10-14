@@ -88,28 +88,34 @@ export default function AppLayout() {
 
       <div className="main-area">
         <header className="topbar">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <button className="btn-icon mobile-toggle" onClick={() => setOpen(!open)}>
+          <div className="topbar-meta">
+            <button
+              className="btn-icon mobile-toggle"
+              onClick={() => setOpen(!open)}
+              aria-label={open ? 'Close menu' : 'Open menu'}
+            >
               {open ? <X size={20} /> : <Menu size={20} />}
             </button>
             <div className="user-chip">
               <div className="avatar">{user?.name?.[0]?.toUpperCase()}</div>
-              <div>
-                <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>{user?.name}</div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.95rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {user?.name}
+                </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                  Lv.{user?.level} · {user?.xp} XP
+                  Level {user?.level} · {user?.xp} XP
                 </div>
               </div>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <div className="topbar-actions">
             <span className="pill pill-amber" title="Coins">
               <Coins size={14} /> {user?.coins ?? 0}
             </span>
-            <span className="pill" title="Streak">
-              🔥 {user?.currentStreak ?? 0}
+            <span className="pill" title="Current streak">
+              🔥 {user?.currentStreak ?? 0} days
             </span>
-            <button className="btn-icon" onClick={toggleTheme} title="Toggle theme">
+            <button className="btn-icon" onClick={toggleTheme} title="Toggle theme" aria-label="Toggle theme">
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
           </div>
