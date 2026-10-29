@@ -49,6 +49,8 @@ npm run dev          # starts API + Vite together
 - API: `http://localhost:5001` (5000 is often taken by macOS AirPlay)
 - App: `http://localhost:5173`
 
+The client is an installable PWA. On Chrome/Edge, use **Install app** (address bar or Settings). On iPhone, use **Share → Add to Home Screen**. API calls stay online; only the app shell is cached.
+
 Run one side only with `npm run dev:server` or `npm run dev:client`.
 
 ### Demo accounts

@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { usePwaInstall } from '../hooks/usePwaInstall';
 import Modal from '../components/common/Modal';
 
 export default function Settings() {
   const { user, showToast, updateUserLocal, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { installed, canInstall, showIosHelp, install } = usePwaInstall();
   const navigate = useNavigate();
 
   const [name, setName] = useState(user?.name || '');
@@ -89,6 +91,26 @@ export default function Settings() {
               Save Profile
             </button>
           </form>
+        </div>
+
+        <div className="glass" style={{ padding: '1.5rem' }}>
+          <h3 style={{ marginBottom: '1rem' }}>Install app</h3>
+          {installed ? (
+            <p style={{ color: 'var(--text-muted)' }}>LifeQuest is installed on this device.</p>
+          ) : (
+            <>
+              <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                {showIosHelp && !canInstall
+                  ? 'On iPhone, tap Share, then Add to Home Screen.'
+                  : 'Install LifeQuest to open it from your home screen like a native app.'}
+              </p>
+              {canInstall && (
+                <button className="btn btn-primary" type="button" onClick={install}>
+                  Install LifeQuest
+                </button>
+              )}
+            </>
+          )}
         </div>
 
         <div className="glass" style={{ padding: '1.5rem' }}>

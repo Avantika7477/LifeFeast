@@ -15,6 +15,9 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('lq_theme', theme);
+    const color = theme === 'light' ? '#fff3e0' : '#1a1240';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', color);
   }, [theme]);
 
   const toggleTheme = async () => {

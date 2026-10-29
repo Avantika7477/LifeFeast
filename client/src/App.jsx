@@ -19,6 +19,7 @@ import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Admin from './pages/Admin';
 import Home from './pages/Home';
+import InstallBanner from './components/common/InstallBanner';
 
 function PublicOnly({ children }) {
   const { user, loading } = useAuth();
@@ -32,6 +33,7 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <ThemeProvider>
+          <InstallBanner />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
