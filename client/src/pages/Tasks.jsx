@@ -69,8 +69,8 @@ export default function Tasks() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Tasks</h2>
-          <p>Daily to-dos, weekly tasks & monthly goals</p>
+          <h2>Quest Log</h2>
+          <p>What you will finish next.</p>
         </div>
         <button className="btn btn-primary" onClick={() => setOpen(true)}>
           <Plus size={18} /> Add Task
@@ -90,7 +90,8 @@ export default function Tasks() {
       ) : tasks.length === 0 ? (
         <div className="empty-state glass">
           <div className="empty-icon">📝</div>
-          <p>No {tab} tasks yet</p>
+          <h3>Nothing on the log</h3>
+          <p>No {tab} tasks yet. Write the next move.</p>
         </div>
       ) : (
         <div className="glass">

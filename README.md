@@ -23,7 +23,7 @@ Turn your daily life into a game. Track habits, earn XP, unlock badges, complete
 ## Prerequisites
 
 - Node.js 20.19+ or 22.12+ (Vite 8 and Mongoose 9 will not install on Node 18)
-- MongoDB running locally (or set `MONGODB_URI` in `server/.env`)
+- MongoDB is optional. If nothing is running on port 27017, the API starts an embedded MongoDB automatically.
 
 ## Setup
 
@@ -46,7 +46,7 @@ npm run seed         # creates admin@lifequest.app / admin123 and demo@lifequest
 npm run dev          # starts API + Vite together
 ```
 
-- API: `http://localhost:5000`
+- API: `http://localhost:5001` (5000 is often taken by macOS AirPlay)
 - App: `http://localhost:5173`
 
 Run one side only with `npm run dev:server` or `npm run dev:client`.
@@ -101,7 +101,7 @@ Copy from the example files. Do not commit `.env`.
 
 **server/.env.example**
 ```
-PORT=5000
+PORT=5001
 MONGODB_URI=mongodb://127.0.0.1:27017/lifequest
 JWT_SECRET=change_this_to_a_long_random_secret
 JWT_EXPIRE=7d
@@ -110,5 +110,5 @@ CLIENT_URL=http://localhost:5173
 
 **client/.env.example**
 ```
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5001/api
 ```

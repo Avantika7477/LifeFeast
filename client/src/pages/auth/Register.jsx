@@ -36,7 +36,7 @@ export default function Register() {
         <div className="brand">
           <div className="logo-mark">⚔️</div>
           <h1>LifeQuest</h1>
-          <p>Begin your adventure</p>
+          <p>Every legend starts with day one</p>
         </div>
         {error && <div className="auth-error">{error}</div>}
         <form onSubmit={handleSubmit}>
@@ -53,11 +53,15 @@ export default function Register() {
             <input className="form-control" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} placeholder="Min 6 characters" />
           </div>
           <button className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-            {loading ? 'Creating...' : 'Start Quest'}
+            {loading ? 'Forging your hero...' : 'Start your quest'}
           </button>
         </form>
+        <p className="auth-motto">Show up. Level up. Repeat.</p>
         <div className="auth-footer">
-          Already have an account? <Link to="/login">Login</Link>
+          Already on the path? <Link to="/login">Enter the quest</Link>
+          <div>
+            <Link to="/">Back to home</Link>
+          </div>
         </div>
       </motion.div>
     </div>

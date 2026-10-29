@@ -58,8 +58,8 @@ export default function Notifications() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Notifications</h2>
-          <p>Reminders, motivation & achievements</p>
+          <h2>Signals</h2>
+          <p>Wins, reminders, and a nudge when you need it.</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <button className="btn btn-ghost btn-sm" onClick={generate}>
@@ -75,7 +75,8 @@ export default function Notifications() {
         {items.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">🔔</div>
-            <p>No notifications yet</p>
+            <h3>Quiet for now</h3>
+            <p>Your next win will ring here.</p>
           </div>
         ) : (
           items.map((n) => (

@@ -69,7 +69,7 @@ export default function Settings() {
       <div className="page-header">
         <div>
           <h2>Settings</h2>
-          <p>Profile, theme & account</p>
+          <p>Tune your hero and your world.</p>
         </div>
       </div>
 

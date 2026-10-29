@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import {
   LayoutDashboard,
@@ -26,14 +26,14 @@ import { motion } from 'framer-motion';
 
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/habits', label: 'Habits', icon: Target },
+  { to: '/habits', label: 'Training', icon: Target },
   { to: '/calendar', label: 'Calendar', icon: CalendarDays },
-  { to: '/analytics', label: 'Analytics', icon: BarChart3 },
+  { to: '/analytics', label: 'Chronicle', icon: BarChart3 },
   { to: '/missions', label: 'Missions', icon: Swords },
-  { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-  { to: '/tasks', label: 'Tasks', icon: ListTodo },
+  { to: '/leaderboard', label: 'Heroes', icon: Trophy },
+  { to: '/tasks', label: 'Quest Log', icon: ListTodo },
   { to: '/journal', label: 'Journal', icon: BookOpen },
-  { to: '/notifications', label: 'Notifications', icon: Bell },
+  { to: '/notifications', label: 'Signals', icon: Bell },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
@@ -46,17 +46,17 @@ export default function AppLayout() {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/');
   };
 
   return (
     <div className="app-shell">
       <div className={`sidebar-overlay ${open ? 'open' : ''}`} onClick={() => setOpen(false)} />
       <aside className={`sidebar ${open ? 'open' : ''}`}>
-        <div className="sidebar-brand">
+        <Link to="/" className="sidebar-brand">
           <div className="logo-mark">⚔️</div>
           <h1>LifeQuest</h1>
-        </div>
+        </Link>
         <nav className="nav-links">
           {links.map(({ to, label, icon: Icon }) => (
             <NavLink

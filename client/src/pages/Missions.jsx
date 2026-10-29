@@ -36,11 +36,18 @@ export default function Missions() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Daily Missions</h2>
-          <p>Complete missions for bonus coins & XP</p>
+          <h2>Today&apos;s Missions</h2>
+          <p>Bonus gold for the brave.</p>
         </div>
       </div>
 
+      {missions.length === 0 ? (
+        <div className="empty-state glass">
+          <div className="empty-icon">⚔️</div>
+          <h3>No missions posted</h3>
+          <p>Come back tomorrow. New challenges spawn with the dawn.</p>
+        </div>
+      ) : (
       <div className="cards-grid">
         {missions.map((m, i) => (
           <motion.div
@@ -61,13 +68,14 @@ export default function Missions() {
                 <span className="pill pill-green">✓ Completed</span>
               ) : (
                 <button className="btn btn-accent btn-sm" onClick={() => complete(m._id)}>
-                  Complete Mission
+                  Claim the reward
                 </button>
               )}
             </div>
           </motion.div>
         ))}
       </div>
+      )}
 
       <LevelUpOverlay show={!!levelUp} level={levelUp} onClose={() => setLevelUp(null)} />
     </div>

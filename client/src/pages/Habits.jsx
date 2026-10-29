@@ -87,8 +87,8 @@ export default function Habits() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Habits</h2>
-          <p>Build your daily quests</p>
+          <h2>Your Training</h2>
+          <p>Small reps. Legendary days.</p>
         </div>
         <button
           className="btn btn-primary"
@@ -97,14 +97,15 @@ export default function Habits() {
             setModalOpen(true);
           }}
         >
-          <Plus size={18} /> Create Habit
+          <Plus size={18} /> Forge a habit
         </button>
       </div>
 
       {habits.length === 0 ? (
         <div className="empty-state glass">
           <div className="empty-icon">🎯</div>
-          <p>No habits yet. Create your first quest!</p>
+          <h3>Your first quest awaits</h3>
+          <p>No training yet. One habit is the start of the legend.</p>
         </div>
       ) : (
         <div className="cards-grid">

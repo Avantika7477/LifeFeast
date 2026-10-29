@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { progressAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
 import Loader from '../components/common/Loader';
 import ProgressRing from '../components/common/ProgressRing';
-import { displayDate } from '../utils/constants';
+import { displayDate, questGreeting, streakCopy } from '../utils/constants';
 
 export default function Dashboard() {
   const { user, quote } = useAuth();
@@ -21,32 +22,66 @@ export default function Dashboard() {
 
   if (loading) return <Loader />;
 
+  const greeting = questGreeting(user?.name);
+  const level = data?.level ?? user?.level ?? 1;
+  const xp = data?.xp ?? user?.xp ?? 0;
+  const xpForNext = data?.xpForNext ?? 0;
+  const xpLeft = Math.max(0, xpForNext - xp);
+  const xpProgress = Math.min(100, Math.max(0, data?.xpProgress || 0));
+  const streak = data?.currentStreak ?? user?.currentStreak ?? 0;
+  const coins = data?.coins ?? user?.coins ?? 0;
+  const daily = data?.dailyProgress ?? 0;
+  const monthly = data?.monthlyProgress ?? 0;
+  const done = data?.habitsCompletedToday ?? 0;
+  const total = data?.habitsTotal ?? 0;
+  const hasHabits = total > 0;
+
   const stats = [
-    { label: 'Level', value: data?.level ?? user?.level, icon: '⚔️' },
-    { label: 'XP', value: data?.xp ?? user?.xp, icon: '✨' },
-    { label: 'Streak', value: `${data?.currentStreak ?? 0} 🔥`, icon: '🔥' },
-    { label: 'Coins', value: data?.coins ?? user?.coins, icon: '🪙' },
-    { label: 'Daily', value: `${data?.dailyProgress ?? 0}%`, icon: '📅' },
-    { label: 'Monthly', value: `${data?.monthlyProgress ?? 0}%`, icon: '📊' },
+    { label: 'Level', value: level, icon: '⚔️', hint: 'Your legend grows' },
+    { label: 'XP', value: xp, icon: '✨', hint: xpLeft ? `${xpLeft} XP to the next level` : 'Keep stacking wins' },
+    { label: 'Streak', value: `${streak} 🔥`, icon: '🔥', hint: streakCopy(streak) },
+    { label: 'Coins', value: coins, icon: '🪙', hint: 'Earned by showing up' },
+    { label: 'Today', value: `${daily}%`, icon: '📅', hint: hasHabits ? `${done} of ${total} habits done` : 'Forge your first habit' },
+    { label: 'This month', value: `${monthly}%`, icon: '📊', hint: 'The long game' },
   ];
 
   return (
     <div>
-      <div className="page-header">
-        <div>
-          <h2>Welcome {user?.name} 👋</h2>
-          <p>{displayDate()}</p>
+      <motion.section
+        className="hero-quest glass"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div className="hero-quest-copy">
+          <p className="quest-kicker">{greeting.kicker}</p>
+          <h2>{greeting.title}</h2>
+          <p className="hero-quest-date">{displayDate()}</p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <ProgressRing progress={data?.xpProgress || 0} size={64} stroke={5} color="#D4AF37" />
-          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            <div>Level {data?.level}</div>
-            <div>
-              {data?.xp} / {data?.xpForNext} XP
-            </div>
+
+        <div className="quest-bar-wrap">
+          <div className="quest-bar-meta">
+            <span>Level {level}</span>
+            <span>
+              {xp} / {xpForNext} XP
+            </span>
           </div>
+          <div className="quest-bar" role="progressbar" aria-valuenow={xpProgress} aria-valuemin={0} aria-valuemax={100}>
+            <span style={{ width: `${xpProgress}%` }} />
+          </div>
+          <p className="quest-bar-hint">
+            {xpLeft > 0 ? `${xpLeft} XP until Level ${level + 1}. Every habit counts.` : 'You are ready for the next chapter.'}
+          </p>
         </div>
-      </div>
+
+        <div className="hero-quest-actions">
+          <Link to="/habits" className="btn btn-primary">
+            {hasHabits ? "Continue today's quest" : 'Begin your first quest'}
+          </Link>
+          <Link to="/missions" className="btn btn-ghost">
+            View missions
+          </Link>
+        </div>
+      </motion.section>
 
       {quote && (
         <motion.blockquote
@@ -54,7 +89,8 @@ export default function Dashboard() {
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          &ldquo;{quote.quote}&rdquo;
+          <p className="quote-kicker">Daily prophecy</p>
+          <p className="quote-text">&ldquo;{quote.quote}&rdquo;</p>
           <cite>— {quote.author}</cite>
         </motion.blockquote>
       )}
@@ -70,6 +106,7 @@ export default function Dashboard() {
           >
             <div className="stat-label">{s.label}</div>
             <div className="stat-value">{s.value}</div>
+            <p className="stat-hint">{s.hint}</p>
             <span className="stat-icon">{s.icon}</span>
           </motion.div>
         ))}
@@ -77,23 +114,25 @@ export default function Dashboard() {
 
       <div className="charts-grid">
         <div className="glass chart-card">
-          <h3>Today&apos;s Progress</h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <ProgressRing progress={data?.dailyProgress || 0} size={100} stroke={8} color="#3F9A66" />
+          <h3>Today&apos;s progress</h3>
+          <div className="today-progress">
+            <ProgressRing progress={daily} size={100} stroke={8} color="#06D6A0" />
             <div>
-              <p style={{ fontSize: '1.5rem', fontWeight: 700 }}>
-                {data?.habitsCompletedToday}/{data?.habitsTotal}
+              <p className="today-progress-count">
+                {done}/{total}
               </p>
-              <p style={{ color: 'var(--text-muted)' }}>habits completed</p>
+              <p className="today-progress-label">
+                {hasHabits ? 'habits completed — keep the fire lit' : 'no habits yet — start with one'}
+              </p>
             </div>
           </div>
         </div>
         <div className="glass chart-card">
-          <h3>Your Badges</h3>
+          <h3>Your badges</h3>
           {(data?.badges?.length || 0) === 0 ? (
-            <p style={{ color: 'var(--text-muted)' }}>Complete habits to unlock badges!</p>
+            <p className="empty-inline">No badges yet. Your first one is one habit away.</p>
           ) : (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+            <div className="badge-row">
               {data.badges.map((b) => (
                 <div key={b.id} className="pill" title={b.description}>
                   {b.icon} {b.name}
@@ -101,9 +140,7 @@ export default function Dashboard() {
               ))}
             </div>
           )}
-          <p style={{ marginTop: '1rem', color: 'var(--text-dim)', fontSize: '0.85rem' }}>
-            Longest streak: {data?.longestStreak || 0} days
-          </p>
+          <p className="longest-streak">Longest streak: {data?.longestStreak || 0} days of proving it</p>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 
@@ -10,6 +10,9 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from;
+  const afterLogin = from && from !== '/login' && from !== '/register' ? from : '/dashboard';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,7 +20,7 @@ export default function Login() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate('/dashboard');
+      navigate(afterLogin);
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     } finally {
@@ -68,11 +71,15 @@ export default function Login() {
             </Link>
           </div>
           <button className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-            {loading ? 'Entering...' : 'Enter Quest'}
+            {loading ? 'Opening the gate...' : 'Enter the quest'}
           </button>
         </form>
+        <p className="auth-motto">Small days. Big legend.</p>
         <div className="auth-footer">
-          New adventurer? <Link to="/register">Create account</Link>
+          New adventurer? <Link to="/register">Begin your legend</Link>
+          <div>
+            <Link to="/">Back to home</Link>
+          </div>
         </div>
       </motion.div>
     </div>

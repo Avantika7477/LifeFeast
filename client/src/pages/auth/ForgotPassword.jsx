@@ -51,7 +51,7 @@ export default function ForgotPassword() {
         <div className="brand">
           <div className="logo-mark">⚔️</div>
           <h1>LifeQuest</h1>
-          <p>Recover your account</p>
+          <p>Every hero loses the map sometimes</p>
         </div>
         {error && <div className="auth-error">{error}</div>}
         {message && step !== 1 && (
@@ -101,6 +101,9 @@ export default function ForgotPassword() {
 
         <div className="auth-footer">
           <Link to="/login">Back to Login</Link>
+          <div>
+            <Link to="/">Back to home</Link>
+          </div>
         </div>
       </motion.div>
     </div>

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-export default function ProgressRing({ progress = 0, size = 48, stroke = 4, color = '#22C55E' }) {
+export default function ProgressRing({ progress = 0, size = 48, stroke = 4, color = '#06D6A0' }) {
   const r = (size - stroke) / 2;
   const circ = 2 * Math.PI * r;
   const offset = circ - (Math.min(100, Math.max(0, progress)) / 100) * circ;

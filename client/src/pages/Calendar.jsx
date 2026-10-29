@@ -54,10 +54,10 @@ export default function Calendar() {
   const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
 
   const heatColor = (pct) => {
-    if (pct >= 80) return '#22c55e';
-    if (pct >= 50) return '#86efac';
-    if (pct >= 25) return '#fbbf24';
-    if (pct > 0) return '#f87171';
+    if (pct >= 80) return '#06d6a0';
+    if (pct >= 50) return '#ffd166';
+    if (pct >= 25) return '#ffb703';
+    if (pct > 0) return '#ff7b54';
     return 'var(--text-dim)';
   };
 
@@ -67,8 +67,8 @@ export default function Calendar() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Calendar</h2>
-          <p>Track completions across the month</p>
+          <h2>Quest Calendar</h2>
+          <p>Every lit day is a step you kept.</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <button className="btn-icon" onClick={prev}>
@@ -123,9 +123,7 @@ export default function Calendar() {
               {dayDetail.completed.length} habit(s) completed
             </p>
             {dayDetail.completed.length === 0 ? (
-              <p className="empty-state" style={{ padding: '1rem' }}>
-                No completions this day
-              </p>
+              <p className="empty-inline">A quiet day. Tomorrow is another chance.</p>
             ) : (
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {dayDetail.completed.map((h) => (

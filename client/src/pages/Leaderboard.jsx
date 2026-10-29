@@ -44,8 +44,8 @@ export default function Leaderboard() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Leaderboard</h2>
-          <p>Compete with heroes worldwide</p>
+          <h2>Hall of Heroes</h2>
+          <p>Climb the ranks. Leave a mark.</p>
         </div>
       </div>
 
@@ -118,7 +118,11 @@ export default function Leaderboard() {
             </tbody>
           </table>
           {rows.length === 0 && (
-            <div className="empty-state">No adventurers yet</div>
+            <div className="empty-state">
+              <div className="empty-icon">🏆</div>
+              <h3>The hall is empty</h3>
+              <p>Be the first legend on the board.</p>
+            </div>
           )}
         </div>
       )}

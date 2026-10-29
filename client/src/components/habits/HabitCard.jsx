@@ -6,7 +6,7 @@ import { CATEGORY_COLORS, XP_MAP } from '../../utils/constants';
 
 export default function HabitCard({ habit, onComplete, onEdit, onDelete, completing }) {
   const [busy, setBusy] = useState(false);
-  const color = CATEGORY_COLORS[habit.category] || '#D4AF37';
+  const color = CATEGORY_COLORS[habit.category] || '#FFB703';
   const xp = habit.xpReward || XP_MAP[habit.difficulty] || 10;
   const progress = habit.completedToday ? 100 : 0;
 

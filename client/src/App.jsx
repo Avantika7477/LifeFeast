@@ -18,6 +18,7 @@ import Journal from './pages/Journal';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Admin from './pages/Admin';
+import Home from './pages/Home';
 
 function PublicOnly({ children }) {
   const { user, loading } = useAuth();
@@ -32,6 +33,7 @@ export default function App() {
       <AuthProvider>
         <ThemeProvider>
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route
               path="/login"
               element={
@@ -78,8 +80,7 @@ export default function App() {
               </Route>
             </Route>
 
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </ThemeProvider>
       </AuthProvider>

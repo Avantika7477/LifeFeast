@@ -17,7 +17,7 @@ import {
 import { progressAPI } from '../api';
 import Loader from '../components/common/Loader';
 
-const COLORS = ['#D4AF37', '#3F9A66', '#E09A2E', '#D16A6A', '#58B87F', '#ECC75A', '#2F7A52', '#9A7B1A', '#CBBFA6'];
+const COLORS = ['#FFB703', '#06D6A0', '#FF7B54', '#FF5D8F', '#5EEAD4', '#FFD166', '#8B5CF6', '#FB8500', '#EAD6FF'];
 
 export default function Analytics() {
   const [data, setData] = useState(null);
@@ -45,8 +45,8 @@ export default function Analytics() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Analytics</h2>
-          <p>Your progress at a glance</p>
+          <h2>The Chronicle</h2>
+          <p>Proof that you showed up.</p>
         </div>
       </div>
 
@@ -81,8 +81,8 @@ export default function Analytics() {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
               <XAxis dataKey="label" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" fontSize={12} domain={[0, 100]} />
-              <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8 }} />
-              <Line type="monotone" dataKey="completion" stroke="#D4AF37" strokeWidth={2} dot={{ fill: '#3F9A66' }} />
+              <Tooltip contentStyle={{ background: '#241a52', border: 'none', borderRadius: 8 }} />
+              <Line type="monotone" dataKey="completion" stroke="#FFB703" strokeWidth={2} dot={{ fill: '#06D6A0' }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -94,8 +94,8 @@ export default function Analytics() {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
               <XAxis dataKey="label" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" fontSize={12} domain={[0, 100]} />
-              <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8 }} />
-              <Bar dataKey="completion" fill="#D4AF37" radius={[6, 6, 0, 0]} />
+              <Tooltip contentStyle={{ background: '#241a52', border: 'none', borderRadius: 8 }} />
+              <Bar dataKey="completion" fill="#FFB703" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -107,8 +107,8 @@ export default function Analytics() {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
               <XAxis dataKey="label" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" fontSize={12} domain={[0, 100]} />
-              <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8 }} />
-              <Bar dataKey="completion" fill="#3F9A66" radius={[6, 6, 0, 0]} />
+              <Tooltip contentStyle={{ background: '#241a52', border: 'none', borderRadius: 8 }} />
+              <Bar dataKey="completion" fill="#06D6A0" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -119,8 +119,8 @@ export default function Analytics() {
             <BarChart data={data.yearly.length ? data.yearly : [{ year: new Date().getFullYear(), count: 0 }]}>
               <XAxis dataKey="year" stroke="#94a3b8" />
               <YAxis stroke="#94a3b8" />
-              <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8 }} />
-              <Bar dataKey="count" fill="#F59E0B" radius={[6, 6, 0, 0]} />
+              <Tooltip contentStyle={{ background: '#241a52', border: 'none', borderRadius: 8 }} />
+              <Bar dataKey="count" fill="#FF7B54" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -137,7 +137,7 @@ export default function Analytics() {
                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8 }} />
+                <Tooltip contentStyle={{ background: '#241a52', border: 'none', borderRadius: 8 }} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>

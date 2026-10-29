@@ -15,15 +15,15 @@ export const DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
 export const XP_MAP = { Easy: 10, Medium: 20, Hard: 40 };
 
 export const CATEGORY_COLORS = {
-  Health: '#22C55E',
-  Fitness: '#EF4444',
-  Study: '#3B82F6',
+  Health: '#06D6A0',
+  Fitness: '#FF5D8F',
+  Study: '#7C6CFF',
   Coding: '#8B5CF6',
-  Finance: '#F59E0B',
-  Meditation: '#06B6D4',
-  Reading: '#EC4899',
-  Business: '#C9A227',
-  Personal: '#14B8A6',
+  Finance: '#FFB703',
+  Meditation: '#5EEAD4',
+  Reading: '#FF7B54',
+  Business: '#FB8500',
+  Personal: '#38D9A9',
 };
 
 export const MOODS = ['😀', '😐', '😔', '😴', '😡'];
@@ -40,3 +40,24 @@ export const displayDate = (d = new Date()) =>
     month: 'long',
     day: 'numeric',
   });
+
+export const firstName = (name = '') => {
+  const part = String(name).trim().split(/\s+/)[0];
+  return part || 'hero';
+};
+
+export const questGreeting = (name) => {
+  const hour = new Date().getHours();
+  const who = firstName(name);
+  if (hour < 12) return { kicker: 'Dawn patrol', title: `The quest begins, ${who}.` };
+  if (hour < 17) return { kicker: 'Midday march', title: `Stay the course, ${who}.` };
+  if (hour < 21) return { kicker: 'Evening fire', title: `Finish strong, ${who}.` };
+  return { kicker: 'Night watch', title: `Rest is part of the quest, ${who}.` };
+};
+
+export const streakCopy = (days) => {
+  const n = Number(days) || 0;
+  if (n <= 0) return 'Light the first flame today';
+  if (n === 1) return 'One day of showing up';
+  return `${n} days of showing up`;
+};

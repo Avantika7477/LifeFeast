@@ -31,6 +31,7 @@ pnpm-debug.log*
 # Coverage / local data
 coverage/
 .mongodb-data/
+tools/mongodb/
 
 # Accidental command output
 server/npm
