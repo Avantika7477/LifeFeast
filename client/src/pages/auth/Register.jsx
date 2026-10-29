@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import { apiErrorMessage } from '../../api/client';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -20,7 +21,7 @@ export default function Register() {
       await register(name, email, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(apiErrorMessage(err, 'Registration failed'));
     } finally {
       setLoading(false);
     }

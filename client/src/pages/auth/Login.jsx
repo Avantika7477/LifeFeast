@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import { apiErrorMessage } from '../../api/client';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -22,7 +23,7 @@ export default function Login() {
       await login(email, password);
       navigate(afterLogin);
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError(apiErrorMessage(err, 'Login failed'));
     } finally {
       setLoading(false);
     }

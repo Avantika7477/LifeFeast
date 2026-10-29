@@ -1,11 +1,24 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+// In Vite dev, always use the /api proxy so we never hit macOS AirPlay on :5000
+// or a stale tab talking to the wrong port.
+const API_URL = import.meta.env.DEV
+  ? '/api'
+  : (import.meta.env.VITE_API_URL || '/api');
 
 const api = axios.create({
   baseURL: API_URL,
   headers: { 'Content-Type': 'application/json' },
 });
+
+export function apiErrorMessage(error, fallback) {
+  const fromApi = error.response?.data?.message;
+  if (fromApi) return fromApi;
+  if (!error.response) {
+    return 'Cannot reach the LifeQuest API. Start the server and refresh.';
+  }
+  return fallback;
+}
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('lq_token');
