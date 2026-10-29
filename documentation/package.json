@@ -5,5 +5,8 @@
   "description": "Source HTML + PDF generator for LifeQuest docs (not part of the running app)",
   "scripts": {
     "pdf": "node generate-pdf.mjs"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
   }
 }

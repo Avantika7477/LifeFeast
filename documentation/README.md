@@ -5,14 +5,24 @@ This folder is **outside** `client/` and `server/`. It holds the documentation s
 | File | Purpose |
 |------|---------|
 | `LifeQuest-Documentation.html` | Full documentation content |
-| `generate-pdf.mjs` | Rebuilds the PDF using Chrome/Edge |
+| `generate-pdf.mjs` | Rebuilds the PDF using Chrome/Edge on macOS, Windows, or Linux |
 | `../LifeQuest-Documentation.pdf` | **Final PDF** at the LifeQuest folder root |
 
 ## Regenerate PDF
+
+From the repo root:
+
+```bash
+npm run pdf
+```
+
+Or:
 
 ```bash
 cd documentation
 npm run pdf
 ```
 
-Or open `LifeQuest-Documentation.html` in a browser → Print → Save as PDF.
+The script looks for Google Chrome, Microsoft Edge, Chromium, or Brave. Override with `CHROME_PATH` if needed.
+
+If no browser is found, open `LifeQuest-Documentation.html` in a browser → Print → Save as PDF.

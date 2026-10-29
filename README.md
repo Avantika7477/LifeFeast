@@ -22,32 +22,34 @@ Turn your daily life into a game. Track habits, earn XP, unlock badges, complete
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 20.19+ or 22.12+ (Vite 8 and Mongoose 9 will not install on Node 18)
 - MongoDB running locally (or set `MONGODB_URI` in `server/.env`)
 
 ## Setup
 
-### 1. Backend
+Copy the env templates first:
 
 ```bash
-cd server
-npm install
-# Edit .env if needed (MongoDB URI, JWT secret)
-npm run seed   # creates admin@lifequest.app / admin123 and demo@lifequest.app / demo123
-npm run dev
+cp server/.env.example server/.env
+cp client/.env.example client/.env
 ```
 
-API runs at `http://localhost:5000`.
+Then edit `server/.env` if your MongoDB URI or JWT secret differ from the defaults.
 
-### 2. Frontend
+### Install and run from the repo root
+
+This repo is an npm workspace (`client`, `server`, `documentation`). One install at the root is enough:
 
 ```bash
-cd client
 npm install
-npm run dev
+npm run seed         # creates admin@lifequest.app / admin123 and demo@lifequest.app / demo123
+npm run dev          # starts API + Vite together
 ```
 
-App runs at `http://localhost:5173`.
+- API: `http://localhost:5000`
+- App: `http://localhost:5173`
+
+Run one side only with `npm run dev:server` or `npm run dev:client`.
 
 ### Demo accounts
 
@@ -68,32 +70,45 @@ App runs at `http://localhost:5173`.
 
 ```
 LifeQuest/
-├── client/          # React Vite SPA
+├── package.json            # npm workspaces (client, server, documentation)
+├── package-lock.json
+├── client/                 # React Vite SPA
+│   ├── public/
+│   ├── .env.example
 │   └── src/
-│       ├── api/     # Axios API layer
+│       ├── api/            # Axios API layer
 │       ├── components/
-│       ├── context/ # Auth & Theme
+│       ├── context/        # Auth & Theme
 │       ├── pages/
-│       └── styles/
-└── server/          # Express REST API
-    ├── models/
-    ├── controllers/
-    ├── routes/
-    └── middleware/
+│       ├── styles/
+│       └── utils/
+├── server/                 # Express REST API
+│   ├── .env.example
+│   ├── config/             # MongoDB connection
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── utils/
+│   ├── index.js
+│   └── seed.js
+└── documentation/          # HTML guide + PDF generator (not app runtime)
 ```
 
 ## Environment
 
-**server/.env**
+Copy from the example files. Do not commit `.env`.
+
+**server/.env.example**
 ```
 PORT=5000
 MONGODB_URI=mongodb://127.0.0.1:27017/lifequest
-JWT_SECRET=your_secret
+JWT_SECRET=change_this_to_a_long_random_secret
 JWT_EXPIRE=7d
 CLIENT_URL=http://localhost:5173
 ```
 
-**client/.env**
+**client/.env.example**
 ```
 VITE_API_URL=http://localhost:5000/api
 ```

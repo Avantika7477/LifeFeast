@@ -1,14 +1,14 @@
 {
-  "name": "server",
+  "name": "lifequest-server",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
+  "description": "LifeQuest API — gamified habit tracker backend",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
     "seed": "node seed.js"
   },
-  "description": "LifeQuest API — gamified habit tracker backend",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -18,12 +18,13 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.9.1",
-    "nodemailer": "^9.0.4"
+    "mongoose": "^9.9.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
   }
 }

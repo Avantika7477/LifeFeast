@@ -3,11 +3,25 @@
   "version": "1.0.0",
   "private": true,
   "description": "LifeQuest — Gamified Habit Tracker",
+  "workspaces": [
+    "client",
+    "server",
+    "documentation"
+  ],
   "scripts": {
-    "install:all": "npm install --prefix server && npm install --prefix client",
-    "dev:server": "npm run dev --prefix server",
-    "dev:client": "npm run dev --prefix client",
-    "seed": "npm run seed --prefix server",
-    "build": "npm run build --prefix client"
+    "dev": "concurrently -n server,client -c cyan,magenta \"npm run dev -w lifequest-server\" \"npm run dev -w lifequest-client\"",
+    "dev:server": "npm run dev -w lifequest-server",
+    "dev:client": "npm run dev -w lifequest-client",
+    "seed": "npm run seed -w lifequest-server",
+    "start": "npm run start -w lifequest-server",
+    "build": "npm run build -w lifequest-client",
+    "lint": "npm run lint -w lifequest-client",
+    "pdf": "npm run pdf -w documentation"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
   }
 }
