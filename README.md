@@ -114,3 +114,70 @@ CLIENT_URL=http://localhost:5173
 ```
 VITE_API_URL=http://localhost:5001/api
 ```
+
+Leave `VITE_API_URL` unset on the host. Production builds then call same-origin `/api`.
+
+## Deploy (one URL)
+
+The production server serves the API and the built React app together. Use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (free M0). Do not use the local embedded MongoDB in production.
+
+### 1. Atlas
+
+1. Create a free cluster.
+2. Add a database user.
+3. Network Access → allow `0.0.0.0/0` (or your host IPs).
+4. Copy the `mongodb+srv://...` URI and append `/lifequest`.
+
+### 2. Render
+
+1. Push this repo to GitHub.
+2. Render → **New → Blueprint** and select the repo (`render.yaml`), or **New Web Service** with:
+   - Build: `npm install && npm run build`
+   - Start: `npm start`
+   - Node 22
+   - Health check: `/api/health`
+3. Set env vars:
+
+```
+NODE_ENV=production
+MONGODB_URI=mongodb+srv://USER:PASS@cluster.../lifequest
+JWT_SECRET=<long random string>
+JWT_EXPIRE=7d
+CLIENT_URL=https://your-service.onrender.com
+```
+
+Render also sets `RENDER_EXTERNAL_URL`; CORS uses that automatically.
+
+4. After the first deploy, open the Render **Shell** and run `npm run seed` once if you want the demo accounts.
+
+Open `https://your-service.onrender.com` — the UI, `/api/health`, and PWA install all use that origin.
+
+### Vercel (same GitHub repo)
+
+This repo includes `vercel.json` so Vercel **Services** can import `client` (Vite) and `server` (Express) as one project.
+
+1. Refresh the Vercel import page after this file is on `main`.
+2. Root Directory: `./`
+3. Do **not** import `client` and `server` as two separate projects.
+4. Add env vars on the Vercel project (Production + Preview):
+
+```
+NODE_ENV=production
+MONGODB_URI=mongodb+srv://USER:PASS@cluster.../lifequest
+JWT_SECRET=<long random string>
+JWT_EXPIRE=7d
+CLIENT_URL=https://your-project.vercel.app
+```
+
+Leave `VITE_API_URL` unset so the UI calls same-origin `/api`.
+
+5. Deploy, then run `npm run seed` locally against Atlas (or a one-off machine) if you want demo accounts. Vercel has no persistent shell like Render.
+
+### Local production check
+
+```bash
+npm run build
+npm start
+```
+
+Then visit `http://localhost:5001`.

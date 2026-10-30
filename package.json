@@ -15,6 +15,7 @@
     "seed": "npm run seed -w lifequest-server",
     "start": "npm run start -w lifequest-server",
     "build": "npm run build -w lifequest-client",
+    "start:web": "npm run build && npm start",
     "lint": "npm run lint -w lifequest-client",
     "pdf": "npm run pdf -w documentation"
   },

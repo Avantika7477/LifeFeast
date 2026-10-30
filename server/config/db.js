@@ -74,6 +74,10 @@ const connectDB = async () => {
     console.log(`MongoDB connected: ${host}`);
   } catch (error) {
     console.warn(`Could not reach ${uri} (${error.message})`);
+    if (process.env.NODE_ENV === 'production') {
+      console.error('Set MONGODB_URI to a MongoDB Atlas connection string in production.');
+      process.exit(1);
+    }
     console.warn('Starting embedded MongoDB (first run may download a binary)...');
     try {
       await startEmbedded();
