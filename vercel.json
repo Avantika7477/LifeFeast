@@ -4,15 +4,15 @@
     "web": {
       "root": "client/",
       "framework": "vite",
-      "installCommand": "cd .. && npm install",
-      "buildCommand": "npm run build",
+      "installCommand": "cd .. && npm install --include=dev",
+      "buildCommand": "cd .. && npm run build -w lifequest-client",
       "outputDirectory": "dist",
       "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
     },
     "api": {
       "root": "server/",
       "framework": "express",
-      "installCommand": "cd .. && npm install",
+      "installCommand": "cd .. && npm install --include=dev",
       "entrypoint": "index.js"
     }
   },
