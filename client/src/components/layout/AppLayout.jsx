@@ -113,7 +113,8 @@ export default function AppLayout() {
               <Coins size={14} /> {user?.coins ?? 0}
             </span>
             <span className="pill" title="Current streak">
-              🔥 {user?.currentStreak ?? 0} days
+              🔥 {user?.currentStreak ?? 0}
+              <span className="pill-extra"> days</span>
             </span>
             <button className="btn-icon" onClick={toggleTheme} title="Toggle theme" aria-label="Toggle theme">
               {isDark ? <Sun size={18} /> : <Moon size={18} />}

@@ -30,7 +30,8 @@ export default function Home() {
           </button>
           {user ? (
             <Link to="/dashboard" className="btn btn-primary">
-              Continue quest
+              <span className="label-wide">Continue quest</span>
+              <span className="label-narrow">Quest</span>
             </Link>
           ) : (
             <>
