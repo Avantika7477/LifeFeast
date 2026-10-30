@@ -57,7 +57,6 @@ Run one side only with `npm run dev:server` or `npm run dev:client`.
 
 | Role  | Email                 | Password  |
 |-------|-----------------------|-----------|
-| Admin | admin@lifequest.app   | admin123  |
 | Demo  | demo@lifequest.app    | demo123   |
 
 ## XP Rewards
