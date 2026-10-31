@@ -4,7 +4,7 @@ import { authAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { usePwaInstall } from '../hooks/usePwaInstall';
-import { INSTALL_URL } from '../utils/constants';
+import { CREATOR_NAME, CREATOR_URL, INSTALL_URL } from '../utils/constants';
 import Modal from '../components/common/Modal';
 
 export default function Settings() {
@@ -77,8 +77,8 @@ export default function Settings() {
       </div>
 
       <div className="charts-grid">
-        <div className="glass" style={{ padding: '1.5rem' }}>
-          <h3 style={{ marginBottom: '1rem' }}>Profile</h3>
+        <div className="glass copy-card">
+          <h3>Profile</h3>
           <form onSubmit={saveProfile}>
             <div className="form-group">
               <label>Name</label>
@@ -94,8 +94,8 @@ export default function Settings() {
           </form>
         </div>
 
-        <div className="glass" style={{ padding: '1.5rem' }}>
-          <h3 style={{ marginBottom: '1rem' }}>Install app</h3>
+        <div className="glass copy-card">
+          <h3>Install app</h3>
           {installed ? (
             <p className="install-help">LifeQuest is installed on this device. Open it from your home screen or app list.</p>
           ) : (
@@ -131,8 +131,28 @@ export default function Settings() {
           )}
         </div>
 
-        <div className="glass" style={{ padding: '1.5rem' }}>
-          <h3 style={{ marginBottom: '1rem' }}>Appearance</h3>
+        <div className="glass copy-card">
+          <h3>About</h3>
+          <p className="install-help">
+            LifeQuest exists because good days are easy to skip and hard to see. Habits, tasks, and mood get lost in
+            notes and reminders that never feel like progress.
+          </p>
+          <p className="install-help">
+            This app turns that work into a quest: train daily, finish tasks after their due time, keep a streak, earn
+            XP, and write the day down. The point is not to play a game instead of living — it is to make showing up
+            visible, so a small day still counts.
+          </p>
+          <p className="install-help">
+            Built by <strong>{CREATOR_NAME}</strong>. Want to know more about me?{' '}
+            <a href={CREATOR_URL} target="_blank" rel="noreferrer">
+              Visit my portfolio
+            </a>
+            .
+          </p>
+        </div>
+
+        <div className="glass copy-card">
+          <h3>Appearance</h3>
           <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
             Current theme: <strong>{theme}</strong>
           </p>
@@ -141,8 +161,8 @@ export default function Settings() {
           </button>
         </div>
 
-        <div className="glass" style={{ padding: '1.5rem' }}>
-          <h3 style={{ marginBottom: '1rem' }}>Change Password</h3>
+        <div className="glass copy-card">
+          <h3>Change Password</h3>
           <form onSubmit={changePw}>
             <div className="form-group">
               <label>Current Password</label>
@@ -171,8 +191,8 @@ export default function Settings() {
           </form>
         </div>
 
-        <div className="glass" style={{ padding: '1.5rem' }}>
-          <h3 style={{ marginBottom: '1rem' }}>Data & Account</h3>
+        <div className="glass copy-card">
+          <h3>Data & Account</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'flex-start' }}>
             <button className="btn btn-ghost" onClick={exportData}>
               Export Data (JSON)
@@ -183,8 +203,8 @@ export default function Settings() {
           </div>
         </div>
 
-        <div className="glass" style={{ padding: '1.5rem' }}>
-          <h3 style={{ marginBottom: '1rem' }}>Badges Unlocked</h3>
+        <div className="glass copy-card">
+          <h3>Badges Unlocked</h3>
           <div className="badge-grid">
             {(user?.badges || []).length === 0 ? (
               <p style={{ color: 'var(--text-muted)' }}>No badges yet</p>

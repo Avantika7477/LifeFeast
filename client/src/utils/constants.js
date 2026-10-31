@@ -82,6 +82,10 @@ export const questGreeting = (name) => {
 
 export const INSTALL_URL = 'https://lifefeast.vercel.app';
 
+export const CREATOR_NAME = 'Avantika Negi';
+
+export const CREATOR_URL = 'https://avan-portfolio.netlify.app/';
+
 export const streakCopy = (days) => {
   const n = Number(days) || 0;
   if (n <= 0) return 'Light the first flame today';

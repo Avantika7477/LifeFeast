@@ -146,8 +146,7 @@ export default function Tasks() {
               }`}
             >
               <select
-                className="form-control select-control"
-                style={{ width: 140, padding: '0.4rem 0.6rem' }}
+                className="form-control select-control task-status"
                 value={t.status}
                 onChange={(e) => updateStatus(t, e.target.value)}
               >
