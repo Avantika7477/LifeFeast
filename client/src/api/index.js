@@ -56,6 +56,10 @@ export const notificationAPI = {
 
 export const socialAPI = {
   friends: () => api.get('/social/friends'),
+  people: (q) => api.get('/social/people', { params: { q } }),
+  requests: () => api.get('/social/requests'),
+  requestFriend: (data) => api.post('/social/requests', data),
+  respondFriend: (id, action) => api.post(`/social/requests/${id}/respond`, { action }),
   messages: (friendId) => api.get(`/social/messages/${friendId}`),
   sendMessage: (friendId, text) => api.post(`/social/messages/${friendId}`, { text }),
   challenges: () => api.get('/social/challenges'),

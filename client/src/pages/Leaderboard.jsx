@@ -1,51 +1,154 @@
 import { useEffect, useState } from 'react';
-import { leaderboardAPI } from '../api';
+import { useSearchParams } from 'react-router-dom';
+import { leaderboardAPI, socialAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
 import Loader from '../components/common/Loader';
 
+function FriendAction({ row, onRequest, onRespond, busy }) {
+  if (row.isMe || row.relation === 'me') return null;
+  if (row.relation === 'friends') return <span className="pill pill-green">Friends</span>;
+  if (row.relation === 'outgoing') return <span className="pill">Requested</span>;
+  if (row.relation === 'incoming') {
+    return (
+      <div className="hero-actions">
+        <button className="btn btn-accent btn-sm" disabled={busy} onClick={() => onRespond(row.requestId, 'accept')}>
+          Accept
+        </button>
+        <button className="btn btn-ghost btn-sm" disabled={busy} onClick={() => onRespond(row.requestId, 'decline')}>
+          Decline
+        </button>
+      </div>
+    );
+  }
+  return (
+    <button className="btn btn-primary btn-sm" disabled={busy} onClick={() => onRequest(row.id)}>
+      Add
+    </button>
+  );
+}
+
 export default function Leaderboard() {
   const { showToast } = useAuth();
-  const [tab, setTab] = useState('global');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get('tab') === 'friends' ? 'friends' : 'global';
   const [sort, setSort] = useState('xp');
   const [rows, setRows] = useState([]);
+  const [requests, setRequests] = useState({ incoming: [], outgoing: [] });
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [friendEmail, setFriendEmail] = useState('');
+  const [searching, setSearching] = useState(false);
+  const [busyId, setBusyId] = useState('');
 
-  const load = async () => {
+  const setTab = (next) => {
+    if (next === 'friends') setSearchParams({ tab: 'friends' });
+    else setSearchParams({});
+  };
+
+  const loadBoard = async () => {
     setLoading(true);
     try {
-      const { data } =
-        tab === 'global'
-          ? await leaderboardAPI.global(sort)
-          : await leaderboardAPI.friends(sort);
+      const [{ data }, reqs] = await Promise.all([
+        tab === 'global' ? leaderboardAPI.global(sort) : leaderboardAPI.friends(sort),
+        socialAPI.requests().catch(() => ({ data: { incoming: [], outgoing: [] } })),
+      ]);
       setRows(data);
+      setRequests(reqs.data);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    load();
+    loadBoard();
   }, [tab, sort]);
 
-  const addFriend = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await leaderboardAPI.addFriend(friendEmail);
-      showToast(data.message);
-      setFriendEmail('');
-      if (tab === 'friends') load();
-    } catch (err) {
-      showToast(err.response?.data?.message || 'Failed', 'error');
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 2) {
+      setResults([]);
+      setSearching(false);
+      return undefined;
+    }
+    setSearching(true);
+    const timer = setTimeout(() => {
+      socialAPI
+        .people(q)
+        .then((res) => setResults(res.data))
+        .catch(() => setResults([]))
+        .finally(() => setSearching(false));
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  const refreshAll = async () => {
+    await loadBoard();
+    const q = query.trim();
+    if (q.length >= 2) {
+      const { data } = await socialAPI.people(q);
+      setResults(data);
     }
   };
+
+  const requestById = async (userId) => {
+    setBusyId(userId);
+    try {
+      const { data } = await socialAPI.requestFriend({ userId });
+      showToast(data.message);
+      await refreshAll();
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Could not send request', 'error');
+    } finally {
+      setBusyId('');
+    }
+  };
+
+  const requestByQuery = async (e) => {
+    e.preventDefault();
+    const q = query.trim();
+    if (!q) return;
+    setBusyId('search');
+    try {
+      const payload = q.includes('@') ? { email: q } : results[0] ? { userId: results[0].id } : null;
+      if (!payload) {
+        showToast('No registered hero matches that name. Try more of the name, or their email.', 'error');
+        return;
+      }
+      const { data } = await socialAPI.requestFriend(payload);
+      showToast(data.message);
+      setQuery('');
+      await refreshAll();
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Could not send request', 'error');
+    } finally {
+      setBusyId('');
+    }
+  };
+
+  const respond = async (id, action) => {
+    setBusyId(id);
+    try {
+      const { data } = await socialAPI.respondFriend(id, action);
+      showToast(data.message);
+      await refreshAll();
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Failed', 'error');
+    } finally {
+      setBusyId('');
+    }
+  };
+
+  const showSearch = query.trim().length >= 2;
 
   return (
     <div>
       <div className="page-header">
         <div>
           <h2>Hall of Heroes</h2>
-          <p>See how you rank against friends and the global board by streak, XP, and coins.</p>
+          <p>
+            Find registered players by name or email, send a friend request, and wait for them to accept.
+            After that you can talk on Campfire.
+          </p>
         </div>
       </div>
 
@@ -55,6 +158,9 @@ export default function Leaderboard() {
         </button>
         <button className={`tab ${tab === 'friends' ? 'active' : ''}`} onClick={() => setTab('friends')}>
           Friends
+          {requests.incoming.length > 0 && (
+            <span className="nav-unread">{requests.incoming.length > 9 ? '9+' : requests.incoming.length}</span>
+          )}
         </button>
         <button className={`tab ${sort === 'xp' ? 'active' : ''}`} onClick={() => setSort('xp')}>
           Top XP
@@ -64,64 +170,99 @@ export default function Leaderboard() {
         </button>
       </div>
 
-      {tab === 'friends' && (
-        <form onSubmit={addFriend} style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
-          <input
-            className="form-control"
-            style={{ flex: 1, minWidth: 200 }}
-            placeholder="Friend's email"
-            value={friendEmail}
-            onChange={(e) => setFriendEmail(e.target.value)}
-            type="email"
-            required
-          />
-          <button className="btn btn-primary" type="submit">
-            Add Friend
-          </button>
-        </form>
+      <form className="hero-search" onSubmit={requestByQuery}>
+        <input
+          className="form-control"
+          placeholder="Name or email"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button className="btn btn-primary" type="submit" disabled={busyId === 'search' || query.trim().length < 2}>
+          Send request
+        </button>
+      </form>
+
+      {showSearch && (
+        <div className="glass hero-search-results">
+          {searching && <p className="install-help">Looking for heroes…</p>}
+          {!searching && results.length === 0 && (
+            <p className="install-help">No registered player matches that. Check the spelling, or use their email.</p>
+          )}
+          {results.map((r) => (
+            <div key={r.id} className="hero-row">
+              <div className="avatar">{r.name?.[0]}</div>
+              <div className="hero-row-copy">
+                <strong>{r.name}</strong>
+                <div className="hero-row-meta">
+                  <span>Lv {r.level}</span>
+                  <span>{r.xp} XP</span>
+                </div>
+              </div>
+              <FriendAction row={r} onRequest={requestById} onRespond={respond} busy={!!busyId} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {tab === 'friends' && requests.incoming.length > 0 && (
+        <div className="cards-grid" style={{ marginBottom: '1.25rem' }}>
+          {requests.incoming.map((r) => (
+            <div key={r.id} className="glass habit-card">
+              <h4>{r.user?.name}</h4>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                Wants to be friends · Level {r.user?.level}
+              </p>
+              <div className="hero-actions" style={{ marginTop: '0.85rem' }}>
+                <button className="btn btn-accent btn-sm" disabled={!!busyId} onClick={() => respond(r.id, 'accept')}>
+                  Accept
+                </button>
+                <button className="btn btn-ghost btn-sm" disabled={!!busyId} onClick={() => respond(r.id, 'decline')}>
+                  Decline
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {tab === 'friends' && requests.outgoing.length > 0 && !showSearch && (
+        <p className="install-help">
+          Waiting on {requests.outgoing.map((r) => r.user?.name).filter(Boolean).join(', ')}.
+        </p>
       )}
 
       {loading ? (
         <Loader />
       ) : (
-        <div className="glass table-wrap">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Hero</th>
-                <th>Level</th>
-                <th>XP</th>
-                <th>Streak</th>
-                <th>Coins</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.id} style={r.isMe ? { background: 'rgba(79,70,229,0.12)' } : undefined}>
-                  <td>
-                    {r.rank <= 3 ? ['🥇', '🥈', '🥉'][r.rank - 1] : `#${r.rank}`}
-                  </td>
-                  <td>
-                    <div className="user-chip">
-                      <div className="avatar">{r.name?.[0]}</div>
-                      {r.name}
-                      {r.isMe && <span className="pill">You</span>}
-                    </div>
-                  </td>
-                  <td>{r.level}</td>
-                  <td>{r.xp}</td>
-                  <td>🔥 {r.currentStreak}</td>
-                  <td>🪙 {r.coins}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="glass hero-list">
+          {rows.map((r) => (
+            <div key={r.id} className={`hero-row${r.isMe ? ' is-me' : ''}`}>
+              <div className="hero-rank">{r.rank <= 3 ? ['🥇', '🥈', '🥉'][r.rank - 1] : `#${r.rank}`}</div>
+              <div className="avatar">{r.name?.[0]}</div>
+              <div className="hero-row-copy">
+                <strong>
+                  {r.name}
+                  {r.isMe && <span className="pill">You</span>}
+                </strong>
+                <div className="hero-row-meta">
+                  <span>Lv {r.level}</span>
+                  <span>{r.xp} XP</span>
+                  <span>🔥 {r.currentStreak}</span>
+                  <span>🪙 {r.coins}</span>
+                </div>
+              </div>
+              <FriendAction row={r} onRequest={requestById} onRespond={respond} busy={!!busyId} />
+            </div>
+          ))}
           {rows.length === 0 && (
             <div className="empty-state">
               <div className="empty-icon">🏆</div>
-              <h3>The hall is empty</h3>
-              <p>Be the first legend on the board.</p>
+              <h3>{tab === 'friends' ? 'No friends yet' : 'The hall is empty'}</h3>
+              <p>
+                {tab === 'friends'
+                  ? 'Search a registered name above and send a request.'
+                  : 'Be the first legend on the board.'}
+              </p>
             </div>
           )}
         </div>

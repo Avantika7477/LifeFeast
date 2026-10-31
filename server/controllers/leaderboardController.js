@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import { mapRelations, sendFriendRequest, withRelation } from '../utils/friendship.js';
 
 export const getGlobalLeaderboard = async (req, res) => {
   try {
@@ -10,19 +11,29 @@ export const getGlobalLeaderboard = async (req, res) => {
       .sort(sortField)
       .limit(50);
 
+    const relations = await mapRelations(
+      req.user._id,
+      users.map((u) => u._id)
+    );
     res.json(
-      users.map((u, i) => ({
-        rank: i + 1,
-        id: u._id,
-        name: u.name,
-        avatar: u.avatar,
-        xp: u.xp,
-        level: u.level,
-        currentStreak: u.currentStreak,
-        longestStreak: u.longestStreak,
-        coins: u.coins,
-        badgeCount: u.badges?.length || 0,
-      }))
+      users.map((u, i) =>
+        withRelation(
+          {
+            rank: i + 1,
+            id: u._id,
+            name: u.name,
+            avatar: u.avatar,
+            xp: u.xp,
+            level: u.level,
+            currentStreak: u.currentStreak,
+            longestStreak: u.longestStreak,
+            coins: u.coins,
+            badgeCount: u.badges?.length || 0,
+          },
+          relations,
+          req.user._id
+        )
+      )
     );
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -40,19 +51,28 @@ export const getFriendsLeaderboard = async (req, res) => {
       .select('name avatar xp level currentStreak longestStreak badges coins')
       .sort(sortField);
 
+    const relations = await mapRelations(
+      req.user._id,
+      users.map((u) => u._id)
+    );
     res.json(
-      users.map((u, i) => ({
-        rank: i + 1,
-        id: u._id,
-        name: u.name,
-        avatar: u.avatar,
-        xp: u.xp,
-        level: u.level,
-        currentStreak: u.currentStreak,
-        longestStreak: u.longestStreak,
-        coins: u.coins,
-        isMe: u._id.toString() === req.user._id.toString(),
-      }))
+      users.map((u, i) =>
+        withRelation(
+          {
+            rank: i + 1,
+            id: u._id,
+            name: u.name,
+            avatar: u.avatar,
+            xp: u.xp,
+            level: u.level,
+            currentStreak: u.currentStreak,
+            longestStreak: u.longestStreak,
+            coins: u.coins,
+          },
+          relations,
+          req.user._id
+        )
+      )
     );
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -61,23 +81,20 @@ export const getFriendsLeaderboard = async (req, res) => {
 
 export const addFriend = async (req, res) => {
   try {
-    const { email } = req.body;
-    const friend = await User.findOne({ email });
-    if (!friend) return res.status(404).json({ message: 'User not found' });
-    if (friend._id.equals(req.user._id)) {
-      return res.status(400).json({ message: 'Cannot add yourself' });
-    }
-
-    const user = await User.findById(req.user._id);
-    if (user.friends.some((f) => f.equals(friend._id))) {
-      return res.status(400).json({ message: 'Already friends' });
-    }
-    user.friends.push(friend._id);
-    friend.friends.push(user._id);
-    await user.save();
-    await friend.save();
-    res.json({ message: `Added ${friend.name} as friend` });
+    const userId = req.body?.userId;
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    const friend = userId
+      ? await User.findById(userId)
+      : email
+        ? await User.findOne({ email })
+        : null;
+    const result = await sendFriendRequest({
+      fromId: req.user._id,
+      fromName: req.user.name,
+      toUser: friend,
+    });
+    res.status(result.accepted ? 200 : 201).json(result);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(error.status || 500).json({ message: error.message });
   }
 };

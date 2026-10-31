@@ -106,8 +106,8 @@ export default function Campfire() {
         <div>
           <h2>Campfire</h2>
           <p>
-            Chat with friends and send them a fun challenge. Add friends by email on Heroes first — only
-            friends can sit at this fire.
+            Chat with friends and send them a fun challenge. Send a friend request on Heroes first — only
+            accepted friends can sit at this fire.
           </p>
         </div>
       </div>
@@ -116,7 +116,7 @@ export default function Campfire() {
         <div className="empty-state glass">
           <div className="empty-icon">🔥</div>
           <h3>The fire is waiting</h3>
-          <p>Add a friend on Heroes, then come back here to talk and challenge them.</p>
+          <p>Send a friend request on Heroes. After they accept, come back here to talk and challenge them.</p>
         </div>
       ) : (
         <div className={`campfire ${friendId ? 'has-thread' : ''}`}>
@@ -131,7 +131,7 @@ export default function Campfire() {
                 <div className="avatar">{f.name?.[0]?.toUpperCase()}</div>
                 <div className="campfire-friend-copy">
                   <strong>
-                    {f.name}
+                    <span className="campfire-friend-name">{f.name}</span>
                     {f.unread > 0 && <span className="nav-unread">{f.unread > 9 ? '9+' : f.unread}</span>}
                   </strong>
                   <span>{f.lastMessage || 'Say hello'}</span>

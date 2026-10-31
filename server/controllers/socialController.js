@@ -3,6 +3,14 @@ import User from '../models/User.js';
 import Message from '../models/Message.js';
 import Challenge from '../models/Challenge.js';
 import Notification from '../models/Notification.js';
+import FriendRequest from '../models/FriendRequest.js';
+import {
+  becomeFriends,
+  escapeRegex,
+  mapRelations,
+  sendFriendRequest,
+  withRelation,
+} from '../utils/friendship.js';
 
 async function assertFriends(userId, friendId) {
   if (!mongoose.isValidObjectId(friendId)) {
@@ -209,6 +217,128 @@ export const completeChallenge = async (req, res) => {
       coinsGained: challenge.coinReward,
       xpGained: challenge.xpReward,
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+function personCard(user) {
+  return {
+    id: String(user._id),
+    name: user.name,
+    avatar: user.avatar,
+    level: user.level,
+    xp: user.xp,
+    currentStreak: user.currentStreak,
+    coins: user.coins,
+  };
+}
+
+export const listRequests = async (req, res) => {
+  try {
+    const incoming = await FriendRequest.find({ to: req.user._id, status: 'pending' })
+      .populate('from', 'name avatar level xp currentStreak coins')
+      .sort({ createdAt: -1 });
+    const outgoing = await FriendRequest.find({ from: req.user._id, status: 'pending' })
+      .populate('to', 'name avatar level xp currentStreak coins')
+      .sort({ createdAt: -1 });
+    res.json({
+      incoming: incoming.filter((r) => r.from).map((r) => ({
+        id: String(r._id),
+        user: personCard(r.from),
+        createdAt: r.createdAt,
+      })),
+      outgoing: outgoing.filter((r) => r.to).map((r) => ({
+        id: String(r._id),
+        user: personCard(r.to),
+        createdAt: r.createdAt,
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const searchPeople = async (req, res) => {
+  try {
+    const q = String(req.query.q || '').trim();
+    if (q.length < 2) return res.json([]);
+
+    const filter = { isActive: true, _id: { $ne: req.user._id } };
+    if (q.includes('@')) {
+      filter.email = q.toLowerCase();
+    } else {
+      filter.name = { $regex: escapeRegex(q), $options: 'i' };
+    }
+
+    const users = await User.find(filter)
+      .select('name avatar xp level currentStreak coins')
+      .limit(20);
+    const relations = await mapRelations(
+      req.user._id,
+      users.map((u) => u._id)
+    );
+    res.json(users.map((u) => withRelation(personCard(u), relations, req.user._id)));
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const requestFriend = async (req, res) => {
+  try {
+    const userId = req.body?.userId;
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    let toUser = null;
+    if (userId && mongoose.isValidObjectId(userId)) {
+      toUser = await User.findById(userId);
+    } else if (email) {
+      toUser = await User.findOne({ email });
+    } else {
+      return res.status(400).json({ message: 'Pick someone by name from Heroes, or enter their email.' });
+    }
+    const result = await sendFriendRequest({
+      fromId: req.user._id,
+      fromName: req.user.name,
+      toUser,
+    });
+    res.status(result.accepted ? 200 : 201).json(result);
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.message });
+  }
+};
+
+export const respondFriend = async (req, res) => {
+  try {
+    const { action } = req.body || {};
+    if (!['accept', 'decline'].includes(action)) {
+      return res.status(400).json({ message: 'Accept or decline the request.' });
+    }
+    const request = await FriendRequest.findOne({
+      _id: req.params.id,
+      to: req.user._id,
+      status: 'pending',
+    });
+    if (!request) return res.status(404).json({ message: 'Request not found' });
+    request.status = action === 'accept' ? 'accepted' : 'declined';
+    await request.save();
+    if (action === 'accept') {
+      await becomeFriends(request.from, request.to);
+    }
+    await Notification.create({
+      user: request.from,
+      title: action === 'accept' ? 'Friend request accepted' : 'Friend request declined',
+      message:
+        action === 'accept'
+          ? `${req.user.name} accepted. You can talk on Campfire.`
+          : `${req.user.name} declined for now.`,
+      type: 'system',
+      meta: {
+        kind: action === 'accept' ? 'friend-accepted' : 'friend-declined',
+        friendId: req.user._id,
+        requestId: request._id,
+      },
+    });
+    res.json({ message: action === 'accept' ? 'You are now friends' : 'Request declined', request });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

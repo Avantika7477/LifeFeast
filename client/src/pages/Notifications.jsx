@@ -50,6 +50,14 @@ export default function Notifications() {
       navigate('/missions');
       return;
     }
+    if (n.meta?.kind === 'friend-request' || n.meta?.kind === 'friend-declined') {
+      navigate('/leaderboard?tab=friends');
+      return;
+    }
+    if (n.meta?.kind === 'friend-accepted' && n.meta?.friendId) {
+      navigate(`/campfire?friend=${n.meta.friendId}`);
+      return;
+    }
     if (n.meta?.friendId) {
       navigate(`/campfire?friend=${n.meta.friendId}`);
     }
@@ -82,8 +90,8 @@ export default function Notifications() {
         <div>
           <h2>Signals</h2>
           <p>
-            Reminders, missed habits, wins, and friend challenges. A red dot means something is unread.
-            Tap a task signal to open that quest, or a challenge signal to open Missions.
+            Reminders, missed habits, wins, friend requests, and challenges. A red dot means something
+            is unread. Tap a request to open Heroes, or a challenge to open Missions.
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -121,6 +129,8 @@ export default function Notifications() {
                   {new Date(n.createdAt).toLocaleString()}
                   {n.meta?.taskId ? ' · Open task' : ''}
                   {n.meta?.kind === 'challenge' || n.meta?.challengeId ? ' · Open challenge' : ''}
+                  {n.meta?.kind === 'friend-request' ? ' · Open request' : ''}
+                  {n.meta?.kind === 'friend-accepted' ? ' · Open Campfire' : ''}
                 </div>
               </div>
               <button

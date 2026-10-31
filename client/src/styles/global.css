@@ -1530,6 +1530,34 @@ textarea.form-control {
     height: auto;
     text-align: center;
   }
+
+  .hero-search .btn,
+  .campfire-compose .btn {
+    min-height: 36px;
+    padding: 0.4rem 0.7rem;
+  }
+
+  .hero-list .hero-row {
+    grid-template-columns: 28px 32px minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    padding: 0.7rem 0.75rem;
+  }
+
+  .hero-search-results .hero-row {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    padding: 0.7rem 0.75rem;
+  }
+
+  .hero-row .avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.78rem;
+  }
+
+  .hero-actions .btn {
+    min-height: 34px;
+    padding: 0.35rem 0.65rem;
+  }
 }
 
 /* Charts / tables */
@@ -2037,9 +2065,17 @@ table.data-table th {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.95rem;
+  min-width: 0;
 }
 
-.campfire-friend-copy span {
+.campfire-friend-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.campfire-friend-copy > span {
   display: block;
   color: var(--text-muted);
   font-size: 0.8rem;
@@ -2068,6 +2104,9 @@ table.data-table th {
 
 .campfire-thread-head strong {
   display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .campfire-thread-head span {
@@ -2092,7 +2131,8 @@ table.data-table th {
   max-width: min(82%, 420px);
   padding: 0.65rem 0.85rem;
   border-radius: 14px;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  word-break: normal;
   line-height: 1.4;
 }
 
@@ -2117,22 +2157,22 @@ table.data-table th {
   padding: 0.2rem 0.15rem;
 }
 
-.campfire-compose,
-.campfire-challenge {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
 .campfire-compose {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.45rem;
   padding-top: 0.5rem;
   position: relative;
 }
 
 .campfire-compose .form-control {
   flex: 1;
-  min-width: 120px;
+  min-width: 0;
+}
+
+.campfire-compose .btn {
+  flex-shrink: 0;
 }
 
 .emoji-picker {
@@ -2175,7 +2215,110 @@ table.data-table th {
   background: var(--bg-elevated);
 }
 
+.hero-search {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.hero-search .form-control {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-search .btn {
+  flex-shrink: 0;
+}
+
+.hero-search-results,
+.hero-list {
+  padding: 0.25rem 0;
+  margin-bottom: 1rem;
+}
+
+.hero-list {
+  margin-bottom: 0;
+}
+
+.hero-row {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-list .hero-row:last-child,
+.hero-search-results .hero-row:last-child {
+  border-bottom: 0;
+}
+
+.hero-row.is-me {
+  background: rgba(79, 70, 229, 0.12);
+}
+
+.hero-row .hero-rank {
+  width: 36px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--primary-soft);
+  flex-shrink: 0;
+}
+
+.hero-list .hero-row {
+  grid-template-columns: 36px 36px minmax(0, 1fr) auto;
+}
+
+.hero-row-copy {
+  min-width: 0;
+}
+
+.hero-row-copy strong {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.7rem;
+  margin-top: 0.15rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.hero-row-meta span {
+  white-space: nowrap;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+
+.hero-actions .btn,
+.hero-row > .btn,
+.hero-row > .pill {
+  flex-shrink: 0;
+}
+
 .campfire-challenge {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
   margin-top: 0.75rem;
   padding-top: 0.75rem;
   border-top: 1px solid var(--border);
@@ -2185,9 +2328,9 @@ table.data-table th {
   width: 100%;
 }
 
-.campfire-challenge .form-control {
-  flex: 1;
-  min-width: 140px;
+.campfire-challenge .form-control,
+.campfire-challenge .btn {
+  width: 100%;
 }
 
 @media (max-width: 800px) {
@@ -2212,5 +2355,9 @@ table.data-table th {
   .campfire-friends {
     max-height: none;
     min-height: 60vh;
+  }
+
+  .campfire-compose .btn {
+    min-width: 68px;
   }
 }
