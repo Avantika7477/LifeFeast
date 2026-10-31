@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { habitAPI, taskAPI } from '../../api';
 import { formatDue } from '../../utils/constants';
-import { shoutNotification, requestNotify } from '../../utils/notify';
+import { shoutNotification, requestNotify, subscribePush } from '../../utils/notify';
 import { playSiren, unlockAudio } from '../../utils/siren';
 
 const INTERVAL_MS = 5 * 60 * 1000;
@@ -66,6 +66,7 @@ export default function TaskAlarm() {
   const arm = useCallback(async () => {
     await unlockAudio();
     await requestNotify();
+    await subscribePush();
     localStorage.setItem(AUDIO_KEY, '1');
     setArmed(true);
   }, []);

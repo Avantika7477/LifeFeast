@@ -1,4 +1,4 @@
-const CACHE = 'lifequest-shell-v1';
+const CACHE = 'lifequest-shell-v2';
 const PRECACHE = [
   '/',
   '/index.html',
@@ -24,6 +24,27 @@ self.addEventListener('activate', (event) => {
       .keys()
       .then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
       .then(() => self.clients.claim()),
+  );
+});
+
+self.addEventListener('push', (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = { body: event.data?.text() };
+  }
+  event.waitUntil(
+    self.registration.showNotification(data.title || 'LifeQuest', {
+      body: data.body || 'You still have unfinished work.',
+      icon: '/pwa-192x192.png',
+      badge: '/pwa-192x192.png',
+      tag: 'lifequest-unfinished',
+      renotify: true,
+      requireInteraction: true,
+      vibrate: [220, 80, 220, 80, 420],
+      data: { url: data.url || '/dashboard' },
+    }),
   );
 });
 

@@ -6,10 +6,16 @@ dist/
 dist-ssr/
 .vite/
 
-# Env (keep .env.example tracked)
+# Env and secrets (keep .env.example tracked)
 .env
+.env.*
+!.env.example
 .env.local
 .env.*.local
+*.pem
+*.p12
+credentials.json
+secrets.json
 
 # Logs
 logs/

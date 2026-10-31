@@ -107,6 +107,8 @@ MONGODB_URI=mongodb://127.0.0.1:27017/lifequest
 JWT_SECRET=change_this_to_a_long_random_secret
 JWT_EXPIRE=7d
 CLIENT_URL=http://localhost:5173
+VAPID_PUBLIC_KEY=
+VAPID_PRIVATE_KEY=
 ```
 
 **client/.env.example**
@@ -143,6 +145,8 @@ MONGODB_URI=mongodb+srv://USER:PASS@cluster.../lifequest
 JWT_SECRET=<long random string>
 JWT_EXPIRE=7d
 CLIENT_URL=https://your-service.onrender.com
+VAPID_PUBLIC_KEY=<from npx web-push generate-vapid-keys>
+VAPID_PRIVATE_KEY=<same generate command>
 ```
 
 Render also sets `RENDER_EXTERNAL_URL`; CORS uses that automatically.
@@ -166,6 +170,8 @@ MONGODB_URI=mongodb+srv://USER:PASS@cluster.../lifequest
 JWT_SECRET=<long random string>
 JWT_EXPIRE=7d
 CLIENT_URL=https://your-project.vercel.app
+VAPID_PUBLIC_KEY=<from npx web-push generate-vapid-keys>
+VAPID_PRIVATE_KEY=<same generate command>
 ```
 
 Leave `VITE_API_URL` unset so the UI calls same-origin `/api`.

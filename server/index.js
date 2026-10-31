@@ -18,6 +18,7 @@ import adminRoutes from './routes/adminRoutes.js';
 dotenv.config();
 await connectDB();
 
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const clientDist = path.resolve(__dirname, '../client/dist');
 const clientIndex = path.join(clientDist, 'index.html');
@@ -96,4 +97,8 @@ if (!process.env.VERCEL) {
     console.log(`LifeQuest API running on port ${PORT}`);
     if (hasClient) console.log(`Serving client from ${clientDist}`);
   });
+  const { sendPushReminders } = await import('./utils/pushService.js');
+  setInterval(() => {
+    sendPushReminders().catch((error) => console.warn(`Push reminders: ${error.message}`));
+  }, 5 * 60 * 1000);
 }

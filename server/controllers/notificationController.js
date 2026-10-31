@@ -1,8 +1,10 @@
 import Notification from '../models/Notification.js';
 import Habit from '../models/Habit.js';
 import Task from '../models/Task.js';
+import PushSubscription from '../models/PushSubscription.js';
 import { MOTIVATIONAL_QUOTES, todayStr } from '../utils/helpers.js';
 import { formatDueLabel } from '../utils/taskDue.js';
+import { sendPushReminders } from '../utils/pushService.js';
 
 export const getUnreadCount = async (req, res) => {
   try {
@@ -108,6 +110,56 @@ export const generateDaily = async (req, res) => {
     }
 
     res.json({ message: 'Daily notifications generated', quote });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getVapidKey = (_req, res) => {
+  const key = process.env.VAPID_PUBLIC_KEY || '';
+  res.json({ publicKey: key });
+};
+
+export const savePushSubscription = async (req, res) => {
+  try {
+    const { endpoint, keys } = req.body || {};
+    if (!endpoint || !keys?.p256dh || !keys?.auth) {
+      return res.status(400).json({ message: 'Invalid push subscription' });
+    }
+    const sub = await PushSubscription.findOneAndUpdate(
+      { endpoint },
+      { user: req.user._id, endpoint, keys },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+    res.status(201).json({ id: sub._id });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const removePushSubscription = async (req, res) => {
+  try {
+    const endpoint = req.body?.endpoint;
+    if (endpoint) {
+      await PushSubscription.deleteOne({ user: req.user._id, endpoint });
+    } else {
+      await PushSubscription.deleteMany({ user: req.user._id });
+    }
+    res.json({ message: 'Unsubscribed' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const runPushReminders = async (req, res) => {
+  const secret = process.env.CRON_SECRET;
+  const provided = req.get('x-cron-secret') || req.get('authorization')?.replace(/^Bearer\s+/i, '');
+  if (secret && provided !== secret) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+  try {
+    const result = await sendPushReminders();
+    res.json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
