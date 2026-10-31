@@ -117,7 +117,10 @@ const es = {
     installed: 'LifeQuest está instalado en este dispositivo. Ábrelo desde la pantalla de inicio o la lista de apps.',
     installHelp:
       'Pon LifeQuest en este ordenador o teléfono como una app normal. Se abre en su propia ventana, funciona sin conexión después de la primera carga, y lo lanzas desde el escritorio o la pantalla de inicio.',
-    iosHelp: 'En iPhone o iPad: toca Compartir y luego Añadir a pantalla de inicio.',
+    iosHelp:
+      'En iPhone o iPad: abre este sitio en Safari, toca Compartir y luego Añadir a pantalla de inicio.',
+    iosAlerts:
+      'Cuando esté en la pantalla de inicio, ábrelo desde ese icono y permite notificaciones si quieres recordatorios. Las alertas funcionan mejor desde la app instalada, no desde una pestaña de Safari.',
     computerHelp:
       'En un ordenador, abre Chrome o Edge y usa el icono de instalar en la barra de direcciones, o el menú → Instalar LifeQuest.',
     installFrom: 'Instalar desde este sitio:',
@@ -449,7 +452,7 @@ const es = {
   install: {
     region: 'Instalar LifeQuest',
     title: 'Instalar LifeQuest',
-    ios: 'En iPhone, toca Compartir y luego Añadir a pantalla de inicio.',
+    ios: 'En iPhone: Safari → Compartir → Añadir a pantalla de inicio. Ábrelo desde ese icono para mejores alertas.',
     add: 'Añádelo a la pantalla de inicio y úsalo como una app.',
     install: 'Instalar',
     dismiss: 'Cerrar aviso de instalación',

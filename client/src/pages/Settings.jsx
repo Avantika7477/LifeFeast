@@ -111,7 +111,10 @@ export default function Settings() {
             <>
               <p className="install-help">{t('settings.installHelp')}</p>
               {showIosHelp && !canInstall ? (
-                <p className="install-help">{t('settings.iosHelp')}</p>
+                <>
+                  <p className="install-help">{t('settings.iosHelp')}</p>
+                  <p className="install-help">{t('settings.iosAlerts')}</p>
+                </>
               ) : (
                 <p className="install-help">{t('settings.computerHelp')}</p>
               )}
@@ -168,6 +171,8 @@ export default function Settings() {
               <input
                 className="form-control"
                 type="password"
+                name="current-password"
+                autoComplete="current-password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
@@ -178,6 +183,8 @@ export default function Settings() {
               <input
                 className="form-control"
                 type="password"
+                name="new-password"
+                autoComplete="new-password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required

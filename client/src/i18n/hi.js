@@ -117,7 +117,9 @@ const hi = {
     installed: 'LifeQuest इस डिवाइस पर इंस्टॉल है. होम स्क्रीन या ऐप सूची से खोलें.',
     installHelp:
       'LifeQuest को इस कंप्यूटर या फ़ोन पर सामान्य ऐप की तरह रखें. यह अपनी विंडो में खुलता है, पहली लोड के बाद ऑफ़लाइन चलता है, और डेस्कटॉप या होम स्क्रीन से चलता है.',
-    iosHelp: 'iPhone या iPad पर: Share दबाएँ, फिर Add to Home Screen.',
+    iosHelp: 'iPhone या iPad पर: Safari में खोलें, Share दबाएँ, फिर Add to Home Screen.',
+    iosAlerts:
+      'होम स्क्रीन पर आने के बाद उस आइकन से LifeQuest खोलें और रिमाइंडर के लिए नोटिफ़िकेशन अनुमति दें. अलर्ट Safari टैब से बेहतर इंस्टॉल ऐप में काम करते हैं.',
     computerHelp:
       'कंप्यूटर पर Chrome या Edge खोलें, एड्रेस बार का इंस्टॉल आइकन या ब्राउज़र मेनू → Install LifeQuest इस्तेमाल करें.',
     installFrom: 'इस साइट से इंस्टॉल करें:',
@@ -449,7 +451,7 @@ const hi = {
   install: {
     region: 'LifeQuest इंस्टॉल करें',
     title: 'LifeQuest इंस्टॉल करें',
-    ios: 'iPhone पर Share दबाएँ, फिर Add to Home Screen.',
+    ios: 'iPhone: Safari → Share → Add to Home Screen. बेहतरीन अलर्ट के लिए उस आइकन से खोलें.',
     add: 'होम स्क्रीन पर जोड़ें और ऐप की तरह खेलें.',
     install: 'इंस्टॉल',
     dismiss: 'इंस्टॉल संदेश बंद करें',

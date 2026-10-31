@@ -49,15 +49,42 @@ export default function Register() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>{t('common.name')}</label>
-            <input className="form-control" value={name} onChange={(e) => setName(e.target.value)} required placeholder={t('auth.heroName')} />
+            <input
+              className="form-control"
+              name="name"
+              autoComplete="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              placeholder={t('auth.heroName')}
+            />
           </div>
           <div className="form-group">
             <label>{t('common.email')}</label>
-            <input className="form-control" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input
+              className="form-control"
+              type="email"
+              name="email"
+              autoComplete="email"
+              inputMode="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
           <div className="form-group">
             <label>{t('common.password')}</label>
-            <input className="form-control" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} placeholder={t('auth.minChars')} />
+            <input
+              className="form-control"
+              type="password"
+              name="password"
+              autoComplete="new-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              placeholder={t('auth.minChars')}
+            />
           </div>
           <button className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
             {loading ? t('auth.forging') : t('auth.startQuest')}

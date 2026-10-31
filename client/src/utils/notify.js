@@ -1,5 +1,13 @@
 import { notificationAPI } from '../api';
 
+export function supportsPush() {
+  return (
+    typeof window !== 'undefined' &&
+    'serviceWorker' in navigator &&
+    'PushManager' in window
+  );
+}
+
 export async function requestNotify() {
   if (typeof window === 'undefined' || !('Notification' in window)) return false;
   if (Notification.permission === 'granted') return true;
@@ -15,8 +23,9 @@ function urlBase64ToUint8Array(base64String) {
   return Uint8Array.from([...raw].map((char) => char.charCodeAt(0)));
 }
 
+/** Subscribe for web push. No-ops safely when PushManager is missing (common on iOS Safari tabs). */
 export async function subscribePush() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return false;
+  if (!supportsPush()) return false;
   const allowed = await requestNotify();
   if (!allowed) return false;
   try {
@@ -48,9 +57,11 @@ export async function shoutNotification({ title, body, url = '/dashboard' }) {
     tag: 'lifequest-unfinished',
     renotify: true,
     requireInteraction: true,
-    vibrate: [220, 80, 220, 80, 420],
     data: { url },
   };
+  if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+    payload.vibrate = [220, 80, 220, 80, 420];
+  }
 
   try {
     const reg = await navigator.serviceWorker?.ready;

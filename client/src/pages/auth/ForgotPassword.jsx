@@ -75,7 +75,16 @@ export default function ForgotPassword() {
           <form onSubmit={requestReset}>
             <div className="form-group">
               <label>{t('common.email')}</label>
-              <input className="form-control" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <input
+                className="form-control"
+                type="email"
+                name="email"
+                autoComplete="email"
+                inputMode="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
             <button className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
               {loading ? t('auth.sending') : t('auth.sendReset')}
@@ -87,11 +96,27 @@ export default function ForgotPassword() {
           <form onSubmit={doReset}>
             <div className="form-group">
               <label>{t('auth.resetToken')}</label>
-              <input className="form-control" value={token} onChange={(e) => setToken(e.target.value)} required />
+              <input
+                className="form-control"
+                name="token"
+                autoComplete="one-time-code"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+                required
+              />
             </div>
             <div className="form-group">
               <label>{t('auth.newPassword')}</label>
-              <input className="form-control" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+              <input
+                className="form-control"
+                type="password"
+                name="new-password"
+                autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+              />
             </div>
             <button className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
               {loading ? t('auth.resetting') : t('auth.resetPassword')}
