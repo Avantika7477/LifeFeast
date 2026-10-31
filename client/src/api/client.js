@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { tStored } from '../i18n';
 
 // In Vite dev, always use the /api proxy so we never hit macOS AirPlay on :5000
 // or a stale tab talking to the wrong port.
@@ -15,7 +16,7 @@ export function apiErrorMessage(error, fallback) {
   const fromApi = error.response?.data?.message;
   if (fromApi) return fromApi;
   if (!error.response) {
-    return 'Cannot reach the LifeQuest API. Start the server and refresh.';
+    return tStored('api.unreachable');
   }
   return fallback;
 }

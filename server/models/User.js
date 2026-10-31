@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
     badges: [badgeSchema],
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     theme: { type: String, enum: ['dark', 'light'], default: 'dark' },
+    language: { type: String, default: 'en', trim: true },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     isActive: { type: Boolean, default: true },

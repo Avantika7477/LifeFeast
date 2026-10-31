@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { notificationAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { useSignals } from '../context/SignalsContext';
 import Loader from '../components/common/Loader';
 
@@ -15,6 +16,7 @@ const typeIcon = {
 
 export default function Notifications() {
   const { showToast } = useAuth();
+  const { t, locale } = useLanguage();
   const { refreshUnread } = useSignals();
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -58,6 +60,10 @@ export default function Notifications() {
       navigate(`/campfire?friend=${n.meta.friendId}`);
       return;
     }
+    if (n.meta?.kind === 'feedback') {
+      navigate('/admin?tab=feedback');
+      return;
+    }
     if (n.meta?.friendId) {
       navigate(`/campfire?friend=${n.meta.friendId}`);
     }
@@ -67,12 +73,12 @@ export default function Notifications() {
     await notificationAPI.markAllRead();
     setItems((prev) => prev.map((n) => ({ ...n, read: true })));
     refreshUnread();
-    showToast('All marked as read');
+    showToast(t('signals.marked'));
   };
 
   const generate = async () => {
     await notificationAPI.generateDaily();
-    showToast('Daily notifications generated');
+    showToast(t('signals.generated'));
     load();
   };
 
@@ -88,18 +94,15 @@ export default function Notifications() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Signals</h2>
-          <p>
-            Reminders, missed habits, wins, friend requests, and challenges. A red dot means something
-            is unread. Tap a request to open Heroes, or a challenge to open Missions.
-          </p>
+          <h2>{t('signals.title')}</h2>
+          <p>{t('signals.lead')}</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <button className="btn btn-ghost btn-sm" onClick={generate}>
-            Generate Daily
+            {t('signals.generate')}
           </button>
           <button className="btn btn-primary btn-sm" onClick={markAll}>
-            Mark All Read
+            {t('signals.markAll')}
           </button>
         </div>
       </div>
@@ -108,29 +111,36 @@ export default function Notifications() {
         {items.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">🔔</div>
-            <h3>Quiet for now</h3>
-            <p>Your next win will ring here.</p>
+            <h3>{t('signals.emptyTitle')}</h3>
+            <p>{t('signals.empty')}</p>
           </div>
         ) : (
           items.map((n) => (
             <div
               key={n._id}
               className={`notif-item ${!n.read ? 'unread' : ''} ${
-                n.meta?.taskId || n.meta?.challengeId || n.meta?.friendId ? 'has-task' : ''
+                n.meta?.taskId || n.meta?.challengeId || n.meta?.friendId || n.meta?.kind === 'feedback'
+                  ? 'has-task'
+                  : ''
               }`}
               onClick={() => openSignal(n)}
-              role={n.meta?.taskId || n.meta?.challengeId || n.meta?.friendId ? 'link' : 'button'}
+              role={
+                n.meta?.taskId || n.meta?.challengeId || n.meta?.friendId || n.meta?.kind === 'feedback'
+                  ? 'link'
+                  : 'button'
+              }
             >
               <span style={{ fontSize: '1.5rem' }}>{typeIcon[n.type] || 'ℹ️'}</span>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600 }}>{n.title}</div>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{n.message}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: 4 }}>
-                  {new Date(n.createdAt).toLocaleString()}
-                  {n.meta?.taskId ? ' · Open task' : ''}
-                  {n.meta?.kind === 'challenge' || n.meta?.challengeId ? ' · Open challenge' : ''}
-                  {n.meta?.kind === 'friend-request' ? ' · Open request' : ''}
-                  {n.meta?.kind === 'friend-accepted' ? ' · Open Campfire' : ''}
+                  {new Date(n.createdAt).toLocaleString(locale)}
+                  {n.meta?.taskId ? ` · ${t('signals.openTask')}` : ''}
+                  {n.meta?.kind === 'challenge' || n.meta?.challengeId ? ` · ${t('signals.openChallenge')}` : ''}
+                  {n.meta?.kind === 'friend-request' ? ` · ${t('signals.openRequest')}` : ''}
+                  {n.meta?.kind === 'friend-accepted' ? ` · ${t('signals.openCampfire')}` : ''}
+                  {n.meta?.kind === 'feedback' ? ` · ${t('signals.openFeedback')}` : ''}
                 </div>
               </div>
               <button

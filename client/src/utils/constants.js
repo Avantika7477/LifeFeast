@@ -44,9 +44,10 @@ export const combineDueAt = (dateStr, timeStr) => {
   return next.toISOString();
 };
 
-export const formatDue = (task) => {
+export const formatDue = (task, locale) => {
+  const tag = locale || undefined;
   if (task?.dueAt) {
-    return new Date(task.dueAt).toLocaleString(undefined, {
+    return new Date(task.dueAt).toLocaleString(tag, {
       month: 'short',
       day: 'numeric',
       hour: 'numeric',
@@ -54,12 +55,12 @@ export const formatDue = (task) => {
     });
   }
   if (task?.dueTime) return task.dueTime;
-  if (task?.deadline) return new Date(task.deadline).toLocaleDateString();
+  if (task?.deadline) return new Date(task.deadline).toLocaleDateString(tag);
   return '';
 };
 
-export const displayDate = (d = new Date()) =>
-  new Date(d).toLocaleDateString('en-US', {
+export const displayDate = (d = new Date(), locale = 'en-US') =>
+  new Date(d).toLocaleDateString(locale, {
     weekday: 'long',
     year: 'numeric',
     month: 'long',

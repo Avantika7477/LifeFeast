@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { authAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
 import { usePwaInstall } from '../hooks/usePwaInstall';
 import { CREATOR_NAME, CREATOR_URL, INSTALL_URL } from '../utils/constants';
 import Modal from '../components/common/Modal';
+import LanguageSelect from '../components/common/LanguageSelect';
 
 export default function Settings() {
   const { user, showToast, updateUserLocal, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { t } = useLanguage();
   const { installed, canInstall, showIosHelp, install } = usePwaInstall();
   const navigate = useNavigate();
 
@@ -23,9 +26,9 @@ export default function Settings() {
     try {
       const { data } = await authAPI.updateProfile({ name });
       updateUserLocal(data.user);
-      showToast('Profile updated');
+      showToast(t('settings.profileUpdated'));
     } catch (err) {
-      showToast(err.response?.data?.message || 'Failed', 'error');
+      showToast(err.response?.data?.message || t('common.failed'), 'error');
     }
   };
 
@@ -33,11 +36,11 @@ export default function Settings() {
     e.preventDefault();
     try {
       await authAPI.changePassword({ currentPassword, newPassword });
-      showToast('Password changed');
+      showToast(t('settings.passwordChanged'));
       setCurrentPassword('');
       setNewPassword('');
     } catch (err) {
-      showToast(err.response?.data?.message || 'Failed', 'error');
+      showToast(err.response?.data?.message || t('common.failed'), 'error');
     }
   };
 
@@ -51,9 +54,9 @@ export default function Settings() {
       a.download = `lifequest-export-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      showToast('Data exported');
-    } catch (err) {
-      showToast('Export failed', 'error');
+      showToast(t('settings.exported'));
+    } catch {
+      showToast(t('settings.exportFailed'), 'error');
     }
   };
 
@@ -63,7 +66,7 @@ export default function Settings() {
       logout();
       navigate('/register');
     } catch (err) {
-      showToast(err.response?.data?.message || 'Failed', 'error');
+      showToast(err.response?.data?.message || t('common.failed'), 'error');
     }
   };
 
@@ -71,60 +74,60 @@ export default function Settings() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Settings</h2>
-          <p>Tune your hero and your world.</p>
+          <h2>{t('settings.title')}</h2>
+          <p>{t('settings.lead')}</p>
         </div>
       </div>
 
       <div className="charts-grid">
         <div className="glass copy-card">
-          <h3>Profile</h3>
+          <h3>{t('settings.profile')}</h3>
           <form onSubmit={saveProfile}>
             <div className="form-group">
-              <label>Name</label>
+              <label>{t('common.name')}</label>
               <input className="form-control" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
             <div className="form-group">
-              <label>Email</label>
+              <label>{t('common.email')}</label>
               <input className="form-control" value={user?.email || ''} disabled />
             </div>
             <button className="btn btn-primary" type="submit">
-              Save Profile
+              {t('settings.saveProfile')}
             </button>
           </form>
         </div>
 
         <div className="glass copy-card">
-          <h3>Install app</h3>
+          <h3>{t('settings.language')}</h3>
+          <p className="install-help">{t('settings.languageHelp')}</p>
+          <LanguageSelect id="settings-language" />
+        </div>
+
+        <div className="glass copy-card">
+          <h3>{t('settings.install')}</h3>
           {installed ? (
-            <p className="install-help">LifeQuest is installed on this device. Open it from your home screen or app list.</p>
+            <p className="install-help">{t('settings.installed')}</p>
           ) : (
             <>
-              <p className="install-help">
-                Put LifeQuest on this computer or phone like a normal app. It opens in its own window, works offline after
-                the first load, and you launch it from your desktop or home screen.
-              </p>
+              <p className="install-help">{t('settings.installHelp')}</p>
               {showIosHelp && !canInstall ? (
-                <p className="install-help">On iPhone or iPad: tap Share, then Add to Home Screen.</p>
+                <p className="install-help">{t('settings.iosHelp')}</p>
               ) : (
-                <p className="install-help">
-                  On a computer, open Chrome or Edge, then use the install icon in the address bar, or the browser menu
-                  → Install LifeQuest.
-                </p>
+                <p className="install-help">{t('settings.computerHelp')}</p>
               )}
               <p className="install-help">
-                Install from this site:{' '}
+                {t('settings.installFrom')}{' '}
                 <a href={INSTALL_URL} target="_blank" rel="noreferrer">
                   {INSTALL_URL.replace('https://', '')}
                 </a>
               </p>
               {canInstall ? (
                 <button className="btn btn-primary" type="button" onClick={install}>
-                  Install LifeQuest
+                  {t('settings.installLifeQuest')}
                 </button>
               ) : (
                 <a className="btn btn-primary" href={INSTALL_URL} target="_blank" rel="noreferrer">
-                  Open install page
+                  {t('settings.openInstall')}
                 </a>
               )}
             </>
@@ -132,40 +135,36 @@ export default function Settings() {
         </div>
 
         <div className="glass copy-card">
-          <h3>About</h3>
+          <h3>{t('settings.about')}</h3>
+          <p className="install-help">{t('settings.about1')}</p>
+          <p className="install-help">{t('settings.about2')}</p>
           <p className="install-help">
-            LifeQuest exists because good days are easy to skip and hard to see. Habits, tasks, and mood get lost in
-            notes and reminders that never feel like progress.
-          </p>
-          <p className="install-help">
-            This app turns that work into a quest: train daily, finish tasks after their due time, keep a streak, earn
-            XP, and write the day down. The point is not to play a game instead of living — it is to make showing up
-            visible, so a small day still counts.
-          </p>
-          <p className="install-help">
-            Built by <strong>{CREATOR_NAME}</strong>. Want to know more about me?{' '}
+            {t('settings.builtBy')} <strong>{CREATOR_NAME}</strong>. {t('settings.knowMore')}{' '}
             <a href={CREATOR_URL} target="_blank" rel="noreferrer">
-              Visit my portfolio
+              {t('settings.visitPortfolio')}
             </a>
             .
+          </p>
+          <p className="install-help">
+            {t('settings.feedbackHint')} <Link to="/feedback">{t('settings.feedbackLink')}</Link>. {t('settings.privateNotes')}
           </p>
         </div>
 
         <div className="glass copy-card">
-          <h3>Appearance</h3>
+          <h3>{t('settings.appearance')}</h3>
           <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
-            Current theme: <strong>{theme}</strong>
+            {t('settings.currentTheme')} <strong>{theme === 'dark' ? t('settings.dark') : t('settings.light')}</strong>
           </p>
           <button className="btn btn-ghost" onClick={toggleTheme}>
-            Switch to {theme === 'dark' ? 'Light' : 'Dark'} Mode
+            {t('settings.switchTo', { mode: theme === 'dark' ? t('settings.light') : t('settings.dark') })}
           </button>
         </div>
 
         <div className="glass copy-card">
-          <h3>Change Password</h3>
+          <h3>{t('settings.password')}</h3>
           <form onSubmit={changePw}>
             <div className="form-group">
-              <label>Current Password</label>
+              <label>{t('settings.currentPassword')}</label>
               <input
                 className="form-control"
                 type="password"
@@ -175,7 +174,7 @@ export default function Settings() {
               />
             </div>
             <div className="form-group">
-              <label>New Password</label>
+              <label>{t('auth.newPassword')}</label>
               <input
                 className="form-control"
                 type="password"
@@ -186,28 +185,28 @@ export default function Settings() {
               />
             </div>
             <button className="btn btn-primary" type="submit">
-              Update Password
+              {t('settings.updatePassword')}
             </button>
           </form>
         </div>
 
         <div className="glass copy-card">
-          <h3>Data & Account</h3>
+          <h3>{t('settings.data')}</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'flex-start' }}>
             <button className="btn btn-ghost" onClick={exportData}>
-              Export Data (JSON)
+              {t('settings.export')}
             </button>
             <button className="btn btn-danger" onClick={() => setDeleteOpen(true)}>
-              Delete Account
+              {t('settings.deleteAccount')}
             </button>
           </div>
         </div>
 
         <div className="glass copy-card">
-          <h3>Badges Unlocked</h3>
+          <h3>{t('settings.badges')}</h3>
           <div className="badge-grid">
             {(user?.badges || []).length === 0 ? (
-              <p style={{ color: 'var(--text-muted)' }}>No badges yet</p>
+              <p style={{ color: 'var(--text-muted)' }}>{t('settings.noBadges')}</p>
             ) : (
               user.badges.map((b) => (
                 <div key={b.id} className="badge-item glass">
@@ -220,16 +219,14 @@ export default function Settings() {
         </div>
       </div>
 
-      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete Account?">
-        <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
-          This permanently deletes your account and all data. This cannot be undone.
-        </p>
+      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title={t('settings.deleteTitle')}>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>{t('settings.deleteWarn')}</p>
         <div className="modal-actions">
           <button className="btn btn-ghost" onClick={() => setDeleteOpen(false)}>
-            Cancel
+            {t('common.cancel')}
           </button>
           <button className="btn btn-danger" onClick={deleteAccount}>
-            Delete Forever
+            {t('settings.deleteForever')}
           </button>
         </div>
       </Modal>

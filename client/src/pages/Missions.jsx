@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { missionAPI, socialAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import Loader from '../components/common/Loader';
 import LevelUpOverlay from '../components/common/LevelUpOverlay';
 
 export default function Missions() {
   const { user, showToast, updateUserLocal } = useAuth();
+  const { t } = useLanguage();
   const [missions, setMissions] = useState([]);
   const [challenges, setChallenges] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ export default function Missions() {
       setMissions((prev) => prev.map((m) => (m._id === id ? data.mission : m)));
       if (data.leveledUp) setLevelUp(data.user.level);
     } catch (e) {
-      showToast(e.response?.data?.message || 'Failed', 'error');
+      showToast(e.response?.data?.message || t('common.failed'), 'error');
     }
   };
 
@@ -38,9 +40,9 @@ export default function Missions() {
     try {
       const { data } = await socialAPI.respondChallenge(id, action);
       setChallenges((prev) => prev.map((c) => (c._id === id ? data : c)));
-      showToast(action === 'accept' ? 'Challenge accepted' : 'Challenge declined');
+      showToast(action === 'accept' ? t('missions.accepted') : t('missions.declined'));
     } catch (e) {
-      showToast(e.response?.data?.message || 'Failed', 'error');
+      showToast(e.response?.data?.message || t('common.failed'), 'error');
     }
   };
 
@@ -52,7 +54,7 @@ export default function Missions() {
       setChallenges((prev) => prev.map((c) => (c._id === id ? data.challenge : c)));
       if (data.leveledUp) setLevelUp(data.user.level);
     } catch (e) {
-      showToast(e.response?.data?.message || 'Failed', 'error');
+      showToast(e.response?.data?.message || t('common.failed'), 'error');
     }
   };
 
@@ -62,16 +64,16 @@ export default function Missions() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Today&apos;s Missions</h2>
-          <p>Bonus challenges for today. Finish one for extra gold on top of your regular habits.</p>
+          <h2>{t('missions.title')}</h2>
+          <p>{t('missions.lead')}</p>
         </div>
       </div>
 
       {missions.length === 0 ? (
         <div className="empty-state glass">
           <div className="empty-icon">⚔️</div>
-          <h3>No missions posted</h3>
-          <p>Come back tomorrow. New challenges spawn with the dawn.</p>
+          <h3>{t('missions.emptyTitle')}</h3>
+          <p>{t('missions.empty')}</p>
         </div>
       ) : (
       <div className="cards-grid">
@@ -91,10 +93,10 @@ export default function Missions() {
             </div>
             <div style={{ marginTop: '1rem' }}>
               {m.completed ? (
-                <span className="pill pill-green">✓ Completed</span>
+                <span className="pill pill-green">✓ {t('missions.completed')}</span>
               ) : (
                 <button className="btn btn-accent btn-sm" onClick={() => complete(m._id)}>
-                  Claim the reward
+                  {t('missions.claim')}
                 </button>
               )}
             </div>
@@ -105,28 +107,26 @@ export default function Missions() {
 
       <div className="page-header" style={{ marginTop: '1.5rem' }}>
         <div>
-          <h2>Friend challenges</h2>
-          <p>
-            Challenges friends send from Campfire. Accept one, finish it, and you both earn a reward.
-          </p>
+          <h2>{t('missions.friendsTitle')}</h2>
+          <p>{t('missions.friendsLead')}</p>
         </div>
         <Link to="/campfire" className="btn btn-ghost btn-sm">
-          Open Campfire
+          {t('missions.openCampfire')}
         </Link>
       </div>
 
       {challenges.length === 0 ? (
         <div className="empty-state glass">
           <div className="empty-icon">🔥</div>
-          <h3>No friend challenges yet</h3>
-          <p>Sit at the Campfire, pick a friend, and send them a dare.</p>
+          <h3>{t('missions.friendsEmptyTitle')}</h3>
+          <p>{t('missions.friendsEmpty')}</p>
         </div>
       ) : (
         <div className="cards-grid">
           {challenges.map((c, i) => {
             const toMe = String(c.to?._id || c.to) === String(user?.id);
-            const fromName = c.from?.name || 'A friend';
-            const toName = c.to?.name || 'a friend';
+            const fromName = c.from?.name || t('missions.aFriend');
+            const toName = c.to?.name || t('missions.aFriend');
             return (
               <motion.div
                 key={c._id}
@@ -137,7 +137,7 @@ export default function Missions() {
               >
                 <h4>{c.title}</h4>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                  {c.description || (toMe ? `From ${fromName}` : `Sent to ${toName}`)}
+                  {c.description || (toMe ? t('missions.fromName', { name: fromName }) : t('missions.sentTo', { name: toName }))}
                 </p>
                 <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
                   <span className="pill pill-amber">🪙 {c.coinReward}</span>
@@ -148,20 +148,20 @@ export default function Missions() {
                   {toMe && c.status === 'pending' && (
                     <>
                       <button className="btn btn-accent btn-sm" onClick={() => respond(c._id, 'accept')}>
-                        Accept
+                        {t('heroes.accept')}
                       </button>
                       <button className="btn btn-ghost btn-sm" onClick={() => respond(c._id, 'decline')}>
-                        Decline
+                        {t('heroes.decline')}
                       </button>
                     </>
                   )}
                   {toMe && c.status === 'accepted' && (
                     <button className="btn btn-primary btn-sm" onClick={() => finishChallenge(c._id)}>
-                      Mark complete
+                      {t('habits.markComplete')}
                     </button>
                   )}
-                  {c.status === 'completed' && <span className="pill pill-green">✓ Completed</span>}
-                  {!toMe && c.status === 'pending' && <span className="pill">Waiting on {toName}</span>}
+                  {c.status === 'completed' && <span className="pill pill-green">✓ {t('missions.completed')}</span>}
+                  {!toMe && c.status === 'pending' && <span className="pill">{t('missions.waitingOn', { name: toName })}</span>}
                 </div>
               </motion.div>
             );

@@ -3,12 +3,31 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { progressAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import Loader from '../components/common/Loader';
 import ProgressRing from '../components/common/ProgressRing';
-import { displayDate, questGreeting, streakCopy } from '../utils/constants';
+import { displayDate, firstName } from '../utils/constants';
+
+function greeting(t, name) {
+  const hour = new Date().getHours();
+  const raw = firstName(name);
+  const who = !raw || raw === 'hero' ? t('dash.heroFallback') : raw;
+  if (hour < 12) return { kicker: t('dash.dawnKicker'), title: t('dash.dawnTitle', { who }) };
+  if (hour < 17) return { kicker: t('dash.middayKicker'), title: t('dash.middayTitle', { who }) };
+  if (hour < 21) return { kicker: t('dash.eveningKicker'), title: t('dash.eveningTitle', { who }) };
+  return { kicker: t('dash.nightKicker'), title: t('dash.nightTitle', { who }) };
+}
+
+function streakHint(t, days) {
+  const n = Number(days) || 0;
+  if (n <= 0) return t('dash.streak0');
+  if (n === 1) return t('dash.streak1');
+  return t('dash.streakN', { n });
+}
 
 export default function Dashboard() {
   const { user, quote } = useAuth();
+  const { t, locale } = useLanguage();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +41,7 @@ export default function Dashboard() {
 
   if (loading) return <Loader />;
 
-  const greeting = questGreeting(user?.name);
+  const greet = greeting(t, user?.name);
   const level = data?.level ?? user?.level ?? 1;
   const xp = data?.xp ?? user?.xp ?? 0;
   const xpForNext = data?.xpForNext ?? 0;
@@ -37,12 +56,12 @@ export default function Dashboard() {
   const hasHabits = total > 0;
 
   const stats = [
-    { label: 'Level', value: level, icon: '⚔️', hint: 'Your legend grows' },
-    { label: 'XP', value: xp, icon: '✨', hint: xpLeft ? `${xpLeft} XP to the next level` : 'Keep stacking wins' },
-    { label: 'Streak', value: `${streak} 🔥`, icon: '🔥', hint: streakCopy(streak) },
-    { label: 'Coins', value: coins, icon: '🪙', hint: 'Earned by showing up' },
-    { label: 'Today', value: `${daily}%`, icon: '📅', hint: hasHabits ? `${done} of ${total} habits done` : 'Forge your first habit' },
-    { label: 'This month', value: `${monthly}%`, icon: '📊', hint: 'The long game' },
+    { label: t('dash.level'), value: level, icon: '⚔️', hint: t('dash.legendGrows') },
+    { label: t('dash.xp'), value: xp, icon: '✨', hint: xpLeft ? t('dash.xpNext', { n: xpLeft }) : t('dash.keepWins') },
+    { label: t('dash.streak'), value: `${streak} 🔥`, icon: '🔥', hint: streakHint(t, streak) },
+    { label: t('dash.coins'), value: coins, icon: '🪙', hint: t('dash.coinsHint') },
+    { label: t('dash.today'), value: `${daily}%`, icon: '📅', hint: hasHabits ? t('dash.todayHint', { done, total }) : t('dash.forgeFirst') },
+    { label: t('dash.month'), value: `${monthly}%`, icon: '📊', hint: t('dash.longGame') },
   ];
 
   return (
@@ -53,32 +72,32 @@ export default function Dashboard() {
         animate={{ opacity: 1, y: 0 }}
       >
         <div className="hero-quest-copy">
-          <p className="quest-kicker">{greeting.kicker}</p>
-          <h2>{greeting.title}</h2>
-          <p className="hero-quest-date">{displayDate()}</p>
+          <p className="quest-kicker">{greet.kicker}</p>
+          <h2>{greet.title}</h2>
+          <p className="hero-quest-date">{displayDate(new Date(), locale)}</p>
         </div>
 
         <div className="quest-bar-wrap">
           <div className="quest-bar-meta">
-            <span>Level {level}</span>
+            <span>{t('dash.levelLabel', { level })}</span>
             <span>
-              {xp} / {xpForNext} XP
+              {xp} / {xpForNext} {t('dash.xp')}
             </span>
           </div>
           <div className="quest-bar" role="progressbar" aria-valuenow={xpProgress} aria-valuemin={0} aria-valuemax={100}>
             <span style={{ width: `${xpProgress}%` }} />
           </div>
           <p className="quest-bar-hint">
-            {xpLeft > 0 ? `${xpLeft} XP until Level ${level + 1}. Every habit counts.` : 'You are ready for the next chapter.'}
+            {xpLeft > 0 ? t('dash.xpUntil', { n: xpLeft, level: level + 1 }) : t('dash.nextChapter')}
           </p>
         </div>
 
         <div className="hero-quest-actions">
           <Link to="/habits" className="btn btn-primary">
-            {hasHabits ? "Continue today's quest" : 'Begin your first quest'}
+            {hasHabits ? t('dash.continueToday') : t('dash.beginFirst')}
           </Link>
           <Link to="/missions" className="btn btn-ghost">
-            View missions
+            {t('dash.viewMissions')}
           </Link>
         </div>
       </motion.section>
@@ -89,7 +108,7 @@ export default function Dashboard() {
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          <p className="quote-kicker">Daily prophecy</p>
+          <p className="quote-kicker">{t('dash.prophecy')}</p>
           <p className="quote-text">&ldquo;{quote.quote}&rdquo;</p>
           <cite>— {quote.author}</cite>
         </motion.blockquote>
@@ -114,7 +133,7 @@ export default function Dashboard() {
 
       <div className="charts-grid">
         <div className="glass chart-card">
-          <h3>Today&apos;s progress</h3>
+          <h3>{t('dash.todayProgress')}</h3>
           <div className="today-progress">
             <ProgressRing progress={daily} size={100} stroke={8} color="#06D6A0" />
             <div>
@@ -122,15 +141,15 @@ export default function Dashboard() {
                 {done}/{total}
               </p>
               <p className="today-progress-label">
-                {hasHabits ? 'habits completed — keep the fire lit' : 'no habits yet — start with one'}
+                {hasHabits ? t('dash.habitsFire') : t('dash.noHabitsYet')}
               </p>
             </div>
           </div>
         </div>
         <div className="glass chart-card">
-          <h3>Your badges</h3>
+          <h3>{t('dash.yourBadges')}</h3>
           {(data?.badges?.length || 0) === 0 ? (
-            <p className="empty-inline">No badges yet. Your first one is one habit away.</p>
+            <p className="empty-inline">{t('dash.noBadgesYet')}</p>
           ) : (
             <div className="badge-row">
               {data.badges.map((b) => (
@@ -140,7 +159,7 @@ export default function Dashboard() {
               ))}
             </div>
           )}
-          <p className="longest-streak">Longest streak: {data?.longestStreak || 0} days of proving it</p>
+          <p className="longest-streak">{t('dash.longest', { n: data?.longestStreak || 0 })}</p>
         </div>
       </div>
     </div>

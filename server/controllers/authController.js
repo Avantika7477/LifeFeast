@@ -59,11 +59,13 @@ export const getMe = async (req, res) => {
 /** @desc Update profile */
 export const updateProfile = async (req, res) => {
   try {
-    const { name, avatar, theme } = req.body;
+    const { name, avatar, theme, language } = req.body;
     const user = await User.findById(req.user._id);
     if (name) user.name = name;
     if (avatar !== undefined) user.avatar = avatar;
     if (theme) user.theme = theme;
+    const allowedLangs = ['en', 'hi', 'es', 'fr', 'de', 'pt', 'ar', 'zh', 'ja'];
+    if (language && allowedLangs.includes(language)) user.language = language;
     await user.save();
     res.json({ user: sanitize(user) });
   } catch (error) {
@@ -137,6 +139,8 @@ export const resetPassword = async (req, res) => {
 /** @desc Delete own account */
 export const deleteAccount = async (req, res) => {
   try {
+    const Feedback = (await import('../models/Feedback.js')).default;
+    await Feedback.deleteMany({ user: req.user._id });
     await User.findByIdAndDelete(req.user._id);
     res.json({ message: 'Account deleted' });
   } catch (error) {
@@ -151,12 +155,14 @@ export const exportData = async (req, res) => {
     const Task = (await import('../models/Task.js')).default;
     const Journal = (await import('../models/Journal.js')).default;
     const Progress = (await import('../models/Progress.js')).default;
+    const Feedback = (await import('../models/Feedback.js')).default;
 
-    const [habits, tasks, journals, progress] = await Promise.all([
+    const [habits, tasks, journals, progress, feedback] = await Promise.all([
       Habit.find({ user: req.user._id }),
       Task.find({ user: req.user._id }),
       Journal.find({ user: req.user._id }),
       Progress.find({ user: req.user._id }),
+      Feedback.find({ user: req.user._id }),
     ]);
 
     res.json({
@@ -166,6 +172,7 @@ export const exportData = async (req, res) => {
       tasks,
       journals,
       progress,
+      feedback,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -185,5 +192,6 @@ const sanitize = (user) => ({
   longestStreak: user.longestStreak,
   badges: user.badges,
   theme: user.theme,
+  language: user.language || 'en',
   createdAt: user.createdAt,
 });

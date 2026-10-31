@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { SignalsProvider } from './context/SignalsContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -19,6 +20,7 @@ import Journal from './pages/Journal';
 import Notifications from './pages/Notifications';
 import Campfire from './pages/Campfire';
 import Settings from './pages/Settings';
+import Feedback from './pages/Feedback';
 import Admin from './pages/Admin';
 import Home from './pages/Home';
 import InstallBanner from './components/common/InstallBanner';
@@ -32,7 +34,8 @@ function LoggedInAlarms() {
 
 function PublicOnly({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <Loader />;
+  const { t } = useLanguage();
+  if (loading) return <Loader text={t('common.preparing')} />;
   if (user) return <Navigate to="/dashboard" replace />;
   return children;
 }
@@ -41,6 +44,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <LanguageProvider>
         <ThemeProvider>
           <SignalsProvider>
           <InstallBanner />
@@ -84,6 +88,7 @@ export default function App() {
                 <Route path="/tasks" element={<Tasks />} />
                 <Route path="/journal" element={<Journal />} />
                 <Route path="/notifications" element={<Notifications />} />
+                <Route path="/feedback" element={<Feedback />} />
                 <Route path="/settings" element={<Settings />} />
               </Route>
             </Route>
@@ -98,6 +103,7 @@ export default function App() {
           </Routes>
           </SignalsProvider>
         </ThemeProvider>
+        </LanguageProvider>
       </AuthProvider>
     </BrowserRouter>
   );

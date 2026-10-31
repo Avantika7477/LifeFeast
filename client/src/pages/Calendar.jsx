@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { progressAPI } from '../api';
+import { useLanguage } from '../context/LanguageContext';
 import Loader from '../components/common/Loader';
 import Modal from '../components/common/Modal';
-
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+import { catLabel } from '../i18n';
 
 export default function Calendar() {
+  const { t, locale } = useLanguage();
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth() + 1);
@@ -51,7 +52,8 @@ export default function Calendar() {
 
   const firstDow = new Date(year, month - 1, 1).getDay();
   const today = now.toISOString().slice(0, 10);
-  const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+  const monthName = new Date(year, month - 1).toLocaleString(locale, { month: 'long', year: 'numeric' });
+  const weekdays = [t('calendar.sun'), t('calendar.mon'), t('calendar.tue'), t('calendar.wed'), t('calendar.thu'), t('calendar.fri'), t('calendar.sat')];
 
   const heatColor = (pct) => {
     if (pct >= 80) return '#06d6a0';
@@ -67,8 +69,8 @@ export default function Calendar() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Quest Calendar</h2>
-          <p>A month view of the days you trained. A lit day means you completed at least one habit that date.</p>
+          <h2>{t('calendar.title')}</h2>
+          <p>{t('calendar.lead')}</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <button className="btn-icon" onClick={prev}>
@@ -83,7 +85,7 @@ export default function Calendar() {
 
       <div className="glass" style={{ padding: '1.25rem' }}>
         <div className="calendar-grid">
-          {WEEKDAYS.map((d) => (
+          {weekdays.map((d) => (
             <div key={d} className="cal-weekday">
               {d}
             </div>
@@ -120,17 +122,17 @@ export default function Calendar() {
         {dayDetail ? (
           <>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
-              {dayDetail.completed.length} habit(s) completed
+              {t('calendar.completed', { n: dayDetail.completed.length })}
             </p>
             {dayDetail.completed.length === 0 ? (
-              <p className="empty-inline">A quiet day. Tomorrow is another chance.</p>
+              <p className="empty-inline">{t('calendar.quiet')}</p>
             ) : (
               <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {dayDetail.completed.map((h) => (
                   <li key={h.id} className="glass" style={{ padding: '0.75rem 1rem' }}>
                     <strong>{h.name}</strong>
                     <span className="pill" style={{ marginLeft: '0.5rem' }}>
-                      {h.category}
+                      {catLabel(t, h.category)}
                     </span>
                   </li>
                 ))}
@@ -139,7 +141,7 @@ export default function Calendar() {
             {selected?.missed?.length > 0 && (
               <div style={{ marginTop: '1rem' }}>
                 <p style={{ color: 'var(--danger)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                  Missed ({selected.missed.length})
+                  {t('calendar.missed', { n: selected.missed.length })}
                 </p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
                   {selected.missed.map((h) => (
@@ -152,7 +154,7 @@ export default function Calendar() {
             )}
           </>
         ) : (
-          <Loader text="Loading..." />
+          <Loader />
         )}
       </Modal>
     </div>

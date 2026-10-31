@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { socialAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import Loader from '../components/common/Loader';
 import EmojiPicker from '../components/common/EmojiPicker';
 
 export default function Campfire() {
   const { user, showToast } = useAuth();
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const [friends, setFriends] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -62,7 +64,7 @@ export default function Campfire() {
       inputRef.current?.focus();
       loadFriends();
     } catch (err) {
-      showToast(err.response?.data?.message || 'Could not send', 'error');
+      showToast(err.response?.data?.message || t('campfire.sendFailed'), 'error');
     } finally {
       setSending(false);
     }
@@ -77,11 +79,11 @@ export default function Campfire() {
         title: challengeTitle.trim(),
         description: challengeNote.trim(),
       });
-      showToast(`Challenge sent to ${active?.name || 'your friend'}`);
+      showToast(t('campfire.challengeSent', { name: active?.name || t('campfire.yourFriend') }));
       setChallengeTitle('');
       setChallengeNote('');
     } catch (err) {
-      showToast(err.response?.data?.message || 'Could not send challenge', 'error');
+      showToast(err.response?.data?.message || t('campfire.challengeFail'), 'error');
     }
   };
 
@@ -104,19 +106,16 @@ export default function Campfire() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Campfire</h2>
-          <p>
-            Chat with friends and send them a fun challenge. Send a friend request on Heroes first — only
-            accepted friends can sit at this fire.
-          </p>
+          <h2>{t('campfire.title')}</h2>
+          <p>{t('campfire.lead')}</p>
         </div>
       </div>
 
       {friends.length === 0 ? (
         <div className="empty-state glass">
           <div className="empty-icon">🔥</div>
-          <h3>The fire is waiting</h3>
-          <p>Send a friend request on Heroes. After they accept, come back here to talk and challenge them.</p>
+          <h3>{t('campfire.emptyTitle')}</h3>
+          <p>{t('campfire.empty')}</p>
         </div>
       ) : (
         <div className={`campfire ${friendId ? 'has-thread' : ''}`}>
@@ -134,7 +133,7 @@ export default function Campfire() {
                     <span className="campfire-friend-name">{f.name}</span>
                     {f.unread > 0 && <span className="nav-unread">{f.unread > 9 ? '9+' : f.unread}</span>}
                   </strong>
-                  <span>{f.lastMessage || 'Say hello'}</span>
+                  <span>{f.lastMessage || t('campfire.sayHello')}</span>
                 </div>
               </button>
             ))}
@@ -145,15 +144,15 @@ export default function Campfire() {
               <>
                 <header className="campfire-thread-head">
                   <button type="button" className="btn btn-ghost btn-sm campfire-back" onClick={() => setSearchParams({})}>
-                    Friends
+                    {t('campfire.friendsBack')}
                   </button>
                   <div>
                     <strong>{active.name}</strong>
-                    <span>Level {active.level}</span>
+                    <span>{t('campfire.levelN', { level: active.level })}</span>
                   </div>
                 </header>
                 <div className="campfire-messages">
-                  {messages.length === 0 && <p className="install-help">No messages yet. Light the first spark.</p>}
+                  {messages.length === 0 && <p className="install-help">{t('campfire.noMessages')}</p>}
                   {messages.map((m) => {
                     const mine = String(m.from?._id || m.from) === String(user?.id);
                     const emojiOnly = !/[A-Za-z0-9]/.test(m.text || '');
@@ -175,39 +174,39 @@ export default function Campfire() {
                     className="form-control"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    placeholder={`Message ${active.name}`}
+                    placeholder={t('campfire.messagePh', { name: active.name })}
                     maxLength={500}
                   />
                   <button className="btn btn-primary" type="submit" disabled={sending || !text.trim()}>
-                    Send
+                    {t('campfire.send')}
                   </button>
                 </form>
                 <form className="campfire-challenge" onSubmit={challenge}>
-                  <strong>Send a challenge</strong>
+                  <strong>{t('campfire.sendChallenge')}</strong>
                   <input
                     className="form-control"
                     value={challengeTitle}
                     onChange={(e) => setChallengeTitle(e.target.value)}
-                    placeholder="e.g. Drink water before sunset"
+                    placeholder={t('campfire.challengePh')}
                     maxLength={80}
                   />
                   <input
                     className="form-control"
                     value={challengeNote}
                     onChange={(e) => setChallengeNote(e.target.value)}
-                    placeholder="Optional note"
+                    placeholder={t('campfire.notePh')}
                     maxLength={240}
                   />
                   <button className="btn btn-ghost" type="submit" disabled={!challengeTitle.trim()}>
-                    Challenge {active.name}
+                    {t('campfire.challengeName', { name: active.name })}
                   </button>
                 </form>
               </>
             ) : (
               <div className="empty-state">
                 <div className="empty-icon">🔥</div>
-                <h3>Pick a friend</h3>
-                <p>Choose someone from the list to chat or send a challenge.</p>
+                <h3>{t('campfire.pickTitle')}</h3>
+                <p>{t('campfire.pick')}</p>
               </div>
             )}
           </section>

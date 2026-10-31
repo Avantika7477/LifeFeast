@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { authAPI } from '../api';
+import { tStored } from '../i18n';
 
 const AuthContext = createContext(null);
 
@@ -51,14 +52,14 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const { data } = await authAPI.login({ email, password });
     persist(data.token, data.user);
-    showToast(`Welcome back, ${data.user.name}!`);
+    showToast(tStored('auth.welcomeBack', { name: data.user.name }));
     return data.user;
   };
 
   const register = async (name, email, password) => {
     const { data } = await authAPI.register({ name, email, password });
     persist(data.token, data.user);
-    showToast('Account created! Your quest begins.');
+    showToast(tStored('auth.accountCreated'));
     return data.user;
   };
 

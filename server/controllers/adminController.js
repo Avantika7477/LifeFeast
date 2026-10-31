@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import Habit from '../models/Habit.js';
 import Progress from '../models/Progress.js';
+import Feedback from '../models/Feedback.js';
 import { BADGE_DEFS } from '../utils/helpers.js';
 
 export const getUsers = async (req, res) => {
@@ -21,6 +22,7 @@ export const deleteUser = async (req, res) => {
     }
     await User.findByIdAndDelete(req.params.id);
     await Habit.deleteMany({ user: req.params.id });
+    await Feedback.deleteMany({ user: req.params.id });
     res.json({ message: 'User deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });

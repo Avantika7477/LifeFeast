@@ -15,6 +15,7 @@ import missionRoutes from './routes/missionRoutes.js';
 import leaderboardRoutes from './routes/leaderboardRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import socialRoutes from './routes/socialRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js';
 
 dotenv.config();
 await connectDB();
@@ -72,6 +73,7 @@ app.use('/api/missions', missionRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/social', socialRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 app.use('/api', (_req, res) => {
   res.status(404).json({ message: 'API route not found' });

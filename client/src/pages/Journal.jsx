@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { journalAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { MOODS, formatDate } from '../utils/constants';
 import Loader from '../components/common/Loader';
 
 export default function Journal() {
   const { showToast } = useAuth();
+  const { t } = useLanguage();
   const [date, setDate] = useState(formatDate());
   const [content, setContent] = useState('');
   const [mood, setMood] = useState('');
@@ -37,12 +39,12 @@ export default function Journal() {
     setSaving(true);
     try {
       await journalAPI.upsert({ date, content, mood });
-      showToast('Journal saved');
+      showToast(t('journal.saved'));
       setContent('');
       setMood('');
       await loadAll();
     } catch (e) {
-      showToast(e.response?.data?.message || 'Save failed', 'error');
+      showToast(e.response?.data?.message || t('journal.saveFailed'), 'error');
     } finally {
       setSaving(false);
     }
@@ -54,22 +56,22 @@ export default function Journal() {
     <div>
       <div className="page-header">
         <div>
-          <h2>Campfire Journal</h2>
-          <p>Write how the day felt. Mood and notes stay on this date so you can look back later.</p>
+          <h2>{t('journal.title')}</h2>
+          <p>{t('journal.lead')}</p>
         </div>
         <button className="btn btn-primary" onClick={save} disabled={saving}>
-          {saving ? 'Saving...' : 'Save Entry'}
+          {saving ? t('common.saving') : t('journal.save')}
         </button>
       </div>
 
       <div className="charts-grid">
         <div className="glass" style={{ padding: '1.5rem' }}>
           <div className="form-group">
-            <label>Date</label>
+            <label>{t('journal.date')}</label>
             <input className="form-control" type="date" value={date} onChange={(e) => onDateChange(e.target.value)} />
           </div>
           <div className="form-group">
-            <label>How are you feeling?</label>
+            <label>{t('journal.feeling')}</label>
             <div className="mood-picker">
               {MOODS.map((m) => (
                 <button
@@ -84,21 +86,21 @@ export default function Journal() {
             </div>
           </div>
           <div className="form-group">
-            <label>Notes</label>
+            <label>{t('journal.notes')}</label>
             <textarea
               className="form-control"
               rows={8}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Write about your day..."
+              placeholder={t('journal.placeholder')}
             />
           </div>
         </div>
 
         <div className="glass" style={{ padding: '1.5rem' }}>
-          <h3 style={{ marginBottom: '1rem' }}>Recent Entries</h3>
+          <h3 style={{ marginBottom: '1rem' }}>{t('journal.recent')}</h3>
           {entries.length === 0 ? (
-            <p style={{ color: 'var(--text-muted)' }}>No entries yet</p>
+            <p style={{ color: 'var(--text-muted)' }}>{t('journal.none')}</p>
           ) : (
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {entries.slice(0, 10).map((e) => (
@@ -122,7 +124,7 @@ export default function Journal() {
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    {e.content || 'No content'}
+                    {e.content || t('journal.noContent')}
                   </p>
                 </li>
               ))}

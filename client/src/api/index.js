@@ -86,4 +86,16 @@ export const adminAPI = {
   analytics: () => api.get('/admin/analytics'),
   badges: () => api.get('/admin/badges'),
   reports: () => api.get('/admin/reports'),
+  feedback: (params) => api.get('/admin/feedback', { params }),
+  feedbackUnread: () => api.get('/admin/feedback/unread-count'),
+  feedbackSeen: () => api.put('/admin/feedback/seen'),
+  revertFeedback: (id) => api.put(`/admin/feedback/${id}/revert`),
+  restoreFeedback: (id) => api.put(`/admin/feedback/${id}/restore`),
+};
+
+export const feedbackAPI = {
+  wall: () => api.get('/feedback'),
+  mine: () => api.get('/feedback/mine'),
+  create: (data) => api.post('/feedback', data),
+  remove: (id) => api.delete(`/feedback/${id}`),
 };

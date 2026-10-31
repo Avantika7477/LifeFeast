@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { apiErrorMessage } from '../../api/client';
+import LanguageSelect from '../../components/common/LanguageSelect';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -10,6 +12,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from;
@@ -23,7 +26,7 @@ export default function Login() {
       await login(email, password);
       navigate(afterLogin);
     } catch (err) {
-      setError(apiErrorMessage(err, 'Login failed'));
+      setError(apiErrorMessage(err, t('auth.loginFailed')));
     } finally {
       setLoading(false);
     }
@@ -37,15 +40,18 @@ export default function Login() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
+        <div className="auth-lang">
+          <LanguageSelect compact id="login-language" />
+        </div>
         <div className="brand">
           <div className="logo-mark">⚔️</div>
           <h1>LifeQuest</h1>
-          <p>Turn your daily life into a game</p>
+          <p>{t('auth.loginLead')}</p>
         </div>
         {error && <div className="auth-error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Email</label>
+            <label>{t('common.email')}</label>
             <input
               className="form-control"
               type="email"
@@ -56,7 +62,7 @@ export default function Login() {
             />
           </div>
           <div className="form-group">
-            <label>Password</label>
+            <label>{t('common.password')}</label>
             <input
               className="form-control"
               type="password"
@@ -68,18 +74,18 @@ export default function Login() {
           </div>
           <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
             <Link to="/forgot-password" className="auth-link">
-              Forgot Password?
+              {t('auth.forgotPassword')}
             </Link>
           </div>
           <button className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-            {loading ? 'Opening the gate...' : 'Enter the quest'}
+            {loading ? t('auth.openingGate') : t('auth.enterQuest')}
           </button>
         </form>
-        <p className="auth-motto">Small days. Big legend.</p>
+        <p className="auth-motto">{t('auth.motto')}</p>
         <div className="auth-footer">
-          New adventurer? <Link to="/register">Begin your legend</Link>
+          {t('auth.newAdventurer')} <Link to="/register">{t('auth.beginLegend')}</Link>
           <div>
-            <Link to="/">Back to home</Link>
+            <Link to="/">{t('auth.backHome')}</Link>
           </div>
         </div>
       </motion.div>

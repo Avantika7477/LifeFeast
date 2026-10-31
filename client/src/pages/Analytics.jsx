@@ -15,11 +15,14 @@ import {
   Legend,
 } from 'recharts';
 import { progressAPI } from '../api';
+import { useLanguage } from '../context/LanguageContext';
 import Loader from '../components/common/Loader';
+import { catLabel } from '../i18n';
 
 const COLORS = ['#FFB703', '#06D6A0', '#FF7B54', '#FF5D8F', '#5EEAD4', '#FFD166', '#8B5CF6', '#FB8500', '#EAD6FF'];
 
 export default function Analytics() {
+  const { t } = useLanguage();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -31,7 +34,8 @@ export default function Analytics() {
   }, []);
 
   if (loading) return <Loader />;
-  if (!data) return <p>Failed to load analytics</p>;
+  if (!data) return <p>{t('analytics.failed')}</p>;
+  const pie = (data.pie || []).map((slice) => ({ ...slice, name: catLabel(t, slice.name) }));
 
   const heatClass = (rate) => {
     if (rate >= 80) return 'heat-4';
@@ -45,28 +49,28 @@ export default function Analytics() {
     <div>
       <div className="page-header">
         <div>
-          <h2>The Chronicle</h2>
-          <p>Your progress over time — streaks, XP, and how consistently you have been showing up.</p>
+          <h2>{t('analytics.title')}</h2>
+          <p>{t('analytics.lead')}</p>
         </div>
       </div>
 
       <div className="stats-grid">
         <div className="stat-card glass">
-          <div className="stat-label">Longest Streak</div>
+          <div className="stat-label">{t('analytics.longest')}</div>
           <div className="stat-value">{data.longestStreak} 🔥</div>
         </div>
         <div className="stat-card glass">
-          <div className="stat-label">Avg Completion</div>
+          <div className="stat-label">{t('analytics.avg')}</div>
           <div className="stat-value">{data.averageCompletion}%</div>
         </div>
         <div className="stat-card glass">
-          <div className="stat-label">Best Habit</div>
+          <div className="stat-label">{t('analytics.best')}</div>
           <div className="stat-value" style={{ fontSize: '1.1rem' }}>
             {data.bestHabit?.name || '—'}
           </div>
         </div>
         <div className="stat-card glass">
-          <div className="stat-label">Needs Work</div>
+          <div className="stat-label">{t('analytics.needs')}</div>
           <div className="stat-value" style={{ fontSize: '1.1rem' }}>
             {data.worstHabit?.name || '—'}
           </div>
@@ -75,7 +79,7 @@ export default function Analytics() {
 
       <div className="charts-grid">
         <div className="glass chart-card">
-          <h3>Daily Progress (7 days)</h3>
+          <h3>{t('analytics.daily')}</h3>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={data.daily}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
@@ -88,7 +92,7 @@ export default function Analytics() {
         </div>
 
         <div className="glass chart-card">
-          <h3>Weekly Progress</h3>
+          <h3>{t('analytics.weekly')}</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={data.weekly}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
@@ -101,7 +105,7 @@ export default function Analytics() {
         </div>
 
         <div className="glass chart-card">
-          <h3>Monthly Progress</h3>
+          <h3>{t('analytics.monthly')}</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={data.monthly}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
@@ -114,7 +118,7 @@ export default function Analytics() {
         </div>
 
         <div className="glass chart-card">
-          <h3>Yearly Completions</h3>
+          <h3>{t('analytics.yearly')}</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={data.yearly.length ? data.yearly : [{ year: new Date().getFullYear(), count: 0 }]}>
               <XAxis dataKey="year" stroke="#94a3b8" />
@@ -126,14 +130,14 @@ export default function Analytics() {
         </div>
 
         <div className="glass chart-card">
-          <h3>Category Breakdown</h3>
-          {data.pie.length === 0 ? (
-            <p style={{ color: 'var(--text-muted)' }}>Complete habits to see category data</p>
+          <h3>{t('analytics.category')}</h3>
+          {pie.length === 0 ? (
+            <p style={{ color: 'var(--text-muted)' }}>{t('analytics.noCategory')}</p>
           ) : (
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
-                <Pie data={data.pie} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
-                  {data.pie.map((_, i) => (
+                <Pie data={pie} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                  {pie.map((_, i) => (
                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
                 </Pie>
@@ -145,7 +149,7 @@ export default function Analytics() {
         </div>
 
         <div className="glass chart-card">
-          <h3>Completion Heatmap (90 days)</h3>
+          <h3>{t('analytics.heatmap')}</h3>
           <div className="heatmap" title="Completion rate by day">
             {data.heatmap.map((h) => (
               <div

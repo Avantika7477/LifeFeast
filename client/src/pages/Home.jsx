@@ -1,21 +1,40 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Moon, Sun } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUp, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-
-const features = [
-  { icon: '🎯', title: 'Daily training', text: 'Build habits that stick. Complete them. Watch the ring fill.' },
-  { icon: '✨', title: 'XP & levels', text: 'Every win grants XP. Rise through levels like a real quest.' },
-  { icon: '🔥', title: 'Streaks', text: 'Show up tomorrow. Then the day after. Fire grows with you.' },
-  { icon: '⚔️', title: 'Missions', text: 'Bonus gold for the brave. New challenges with the dawn.' },
-  { icon: '🏆', title: 'Hall of heroes', text: 'Climb the leaderboard. Leave a mark the world can see.' },
-  { icon: '📖', title: 'Campfire journal', text: 'Write it down. Make the day real. Track your mood.' },
-];
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSelect from '../components/common/LanguageSelect';
 
 export default function Home() {
   const { user } = useAuth();
   const { isDark, toggleTheme } = useTheme();
+  const { t } = useLanguage();
+  const [showTop, setShowTop] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 240);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const goTop = () => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  };
+
+  const features = [
+    { icon: '🎯', title: t('home.f1t'), text: t('home.f1d') },
+    { icon: '✨', title: t('home.f2t'), text: t('home.f2d') },
+    { icon: '🔥', title: t('home.f3t'), text: t('home.f3d') },
+    { icon: '⚔️', title: t('home.f4t'), text: t('home.f4d') },
+    { icon: '🏆', title: t('home.f5t'), text: t('home.f5d') },
+    { icon: '📖', title: t('home.f6t'), text: t('home.f6d') },
+    { icon: '💬', title: t('home.f7t'), text: t('home.f7d') },
+    { icon: '⭐', title: t('home.f8t'), text: t('home.f8d') },
+  ];
 
   return (
     <div className="landing">
@@ -25,21 +44,22 @@ export default function Home() {
           <span>LifeQuest</span>
         </Link>
         <div className="landing-nav-actions">
-          <button className="btn-icon" onClick={toggleTheme} title="Toggle theme" aria-label="Toggle theme">
+          <LanguageSelect compact id="home-language" />
+          <button className="btn-icon" onClick={toggleTheme} title={t('common.toggleTheme')} aria-label={t('common.toggleTheme')}>
             {isDark ? <Sun size={18} /> : <Moon size={18} />}
           </button>
           {user ? (
             <Link to="/dashboard" className="btn btn-primary">
-              <span className="label-wide">Continue quest</span>
-              <span className="label-narrow">Quest</span>
+              <span className="label-wide">{t('home.continueQuest')}</span>
+              <span className="label-narrow">{t('home.quest')}</span>
             </Link>
           ) : (
             <>
               <Link to="/login" className="btn btn-ghost">
-                Login
+                {t('home.login')}
               </Link>
               <Link to="/register" className="btn btn-primary">
-                Sign up
+                {t('home.signUp')}
               </Link>
             </>
           )}
@@ -51,23 +71,21 @@ export default function Home() {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <p className="quest-kicker">Your life. Your quest.</p>
-        <h1>Turn every day into a legend.</h1>
-        <p className="landing-lead">
-          Track habits. Earn XP. Unlock badges. Climb levels. Small days. Big legend.
-        </p>
+        <p className="quest-kicker">{t('home.kicker')}</p>
+        <h1>{t('home.title')}</h1>
+        <p className="landing-lead">{t('home.lead')}</p>
         <div className="hero-quest-actions">
           {user ? (
             <Link to="/dashboard" className="btn btn-primary">
-              Enter your dashboard
+              {t('home.enterDashboard')}
             </Link>
           ) : (
             <>
               <Link to="/register" className="btn btn-primary">
-                Begin your quest
+                {t('home.beginQuest')}
               </Link>
               <Link to="/login" className="btn btn-ghost">
-                I already have a path
+                {t('home.alreadyPath')}
               </Link>
             </>
           )}
@@ -91,20 +109,38 @@ export default function Home() {
       </section>
 
       <section className="landing-cta glass">
-        <h2>Training stays locked until you enter.</h2>
-        <p>Habits, missions, journal, and the hall of heroes require an account. The home gate is open to all.</p>
+        <h2>{t('home.ctaTitle')}</h2>
+        <p>{t('home.ctaText')}</p>
         {user ? (
           <Link to="/habits" className="btn btn-primary">
-            Continue today&apos;s training
+            {t('home.continueTraining')}
           </Link>
         ) : (
           <Link to="/register" className="btn btn-primary">
-            Sign up to start training
+            {t('home.signUpTraining')}
           </Link>
         )}
       </section>
 
-      <footer className="landing-foot">Small days. Big legend.</footer>
+      <footer className="landing-foot">{t('home.foot')}</footer>
+
+      <AnimatePresence>
+        {showTop && (
+          <motion.button
+            type="button"
+            className="back-to-top"
+            onClick={goTop}
+            aria-label={t('common.backToTop')}
+            title={t('common.backToTop')}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+          >
+            <ArrowUp size={20} strokeWidth={2.5} />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

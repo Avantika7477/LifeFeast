@@ -12,6 +12,7 @@ import {
   Flame,
   Bell,
   Settings,
+  MessageSquareHeart,
   Shield,
   Menu,
   X,
@@ -22,29 +23,33 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { useSignals } from '../../context/SignalsContext';
 import Toast from '../common/Toast';
+import LanguageSelect from '../common/LanguageSelect';
 import UnfinishedReminder from '../tasks/UnfinishedReminder';
 import { motion } from 'framer-motion';
 
 const links = [
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/habits', label: 'Training', icon: Target },
-  { to: '/calendar', label: 'Calendar', icon: CalendarDays },
-  { to: '/analytics', label: 'Chronicle', icon: BarChart3 },
-  { to: '/missions', label: 'Missions', icon: Swords },
-  { to: '/leaderboard', label: 'Heroes', icon: Trophy },
-  { to: '/campfire', label: 'Campfire', icon: Flame },
-  { to: '/tasks', label: 'Quest Log', icon: ListTodo },
-  { to: '/journal', label: 'Journal', icon: BookOpen },
-  { to: '/notifications', label: 'Signals', icon: Bell },
-  { to: '/settings', label: 'Settings', icon: Settings },
+  { to: '/dashboard', key: 'nav.dashboard', icon: LayoutDashboard },
+  { to: '/habits', key: 'nav.training', icon: Target },
+  { to: '/calendar', key: 'nav.calendar', icon: CalendarDays },
+  { to: '/analytics', key: 'nav.chronicle', icon: BarChart3 },
+  { to: '/missions', key: 'nav.missions', icon: Swords },
+  { to: '/leaderboard', key: 'nav.heroes', icon: Trophy },
+  { to: '/campfire', key: 'nav.campfire', icon: Flame },
+  { to: '/tasks', key: 'nav.questLog', icon: ListTodo },
+  { to: '/journal', key: 'nav.journal', icon: BookOpen },
+  { to: '/notifications', key: 'nav.signals', icon: Bell },
+  { to: '/feedback', key: 'nav.feedback', icon: MessageSquareHeart },
+  { to: '/settings', key: 'nav.settings', icon: Settings },
 ];
 
 export default function AppLayout() {
   const { user, logout, isAdmin } = useAuth();
   const { isDark, toggleTheme } = useTheme();
-  const { unread } = useSignals();
+  const { t } = useLanguage();
+  const { unread, feedbackUnread } = useSignals();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -64,7 +69,7 @@ export default function AppLayout() {
           <h1>LifeQuest</h1>
         </Link>
         <nav className="nav-links">
-          {links.map(({ to, label, icon: Icon }) => (
+          {links.map(({ to, key, icon: Icon }) => (
             <NavLink
               key={to}
               to={to}
@@ -72,9 +77,9 @@ export default function AppLayout() {
               onClick={() => setOpen(false)}
             >
               <Icon size={18} />
-              {label}
+              {t(key)}
               {to === '/notifications' && unread > 0 && (
-                <span className="nav-unread" aria-label={`${unread} unread signals`}>
+                <span className="nav-unread" aria-label={t('nav.unreadSignals', { count: unread })}>
                   {unreadLabel}
                 </span>
               )}
@@ -87,13 +92,18 @@ export default function AppLayout() {
               onClick={() => setOpen(false)}
             >
               <Shield size={18} />
-              Admin
+              {t('nav.admin')}
+              {feedbackUnread > 0 && (
+                <span className="nav-unread" aria-label={t('nav.unreadFeedback', { count: feedbackUnread })}>
+                  {feedbackUnread > 99 ? '99+' : String(feedbackUnread)}
+                </span>
+              )}
             </NavLink>
           )}
         </nav>
         <button className="nav-link" onClick={handleLogout} style={{ marginTop: '0.5rem' }}>
           <LogOut size={18} />
-          Logout
+          {t('nav.logout')}
         </button>
       </aside>
 
@@ -103,7 +113,7 @@ export default function AppLayout() {
             <button
               className="btn-icon mobile-toggle"
               onClick={() => setOpen(!open)}
-              aria-label={open ? 'Close menu' : 'Open menu'}
+              aria-label={open ? t('common.closeMenu') : t('common.openMenu')}
             >
               {open ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -114,20 +124,21 @@ export default function AppLayout() {
                   {user?.name}
                 </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                  Level {user?.level} · {user?.xp} XP
+                  {t('nav.levelXp', { level: user?.level, xp: user?.xp })}
                 </div>
               </div>
             </div>
           </div>
           <div className="topbar-actions">
-            <span className="pill pill-amber" title="Coins">
+            <LanguageSelect compact id="app-language" />
+            <span className="pill pill-amber" title={t('nav.coins')}>
               <Coins size={14} /> {user?.coins ?? 0}
             </span>
-            <span className="pill" title="Current streak">
+            <span className="pill" title={t('nav.streak')}>
               🔥 {user?.currentStreak ?? 0}
-              <span className="pill-extra"> days</span>
+              <span className="pill-extra"> {t('nav.days')}</span>
             </span>
-            <button className="btn-icon" onClick={toggleTheme} title="Toggle theme" aria-label="Toggle theme">
+            <button className="btn-icon" onClick={toggleTheme} title={t('common.toggleTheme')} aria-label={t('common.toggleTheme')}>
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
           </div>
