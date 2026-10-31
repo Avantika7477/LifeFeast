@@ -17,6 +17,7 @@ import Leaderboard from './pages/Leaderboard';
 import Tasks from './pages/Tasks';
 import Journal from './pages/Journal';
 import Notifications from './pages/Notifications';
+import Campfire from './pages/Campfire';
 import Settings from './pages/Settings';
 import Admin from './pages/Admin';
 import Home from './pages/Home';
@@ -79,6 +80,7 @@ export default function App() {
                 <Route path="/analytics" element={<Analytics />} />
                 <Route path="/missions" element={<Missions />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/campfire" element={<Campfire />} />
                 <Route path="/tasks" element={<Tasks />} />
                 <Route path="/journal" element={<Journal />} />
                 <Route path="/notifications" element={<Notifications />} />

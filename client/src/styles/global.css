@@ -1980,3 +1980,237 @@ table.data-table th {
   gap: 0.5rem;
   justify-content: center;
 }
+
+.campfire {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+  min-height: min(70vh, 640px);
+}
+
+.campfire-friends,
+.campfire-thread {
+  padding: 0.75rem;
+  min-width: 0;
+}
+
+.campfire-friends {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: min(70vh, 640px);
+  overflow-y: auto;
+}
+
+.campfire-friend {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.65rem 0.7rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+}
+
+.campfire-friend:hover,
+.campfire-friend.active {
+  background: var(--bg-elevated);
+  border-color: var(--border);
+}
+
+.campfire-friend.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.campfire-friend-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.campfire-friend-copy strong {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.campfire-friend-copy span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.campfire-thread {
+  display: flex;
+  flex-direction: column;
+  min-height: min(70vh, 640px);
+}
+
+.campfire-thread-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.campfire-thread-head div {
+  min-width: 0;
+}
+
+.campfire-thread-head strong {
+  display: block;
+}
+
+.campfire-thread-head span {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.campfire-back {
+  display: none;
+}
+
+.campfire-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.9rem 0;
+}
+
+.campfire-bubble {
+  max-width: min(82%, 420px);
+  padding: 0.65rem 0.85rem;
+  border-radius: 14px;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+
+.campfire-bubble.mine {
+  align-self: flex-end;
+  background: linear-gradient(180deg, var(--primary-soft), var(--primary));
+  color: #241c08;
+}
+
+.campfire-bubble.theirs {
+  align-self: flex-start;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+
+.campfire-bubble.emoji-only {
+  font-size: 1.7rem;
+  line-height: 1.2;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0.2rem 0.15rem;
+}
+
+.campfire-compose,
+.campfire-challenge {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.campfire-compose {
+  padding-top: 0.5rem;
+  position: relative;
+}
+
+.campfire-compose .form-control {
+  flex: 1;
+  min-width: 120px;
+}
+
+.emoji-picker {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.emoji-picker-toggle {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.emoji-picker-panel {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.2rem;
+  width: min(320px, 86vw);
+  padding: 0.55rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  box-shadow: var(--shadow);
+}
+
+.emoji-picker-item {
+  width: 100%;
+  min-height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.emoji-picker-item:hover {
+  background: var(--bg-elevated);
+}
+
+.campfire-challenge {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.campfire-challenge strong {
+  width: 100%;
+}
+
+.campfire-challenge .form-control {
+  flex: 1;
+  min-width: 140px;
+}
+
+@media (max-width: 800px) {
+  .campfire {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .campfire.has-thread .campfire-friends {
+    display: none;
+  }
+
+  .campfire:not(.has-thread) .campfire-thread {
+    display: none;
+  }
+
+  .campfire-back {
+    display: inline-flex;
+  }
+
+  .campfire-thread,
+  .campfire-friends {
+    max-height: none;
+    min-height: 60vh;
+  }
+}

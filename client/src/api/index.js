@@ -54,6 +54,16 @@ export const notificationAPI = {
   generateDaily: () => api.post('/notifications/generate-daily'),
 };
 
+export const socialAPI = {
+  friends: () => api.get('/social/friends'),
+  messages: (friendId) => api.get(`/social/messages/${friendId}`),
+  sendMessage: (friendId, text) => api.post(`/social/messages/${friendId}`, { text }),
+  challenges: () => api.get('/social/challenges'),
+  sendChallenge: (data) => api.post('/social/challenges', data),
+  respondChallenge: (id, action) => api.post(`/social/challenges/${id}/respond`, { action }),
+  completeChallenge: (id) => api.post(`/social/challenges/${id}/complete`),
+};
+
 export const missionAPI = {
   getAll: () => api.get('/missions'),
   complete: (id) => api.post(`/missions/${id}/complete`),

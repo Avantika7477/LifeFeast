@@ -44,6 +44,14 @@ export default function Notifications() {
     const taskId = n.meta?.taskId;
     if (taskId) {
       navigate(`/tasks?task=${taskId}&type=${n.meta?.type || 'daily'}`);
+      return;
+    }
+    if (n.meta?.kind === 'challenge' || n.meta?.challengeId) {
+      navigate('/missions');
+      return;
+    }
+    if (n.meta?.friendId) {
+      navigate(`/campfire?friend=${n.meta.friendId}`);
     }
   };
 
@@ -74,8 +82,8 @@ export default function Notifications() {
         <div>
           <h2>Signals</h2>
           <p>
-            Reminders, missed habits, and wins. A red dot means something is unread. Tap a task
-            signal to open that quest and mark it done or not done.
+            Reminders, missed habits, wins, and friend challenges. A red dot means something is unread.
+            Tap a task signal to open that quest, or a challenge signal to open Missions.
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -99,9 +107,11 @@ export default function Notifications() {
           items.map((n) => (
             <div
               key={n._id}
-              className={`notif-item ${!n.read ? 'unread' : ''} ${n.meta?.taskId ? 'has-task' : ''}`}
+              className={`notif-item ${!n.read ? 'unread' : ''} ${
+                n.meta?.taskId || n.meta?.challengeId || n.meta?.friendId ? 'has-task' : ''
+              }`}
               onClick={() => openSignal(n)}
-              role={n.meta?.taskId ? 'link' : 'button'}
+              role={n.meta?.taskId || n.meta?.challengeId || n.meta?.friendId ? 'link' : 'button'}
             >
               <span style={{ fontSize: '1.5rem' }}>{typeIcon[n.type] || 'ℹ️'}</span>
               <div style={{ flex: 1 }}>
@@ -110,6 +120,7 @@ export default function Notifications() {
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: 4 }}>
                   {new Date(n.createdAt).toLocaleString()}
                   {n.meta?.taskId ? ' · Open task' : ''}
+                  {n.meta?.kind === 'challenge' || n.meta?.challengeId ? ' · Open challenge' : ''}
                 </div>
               </div>
               <button
