@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { habitAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -10,6 +11,8 @@ import Modal from '../components/common/Modal';
 
 export default function Habits() {
   const { showToast, updateUserLocal, refreshUser } = useAuth();
+  const [searchParams] = useSearchParams();
+  const focusId = searchParams.get('habit');
   const [habits, setHabits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -31,6 +34,11 @@ export default function Habits() {
   useEffect(() => {
     load();
   }, []);
+
+  useEffect(() => {
+    if (!focusId || loading) return;
+    document.getElementById(`habit-${focusId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [focusId, loading, habits]);
 
   const handleSubmit = async (form) => {
     if (editing) {
@@ -113,6 +121,7 @@ export default function Habits() {
             <HabitCard
               key={h._id}
               habit={h}
+              focused={focusId === h._id}
               onComplete={handleComplete}
               onEdit={(habit) => {
                 setEditing(habit);

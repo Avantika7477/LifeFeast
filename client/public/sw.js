@@ -27,6 +27,40 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = event.notification.data?.url || '/dashboard';
+  event.waitUntil(
+    (async () => {
+      const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      for (const client of windows) {
+        if ('focus' in client) {
+          await client.focus();
+          if ('navigate' in client) await client.navigate(target);
+          return;
+        }
+      }
+      if (self.clients.openWindow) await self.clients.openWindow(target);
+    })(),
+  );
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data?.type !== 'ALARM') return;
+  event.waitUntil(
+    self.registration.showNotification(event.data.title || 'LifeQuest', {
+      body: event.data.body || 'You still have unfinished work.',
+      icon: '/pwa-192x192.png',
+      badge: '/pwa-192x192.png',
+      tag: 'lifequest-unfinished',
+      renotify: true,
+      requireInteraction: true,
+      vibrate: [220, 80, 220, 80, 420],
+      data: { url: event.data.url || '/dashboard' },
+    }),
+  );
+});
+
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;

@@ -21,6 +21,13 @@ import Settings from './pages/Settings';
 import Admin from './pages/Admin';
 import Home from './pages/Home';
 import InstallBanner from './components/common/InstallBanner';
+import TaskAlarm from './components/tasks/TaskAlarm';
+
+function LoggedInAlarms() {
+  const { user, loading } = useAuth();
+  if (loading || !user) return null;
+  return <TaskAlarm />;
+}
 
 function PublicOnly({ children }) {
   const { user, loading } = useAuth();
@@ -36,6 +43,7 @@ export default function App() {
         <ThemeProvider>
           <SignalsProvider>
           <InstallBanner />
+          <LoggedInAlarms />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route

@@ -4,7 +4,7 @@ import { Check, Pencil, Trash2 } from 'lucide-react';
 import ProgressRing from '../common/ProgressRing';
 import { CATEGORY_COLORS, XP_MAP } from '../../utils/constants';
 
-export default function HabitCard({ habit, onComplete, onEdit, onDelete, completing }) {
+export default function HabitCard({ habit, onComplete, onEdit, onDelete, completing, focused }) {
   const [busy, setBusy] = useState(false);
   const color = CATEGORY_COLORS[habit.category] || '#FFB703';
   const xp = habit.xpReward || XP_MAP[habit.difficulty] || 10;
@@ -22,7 +22,8 @@ export default function HabitCard({ habit, onComplete, onEdit, onDelete, complet
 
   return (
     <motion.div
-      className="habit-card glass"
+      id={`habit-${habit._id}`}
+      className={`habit-card glass ${focused ? 'focus-task' : ''}`}
       layout
       whileHover={{ y: -2 }}
       initial={{ opacity: 0, y: 12 }}

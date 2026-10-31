@@ -24,7 +24,6 @@ import { useTheme } from '../../context/ThemeContext';
 import { useSignals } from '../../context/SignalsContext';
 import Toast from '../common/Toast';
 import UnfinishedReminder from '../tasks/UnfinishedReminder';
-import TaskAlarm from '../tasks/TaskAlarm';
 import { motion } from 'framer-motion';
 
 const links = [
@@ -143,7 +142,6 @@ export default function AppLayout() {
         </motion.main>
       </div>
       <UnfinishedReminder />
-      <TaskAlarm />
       <Toast />
     </div>
   );

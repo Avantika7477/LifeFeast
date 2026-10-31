@@ -2,7 +2,7 @@
   "name": "LifeQuest",
   "short_name": "LifeQuest",
   "description": "Turn your daily life into a game with this gamified habit tracker.",
-  "start_url": "/",
+  "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
