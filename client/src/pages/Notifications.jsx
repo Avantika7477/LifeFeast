@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { notificationAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { useSignals } from '../context/SignalsContext';
 import Loader from '../components/common/Loader';
 
 const typeIcon = {
@@ -13,6 +15,8 @@ const typeIcon = {
 
 export default function Notifications() {
   const { showToast } = useAuth();
+  const { refreshUnread } = useSignals();
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,6 +25,7 @@ export default function Notifications() {
     try {
       const { data } = await notificationAPI.getAll();
       setItems(data);
+      refreshUnread();
     } finally {
       setLoading(false);
     }
@@ -30,19 +35,27 @@ export default function Notifications() {
     load();
   }, []);
 
-  const markRead = async (id) => {
-    await notificationAPI.markRead(id);
-    setItems((prev) => prev.map((n) => (n._id === id ? { ...n, read: true } : n)));
+  const openSignal = async (n) => {
+    if (!n.read) {
+      await notificationAPI.markRead(n._id);
+      setItems((prev) => prev.map((item) => (item._id === n._id ? { ...item, read: true } : item)));
+      refreshUnread();
+    }
+    const taskId = n.meta?.taskId;
+    if (taskId) {
+      navigate(`/tasks?task=${taskId}&type=${n.meta?.type || 'daily'}`);
+    }
   };
 
   const markAll = async () => {
     await notificationAPI.markAllRead();
     setItems((prev) => prev.map((n) => ({ ...n, read: true })));
+    refreshUnread();
     showToast('All marked as read');
   };
 
   const generate = async () => {
-    const { data } = await notificationAPI.generateDaily();
+    await notificationAPI.generateDaily();
     showToast('Daily notifications generated');
     load();
   };
@@ -50,6 +63,7 @@ export default function Notifications() {
   const remove = async (id) => {
     await notificationAPI.remove(id);
     setItems((prev) => prev.filter((n) => n._id !== id));
+    refreshUnread();
   };
 
   if (loading) return <Loader />;
@@ -59,7 +73,10 @@ export default function Notifications() {
       <div className="page-header">
         <div>
           <h2>Signals</h2>
-          <p>Wins, reminders, and a nudge when you need it.</p>
+          <p>
+            Reminders, missed habits, and wins. A red dot means something is unread. Tap a task
+            signal to open that quest and mark it done or not done.
+          </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <button className="btn btn-ghost btn-sm" onClick={generate}>
@@ -82,8 +99,9 @@ export default function Notifications() {
           items.map((n) => (
             <div
               key={n._id}
-              className={`notif-item ${!n.read ? 'unread' : ''}`}
-              onClick={() => !n.read && markRead(n._id)}
+              className={`notif-item ${!n.read ? 'unread' : ''} ${n.meta?.taskId ? 'has-task' : ''}`}
+              onClick={() => openSignal(n)}
+              role={n.meta?.taskId ? 'link' : 'button'}
             >
               <span style={{ fontSize: '1.5rem' }}>{typeIcon[n.type] || 'ℹ️'}</span>
               <div style={{ flex: 1 }}>
@@ -91,6 +109,7 @@ export default function Notifications() {
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{n.message}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: 4 }}>
                   {new Date(n.createdAt).toLocaleString()}
+                  {n.meta?.taskId ? ' · Open task' : ''}
                 </div>
               </div>
               <button

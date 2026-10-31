@@ -37,7 +37,7 @@ export default function Missions() {
       <div className="page-header">
         <div>
           <h2>Today&apos;s Missions</h2>
-          <p>Bonus gold for the brave.</p>
+          <p>Bonus challenges for today. Finish one for extra gold on top of your regular habits.</p>
         </div>
       </div>
 

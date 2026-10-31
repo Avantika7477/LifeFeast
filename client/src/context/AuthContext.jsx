@@ -65,6 +65,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('lq_token');
     localStorage.removeItem('lq_user');
+    sessionStorage.removeItem('lq_task_nudge');
     setUser(null);
   };
 

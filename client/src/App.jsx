@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { SignalsProvider } from './context/SignalsContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AppLayout from './components/layout/AppLayout';
 import Loader from './components/common/Loader';
@@ -33,6 +34,7 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <ThemeProvider>
+          <SignalsProvider>
           <InstallBanner />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -84,6 +86,7 @@ export default function App() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </SignalsProvider>
         </ThemeProvider>
       </AuthProvider>
     </BrowserRouter>

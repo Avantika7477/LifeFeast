@@ -21,6 +21,8 @@ const taskSchema = new mongoose.Schema(
       default: 'todo',
     },
     deadline: { type: Date },
+    dueTime: { type: String, default: '' },
+    dueAt: { type: Date },
     notes: { type: String, default: '' },
   },
   { timestamps: true }

@@ -21,7 +21,9 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useSignals } from '../../context/SignalsContext';
 import Toast from '../common/Toast';
+import UnfinishedReminder from '../tasks/UnfinishedReminder';
 import { motion } from 'framer-motion';
 
 const links = [
@@ -40,9 +42,11 @@ const links = [
 export default function AppLayout() {
   const { user, logout, isAdmin } = useAuth();
   const { isDark, toggleTheme } = useTheme();
+  const { unread } = useSignals();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const unreadLabel = unread > 99 ? '99+' : String(unread);
 
   const handleLogout = () => {
     logout();
@@ -67,6 +71,11 @@ export default function AppLayout() {
             >
               <Icon size={18} />
               {label}
+              {to === '/notifications' && unread > 0 && (
+                <span className="nav-unread" aria-label={`${unread} unread signals`}>
+                  {unreadLabel}
+                </span>
+              )}
             </NavLink>
           ))}
           {isAdmin && (
@@ -132,6 +141,7 @@ export default function AppLayout() {
           <Outlet />
         </motion.main>
       </div>
+      <UnfinishedReminder />
       <Toast />
     </div>
   );

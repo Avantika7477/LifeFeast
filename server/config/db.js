@@ -45,7 +45,6 @@ async function startEmbedded() {
   const systemBinary = findCachedMongod();
   const mongod = await MongoMemoryServer.create({
     instance: {
-      port: 27017,
       ip: '127.0.0.1',
       dbName: 'lifequest',
       dbPath: dataDir,
@@ -61,30 +60,44 @@ async function startEmbedded() {
   const host = await connectUri(uri);
   console.log(
     systemBinary
-      ? `No local MongoDB on 27017 — using embedded MongoDB (${systemBinary})`
-      : 'No local MongoDB on 27017 — using embedded MongoDB (data in .mongodb-data/)',
+      ? `Using embedded MongoDB (${systemBinary})`
+      : 'Using embedded MongoDB (data in .mongodb-data/)',
   );
   console.log(`MongoDB connected: ${host}`);
 }
 
+const LOCAL_URI = 'mongodb://127.0.0.1:27017/lifequest';
+
 const connectDB = async () => {
-  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/lifequest';
+  const uri = process.env.MONGODB_URI || LOCAL_URI;
   try {
     const host = await connectUri(uri);
     console.log(`MongoDB connected: ${host}`);
+    return;
   } catch (error) {
-    console.warn(`Could not reach ${uri} (${error.message})`);
+    console.warn(`Could not reach configured MongoDB (${error.code || error.name})`);
     if (process.env.NODE_ENV === 'production') {
       console.error('Set MONGODB_URI to a MongoDB Atlas connection string in production.');
       process.exit(1);
     }
-    console.warn('Starting embedded MongoDB (first run may download a binary)...');
+  }
+
+  if (uri !== LOCAL_URI) {
     try {
-      await startEmbedded();
-    } catch (embeddedErr) {
-      console.error(`Embedded MongoDB failed: ${embeddedErr.message}`);
-      process.exit(1);
+      const host = await connectUri(LOCAL_URI);
+      console.log(`MongoDB connected (local): ${host}`);
+      return;
+    } catch {
+      // fall through to embedded
     }
+  }
+
+  console.warn('Starting embedded MongoDB (first run may download a binary)...');
+  try {
+    await startEmbedded();
+  } catch (embeddedErr) {
+    console.error(`Embedded MongoDB failed: ${embeddedErr.message}`);
+    process.exit(1);
   }
 };
 

@@ -46,7 +46,7 @@ export default function Analytics() {
       <div className="page-header">
         <div>
           <h2>The Chronicle</h2>
-          <p>Proof that you showed up.</p>
+          <p>Your progress over time — streaks, XP, and how consistently you have been showing up.</p>
         </div>
       </div>
 

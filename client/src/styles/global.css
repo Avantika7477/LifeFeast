@@ -399,6 +399,7 @@ textarea.form-control {
   border: 1px solid transparent;
   transition: all 0.15s ease;
   text-decoration: none;
+  position: relative;
 }
 
 .nav-link:hover {
@@ -471,6 +472,8 @@ textarea.form-control {
   color: var(--text-muted);
   margin-top: 0.3rem;
   font-size: 0.95rem;
+  max-width: 42rem;
+  line-height: 1.45;
 }
 
 /* —— Quest hero —— */
@@ -1564,6 +1567,7 @@ table.data-table th {
   padding: 0.95rem 1rem;
   border-bottom: 1px solid var(--border);
   transition: background 0.15s;
+  cursor: pointer;
 }
 
 .notif-item.unread {
@@ -1686,4 +1690,94 @@ table.data-table th {
   margin: 0.15rem 0 0;
   color: var(--text-muted);
   font-size: 0.82rem;
+}
+
+.nav-unread {
+  margin-left: auto;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #ff4d6d;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.22);
+}
+
+.nav-unread-dot {
+  min-width: 8px;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+.task-row.focus-task {
+  background: rgba(255, 183, 3, 0.16);
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.task-row.locked {
+  opacity: 0.96;
+}
+
+.notif-item {
+  cursor: pointer;
+}
+
+.notif-item.has-task {
+  cursor: pointer;
+}
+
+.field-hint {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
+
+.reminder-lead {
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+  line-height: 1.45;
+}
+
+.reminder-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reminder-item {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+.reminder-item:hover {
+  border-color: var(--primary);
+  background: var(--bg-card-hover);
+}
+
+.reminder-item-title {
+  font-weight: 700;
+}
+
+.reminder-item-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }

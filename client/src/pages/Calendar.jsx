@@ -68,7 +68,7 @@ export default function Calendar() {
       <div className="page-header">
         <div>
           <h2>Quest Calendar</h2>
-          <p>Every lit day is a step you kept.</p>
+          <p>A month view of the days you trained. A lit day means you completed at least one habit that date.</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <button className="btn-icon" onClick={prev}>

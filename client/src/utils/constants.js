@@ -30,7 +30,32 @@ export const MOODS = ['😀', '😐', '😔', '😴', '😡'];
 
 export const formatDate = (d = new Date()) => {
   const date = d instanceof Date ? d : new Date(d);
-  return date.toISOString().slice(0, 10);
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
+
+export const combineDueAt = (dateStr, timeStr) => {
+  if (!timeStr) return undefined;
+  const day = dateStr || formatDate();
+  const next = new Date(`${day}T${timeStr}`);
+  if (Number.isNaN(next.getTime())) return undefined;
+  return next.toISOString();
+};
+
+export const formatDue = (task) => {
+  if (task?.dueAt) {
+    return new Date(task.dueAt).toLocaleString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+  }
+  if (task?.dueTime) return task.dueTime;
+  if (task?.deadline) return new Date(task.deadline).toLocaleDateString();
+  return '';
 };
 
 export const displayDate = (d = new Date()) =>

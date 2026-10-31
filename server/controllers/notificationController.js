@@ -1,6 +1,17 @@
 import Notification from '../models/Notification.js';
 import Habit from '../models/Habit.js';
+import Task from '../models/Task.js';
 import { MOTIVATIONAL_QUOTES, todayStr } from '../utils/helpers.js';
+import { formatDueLabel } from '../utils/taskDue.js';
+
+export const getUnreadCount = async (req, res) => {
+  try {
+    const count = await Notification.countDocuments({ user: req.user._id, read: false });
+    res.json({ count });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 export const getNotifications = async (req, res) => {
   try {
@@ -79,6 +90,20 @@ export const generateDaily = async (req, res) => {
         message: `Time for: ${h.name} at ${h.reminderTime}`,
         type: 'reminder',
         meta: { habitId: h._id, time: h.reminderTime },
+      });
+    }
+
+    const openTasks = await Task.find({ user: req.user._id, status: { $ne: 'completed' } }).limit(5);
+    for (const t of openTasks) {
+      const when = formatDueLabel(t);
+      await Notification.create({
+        user: req.user._id,
+        title: 'Unfinished task',
+        message: when
+          ? `${t.title} is still open. Mark it done after ${when}.`
+          : `${t.title} is still open on your quest log.`,
+        type: 'reminder',
+        meta: { taskId: t._id, type: t.type },
       });
     }
 

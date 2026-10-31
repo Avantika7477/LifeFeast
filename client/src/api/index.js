@@ -44,6 +44,7 @@ export const journalAPI = {
 
 export const notificationAPI = {
   getAll: () => api.get('/notifications'),
+  unreadCount: () => api.get('/notifications/unread-count'),
   markRead: (id) => api.put(`/notifications/${id}/read`),
   markAllRead: () => api.put('/notifications/read-all'),
   remove: (id) => api.delete(`/notifications/${id}`),

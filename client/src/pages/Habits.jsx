@@ -88,7 +88,7 @@ export default function Habits() {
       <div className="page-header">
         <div>
           <h2>Your Training</h2>
-          <p>Small reps. Legendary days.</p>
+          <p>Create habits here and check them off each day. Completing a habit earns XP, coins, and keeps your streak alive.</p>
         </div>
         <button
           className="btn btn-primary"

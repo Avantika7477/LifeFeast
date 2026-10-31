@@ -55,7 +55,7 @@ export default function Journal() {
       <div className="page-header">
         <div>
           <h2>Campfire Journal</h2>
-          <p>Write it down. Make it real.</p>
+          <p>Write how the day felt. Mood and notes stay on this date so you can look back later.</p>
         </div>
         <button className="btn btn-primary" onClick={save} disabled={saving}>
           {saving ? 'Saving...' : 'Save Entry'}

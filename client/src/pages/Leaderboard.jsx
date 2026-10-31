@@ -45,7 +45,7 @@ export default function Leaderboard() {
       <div className="page-header">
         <div>
           <h2>Hall of Heroes</h2>
-          <p>Climb the ranks. Leave a mark.</p>
+          <p>See how you rank against friends and the global board by streak, XP, and coins.</p>
         </div>
       </div>
 
