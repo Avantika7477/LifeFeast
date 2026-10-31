@@ -117,25 +117,23 @@ export default function AppLayout() {
             >
               {open ? <X size={20} /> : <Menu size={20} />}
             </button>
-            <div className="user-chip">
-              <div className="avatar">{user?.name?.[0]?.toUpperCase()}</div>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontWeight: 700, fontSize: '0.95rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {user?.name}
-                </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                  {t('nav.levelXp', { level: user?.level, xp: user?.xp })}
-                </div>
+            <div className="user-chip" title={user?.name}>
+              <div className="avatar" aria-hidden="true">
+                {user?.name?.[0]?.toUpperCase()}
+              </div>
+              <div className="user-chip-text">
+                <div className="user-chip-name">{user?.name}</div>
+                <div className="user-chip-meta">{t('nav.levelXp', { level: user?.level, xp: user?.xp })}</div>
               </div>
             </div>
           </div>
           <div className="topbar-actions">
             <LanguageSelect compact id="app-language" />
-            <span className="pill pill-amber" title={t('nav.coins')}>
-              <Coins size={14} /> {user?.coins ?? 0}
+            <span className="pill pill-amber topbar-stat" title={t('nav.coins')}>
+              <Coins size={14} /> <span>{user?.coins ?? 0}</span>
             </span>
-            <span className="pill" title={t('nav.streak')}>
-              🔥 {user?.currentStreak ?? 0}
+            <span className="pill topbar-stat" title={t('nav.streak')}>
+              🔥 <span>{user?.currentStreak ?? 0}</span>
               <span className="pill-extra"> {t('nav.days')}</span>
             </span>
             <button className="btn-icon" onClick={toggleTheme} title={t('common.toggleTheme')} aria-label={t('common.toggleTheme')}>

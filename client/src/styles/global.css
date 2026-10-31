@@ -427,12 +427,14 @@ textarea.form-control {
 
 .topbar {
   min-height: var(--nav-h);
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0 1.35rem;
-  padding-top: env(safe-area-inset-top);
+  flex-wrap: nowrap;
+  gap: 0.65rem;
+  padding: 0.55rem 1.35rem;
+  padding-top: max(0.55rem, env(safe-area-inset-top));
   border-bottom: 1px solid var(--border);
   background: rgba(26, 18, 64, 0.86);
   backdrop-filter: blur(10px);
@@ -874,8 +876,9 @@ textarea.form-control {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: calc(0.75rem + env(safe-area-inset-top)) 0 0.5rem;
+  flex-wrap: nowrap;
+  gap: 0.65rem;
+  padding: calc(0.75rem + env(safe-area-inset-top)) 0 0.55rem;
   position: sticky;
   top: 0;
   z-index: 40;
@@ -920,8 +923,11 @@ textarea.form-control {
 .landing-nav-actions {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .landing-hero {
@@ -1042,6 +1048,7 @@ textarea.form-control {
 
 .lang-select-wrap.compact {
   display: inline-flex;
+  flex: 0 0 auto;
   flex-direction: row;
   align-items: center;
 }
@@ -1059,24 +1066,23 @@ textarea.form-control {
 }
 
 .lang-select.compact {
-  min-width: 0;
-  width: auto;
-  max-width: 9.5rem;
-  min-height: 42px;
-  padding: 0.4rem 2rem 0.4rem 0.7rem;
-  font-size: 0.82rem;
-  font-weight: 700;
+  width: 4.4rem;
+  min-width: 4.4rem;
+  max-width: 4.4rem;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 1.55rem 0 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
   border-radius: 12px;
+  text-align: left;
+  line-height: 1;
 }
 
-@media (max-width: 640px) {
-  .lang-select.compact {
-    max-width: 7.5rem;
-    min-height: 36px;
-    padding: 0.3rem 1.7rem 0.3rem 0.55rem;
-    font-size: 0.75rem;
-    border-radius: 10px;
-  }
+.topbar-stat {
+  min-height: 40px;
+  padding-inline: 0.65rem;
 }
 
 /* —— Toast —— */
@@ -1467,24 +1473,39 @@ textarea.form-control {
   .topbar {
     padding: 0.45rem 0.75rem;
     padding-top: max(0.45rem, env(safe-area-inset-top));
-    gap: 0.45rem;
+    gap: 0.4rem;
+    min-height: 56px;
   }
 
   .topbar-actions {
-    flex-wrap: nowrap;
-    flex-shrink: 0;
-    gap: 0.3rem;
+    gap: 0.28rem;
   }
 
   .topbar-meta {
-    flex: 1;
-    min-width: 0;
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 
   .user-chip {
-    flex: 1;
-    min-width: 0;
+    gap: 0.4rem;
+  }
+
+  .user-chip-name {
+    max-width: 7.5rem;
+    font-size: 0.88rem;
+  }
+
+  .user-chip-meta {
+    font-size: 0.7rem;
+  }
+
+  .lang-select.compact {
+    width: 3.7rem;
+    min-width: 3.7rem;
+    max-width: 3.7rem;
+    min-height: 36px;
+    padding: 0.25rem 1.45rem 0.25rem 0.4rem;
+    font-size: 0.72rem;
+    border-radius: 10px;
   }
 }
 
@@ -1498,14 +1519,21 @@ textarea.form-control {
   }
 
   .landing-nav {
-    gap: 0.4rem;
+    gap: 0.35rem;
     padding: calc(0.5rem + env(safe-area-inset-top)) 0 0.45rem;
   }
 
   .landing-brand {
     font-size: 1rem;
-    gap: 0.4rem;
+    gap: 0.35rem;
     min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .landing-brand span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .landing-brand .logo-mark {
@@ -1513,21 +1541,23 @@ textarea.form-control {
     height: 32px;
     border-radius: 9px;
     font-size: 0.9rem;
+    flex-shrink: 0;
   }
 
   .landing-nav-actions {
-    flex-wrap: nowrap;
-    gap: 0.3rem;
+    gap: 0.28rem;
   }
 
   .landing-nav-actions .btn {
     min-height: 36px;
-    padding: 0.4rem 0.7rem;
-    font-size: 0.8rem;
+    padding: 0.4rem 0.65rem;
+    font-size: 0.78rem;
     border-radius: 10px;
   }
 
-  .landing-nav-actions .btn-icon {
+  .landing-nav-actions .btn-icon,
+  .topbar .btn-icon,
+  .topbar .mobile-toggle {
     width: 36px;
     height: 36px;
     border-radius: 10px;
@@ -1542,9 +1572,11 @@ textarea.form-control {
     display: inline;
   }
 
-  .topbar .pill {
-    padding: 0.22rem 0.5rem;
+  .topbar .pill,
+  .topbar-stat {
+    padding: 0.22rem 0.45rem;
     font-size: 0.7rem;
+    gap: 0.2rem;
   }
 
   .pill-extra {
@@ -1552,24 +1584,20 @@ textarea.form-control {
   }
 
   .avatar {
-    width: 30px;
-    height: 30px;
-    font-size: 0.78rem;
-    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+    border-radius: 9px;
   }
 
-  .user-chip > div:last-child {
-    font-size: 0.82rem;
+  .user-chip-text {
+    display: none;
   }
 
-  .user-chip > div:last-child > div:last-child {
-    font-size: 0.68rem;
-  }
-
-  .topbar .btn-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+  .lang-select.compact {
+    width: 3.5rem;
+    min-width: 3.5rem;
+    max-width: 3.5rem;
   }
 
   .stats-grid {
@@ -1808,8 +1836,33 @@ table.data-table th {
 .user-chip {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.55rem;
   min-width: 0;
+}
+
+.user-chip-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+
+.user-chip-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 14rem;
+}
+
+.user-chip-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .avatar {
@@ -1830,16 +1883,75 @@ table.data-table th {
 .topbar-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  gap: 0.4rem;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
   justify-content: flex-end;
+}
+
+.topbar-stat {
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .topbar-meta {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.55rem;
   min-width: 0;
+  flex: 1 1 auto;
+}
+
+@media (max-width: 900px) {
+  .user-chip-name {
+    max-width: 7.5rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .user-chip-meta {
+    display: none;
+  }
+
+  .user-chip-name {
+    max-width: 6.5rem;
+  }
+
+  .pill-extra {
+    display: none;
+  }
+
+  .topbar .btn-icon,
+  .landing-nav-actions .btn-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .lang-select.compact {
+    height: 38px;
+    min-height: 38px;
+  }
+
+  .topbar-stat {
+    min-height: 38px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-chip-text {
+    display: none;
+  }
+
+  .lang-select.compact {
+    width: 3.5rem;
+    min-width: 3.5rem;
+    max-width: 3.5rem;
+    min-height: 36px;
+  }
+
+  .topbar-actions {
+    gap: 0.28rem;
+  }
 }
 
 /* —— PWA install —— */

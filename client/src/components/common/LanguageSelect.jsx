@@ -18,7 +18,7 @@ export default function LanguageSelect({ compact = false, id = 'language-select'
         {LANGUAGES.map((l) => (
           <option key={l.code} value={l.code}>
             {compact
-              ? l.native
+              ? l.code.toUpperCase()
               : l.code === DEFAULT_LANG
                 ? `${l.native} (${t('settings.defaultLang')})`
                 : `${l.native} · ${l.name}`}
