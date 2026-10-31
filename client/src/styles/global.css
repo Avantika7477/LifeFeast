@@ -1692,6 +1692,18 @@ table.data-table th {
   font-size: 0.82rem;
 }
 
+.install-help {
+  color: var(--text-muted);
+  margin: 0 0 0.75rem;
+  line-height: 1.45;
+}
+
+.install-help a {
+  color: var(--primary-soft);
+  font-weight: 700;
+  word-break: break-all;
+}
+
 .nav-unread {
   margin-left: auto;
   min-width: 18px;

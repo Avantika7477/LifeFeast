@@ -4,6 +4,7 @@ import { authAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { usePwaInstall } from '../hooks/usePwaInstall';
+import { INSTALL_URL } from '../utils/constants';
 import Modal from '../components/common/Modal';
 
 export default function Settings() {
@@ -96,18 +97,35 @@ export default function Settings() {
         <div className="glass" style={{ padding: '1.5rem' }}>
           <h3 style={{ marginBottom: '1rem' }}>Install app</h3>
           {installed ? (
-            <p style={{ color: 'var(--text-muted)' }}>LifeQuest is installed on this device.</p>
+            <p className="install-help">LifeQuest is installed on this device. Open it from your home screen or app list.</p>
           ) : (
             <>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
-                {showIosHelp && !canInstall
-                  ? 'On iPhone, tap Share, then Add to Home Screen.'
-                  : 'Install LifeQuest to open it from your home screen like a native app.'}
+              <p className="install-help">
+                Put LifeQuest on this computer or phone like a normal app. It opens in its own window, works offline after
+                the first load, and you launch it from your desktop or home screen.
               </p>
-              {canInstall && (
+              {showIosHelp && !canInstall ? (
+                <p className="install-help">On iPhone or iPad: tap Share, then Add to Home Screen.</p>
+              ) : (
+                <p className="install-help">
+                  On a computer, open Chrome or Edge, then use the install icon in the address bar, or the browser menu
+                  → Install LifeQuest.
+                </p>
+              )}
+              <p className="install-help">
+                Install from this site:{' '}
+                <a href={INSTALL_URL} target="_blank" rel="noreferrer">
+                  {INSTALL_URL.replace('https://', '')}
+                </a>
+              </p>
+              {canInstall ? (
                 <button className="btn btn-primary" type="button" onClick={install}>
                   Install LifeQuest
                 </button>
+              ) : (
+                <a className="btn btn-primary" href={INSTALL_URL} target="_blank" rel="noreferrer">
+                  Open install page
+                </a>
               )}
             </>
           )}

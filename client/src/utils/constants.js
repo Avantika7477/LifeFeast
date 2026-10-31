@@ -80,6 +80,8 @@ export const questGreeting = (name) => {
   return { kicker: 'Night watch', title: `Rest is part of the quest, ${who}.` };
 };
 
+export const INSTALL_URL = 'https://lifefeast.vercel.app';
+
 export const streakCopy = (days) => {
   const n = Number(days) || 0;
   if (n <= 0) return 'Light the first flame today';
