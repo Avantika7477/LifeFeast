@@ -51,7 +51,7 @@ export function SignalsProvider({ children }) {
     const timer = setInterval(() => {
       refreshUnread();
       refreshFeedbackUnread();
-    }, 45000);
+    }, 15000);
     return () => clearInterval(timer);
   }, [user, isAdmin, refreshUnread, refreshFeedbackUnread]);
 

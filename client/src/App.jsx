@@ -25,11 +25,17 @@ import Admin from './pages/Admin';
 import Home from './pages/Home';
 import InstallBanner from './components/common/InstallBanner';
 import TaskAlarm from './components/tasks/TaskAlarm';
+import ChatNotify from './components/chat/ChatNotify';
 
 function LoggedInAlarms() {
   const { user, loading } = useAuth();
   if (loading || !user) return null;
-  return <TaskAlarm />;
+  return (
+    <>
+      <TaskAlarm />
+      <ChatNotify />
+    </>
+  );
 }
 
 function PublicOnly({ children }) {

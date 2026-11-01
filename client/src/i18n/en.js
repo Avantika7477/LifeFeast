@@ -401,7 +401,7 @@ const en = {
   },
   signals: {
     title: 'Signals',
-    lead: 'Reminders, missed habits, wins, friend requests, and challenges. A red dot means something is unread. Tap a request to open Heroes, a challenge to open Missions, or a feedback note to open Admin.',
+    lead: 'Reminders, missed habits, wins, friend requests, challenges, and chat messages. A red dot means something is unread. Tap a request to open Heroes, a challenge to open Missions, a chat note to open Chat, or a feedback note to open Admin.',
     generate: 'Generate Daily',
     markAll: 'Mark All Read',
     emptyTitle: 'Quiet for now',
@@ -412,6 +412,7 @@ const en = {
     openChallenge: 'Open challenge',
     openRequest: 'Open request',
     openCampfire: 'Open Chat',
+    openChat: 'Open chat',
     openFeedback: 'Open feedback inbox',
   },
   feedback: {

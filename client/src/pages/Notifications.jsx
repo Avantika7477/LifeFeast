@@ -60,6 +60,10 @@ export default function Notifications() {
       navigate(`/campfire?friend=${n.meta.friendId}`);
       return;
     }
+    if (n.meta?.kind === 'chat' && n.meta?.friendId) {
+      navigate(`/campfire?friend=${n.meta.friendId}`);
+      return;
+    }
     if (n.meta?.kind === 'feedback') {
       navigate('/admin?tab=feedback');
       return;
@@ -140,6 +144,7 @@ export default function Notifications() {
                   {n.meta?.kind === 'challenge' || n.meta?.challengeId ? ` · ${t('signals.openChallenge')}` : ''}
                   {n.meta?.kind === 'friend-request' ? ` · ${t('signals.openRequest')}` : ''}
                   {n.meta?.kind === 'friend-accepted' ? ` · ${t('signals.openCampfire')}` : ''}
+                  {n.meta?.kind === 'chat' ? ` · ${t('signals.openChat')}` : ''}
                   {n.meta?.kind === 'feedback' ? ` · ${t('signals.openFeedback')}` : ''}
                 </div>
               </div>

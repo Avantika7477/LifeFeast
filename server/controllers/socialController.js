@@ -11,6 +11,7 @@ import {
   sendFriendRequest,
   withRelation,
 } from '../utils/friendship.js';
+import { sendPushToUser } from '../utils/pushService.js';
 
 async function assertFriends(userId, friendId) {
   if (!mongoose.isValidObjectId(friendId)) {
@@ -108,6 +109,23 @@ export const sendMessage = async (req, res) => {
       to: req.params.friendId,
       text,
     });
+    const preview = text.length > 80 ? `${text.slice(0, 77)}…` : text;
+    await Notification.create({
+      user: req.params.friendId,
+      title: `Message from ${req.user.name}`,
+      message: preview,
+      type: 'system',
+      meta: {
+        kind: 'chat',
+        friendId: req.user._id,
+        messageId: message._id,
+      },
+    });
+    sendPushToUser(req.params.friendId, {
+      title: `Message from ${req.user.name}`,
+      body: preview,
+      url: `/campfire?friend=${req.user._id}`,
+    }).catch(() => {});
     res.status(201).json(message);
   } catch (error) {
     res.status(error.status || 500).json({ message: error.message });
