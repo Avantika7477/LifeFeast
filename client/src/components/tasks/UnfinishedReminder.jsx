@@ -18,7 +18,7 @@ export default function UnfinishedReminder() {
       .getAll()
       .then(({ data }) => {
         if (cancelled) return;
-        const unfinished = (data || []).filter((t) => t.status !== 'completed');
+        const unfinished = (data || []).filter((t) => t.status === 'todo');
         sessionStorage.setItem(NUDGE_KEY, '1');
         if (unfinished.length) {
           setItems(unfinished.slice(0, 8));

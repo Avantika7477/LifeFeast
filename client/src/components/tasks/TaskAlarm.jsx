@@ -20,7 +20,7 @@ function readSnooze() {
 
 function openTasks(tasks) {
   return (tasks || []).filter((t) => {
-    if (t.status === 'completed') return false;
+    if (t.status === 'completed' || t.status === 'in-progress') return false;
     if (t.dueAt) return Boolean(t.completable);
     return true;
   });
