@@ -150,6 +150,27 @@ export default function Campfire() {
                     <strong>{active.name}</strong>
                     <span>{t('campfire.levelN', { level: active.level })}</span>
                   </div>
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm campfire-unfriend"
+                    disabled={sending}
+                    onClick={async () => {
+                      if (!window.confirm(t('heroes.unfriendConfirm', { name: active.name }))) return;
+                      setSending(true);
+                      try {
+                        const { data } = await socialAPI.unfriend(active.id);
+                        showToast(data.message || t('heroes.unfriended'));
+                        setSearchParams({});
+                        await loadFriends();
+                      } catch (err) {
+                        showToast(err.response?.data?.message || t('common.failed'), 'error');
+                      } finally {
+                        setSending(false);
+                      }
+                    }}
+                  >
+                    {t('heroes.unfriend')}
+                  </button>
                 </header>
                 <div className="campfire-messages">
                   {messages.length === 0 && <p className="install-help">{t('campfire.noMessages')}</p>}

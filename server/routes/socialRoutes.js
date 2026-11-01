@@ -5,6 +5,7 @@ import {
   searchPeople,
   requestFriend,
   respondFriend,
+  unfriend,
   getMessages,
   sendMessage,
   listChallenges,
@@ -17,6 +18,7 @@ import { protect } from '../middleware/auth.js';
 const router = express.Router();
 router.use(protect);
 router.get('/friends', listFriends);
+router.delete('/friends/:friendId', unfriend);
 router.get('/people', searchPeople);
 router.get('/requests', listRequests);
 router.post('/requests', requestFriend);

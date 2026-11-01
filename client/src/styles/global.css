@@ -2299,6 +2299,12 @@ table.data-table th {
 
 .campfire-thread-head div {
   min-width: 0;
+  flex: 1;
+}
+
+.campfire-unfriend {
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .campfire-thread-head strong {

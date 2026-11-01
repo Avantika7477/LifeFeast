@@ -6,6 +6,7 @@ import Notification from '../models/Notification.js';
 import FriendRequest from '../models/FriendRequest.js';
 import {
   becomeFriends,
+  endFriendship,
   escapeRegex,
   mapRelations,
   sendFriendRequest,
@@ -347,7 +348,7 @@ export const respondFriend = async (req, res) => {
       title: action === 'accept' ? 'Friend request accepted' : 'Friend request declined',
       message:
         action === 'accept'
-          ? `${req.user.name} accepted. You can talk on Campfire.`
+          ? `${req.user.name} accepted. You can talk in Chat.`
           : `${req.user.name} declined for now.`,
       type: 'system',
       meta: {
@@ -357,6 +358,51 @@ export const respondFriend = async (req, res) => {
       },
     });
     res.json({ message: action === 'accept' ? 'You are now friends' : 'Request declined', request });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const unfriend = async (req, res) => {
+  try {
+    const friendId = req.params.friendId;
+    if (!mongoose.isValidObjectId(friendId)) {
+      return res.status(404).json({ message: 'Friend not found' });
+    }
+    if (String(friendId) === String(req.user._id)) {
+      return res.status(400).json({ message: 'You cannot unfriend yourself.' });
+    }
+
+    const me = await User.findById(req.user._id).select('friends name');
+    if (!me?.friends?.some((id) => id.equals(friendId))) {
+      return res.status(400).json({ message: 'You are not friends with this player.' });
+    }
+
+    const friend = await User.findById(friendId).select('name');
+    await endFriendship(req.user._id, friendId);
+
+    await Challenge.updateMany(
+      {
+        status: { $in: ['pending', 'accepted'] },
+        $or: [
+          { from: req.user._id, to: friendId },
+          { from: friendId, to: req.user._id },
+        ],
+      },
+      { $set: { status: 'declined' } }
+    );
+
+    await Notification.create({
+      user: friendId,
+      title: 'Friend removed',
+      message: `${req.user.name} removed you from their friends list.`,
+      type: 'system',
+      meta: { kind: 'unfriended', friendId: req.user._id },
+    });
+
+    res.json({
+      message: friend?.name ? `Removed ${friend.name} from friends` : 'Friend removed',
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

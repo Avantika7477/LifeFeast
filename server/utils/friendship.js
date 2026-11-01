@@ -60,6 +60,11 @@ export async function becomeFriends(aId, bId) {
   await User.updateOne({ _id: bId }, { $addToSet: { friends: aId } });
 }
 
+export async function endFriendship(aId, bId) {
+  await User.updateOne({ _id: aId }, { $pull: { friends: bId } });
+  await User.updateOne({ _id: bId }, { $pull: { friends: aId } });
+}
+
 export async function sendFriendRequest({ fromId, fromName, toUser }) {
   if (!toUser || !toUser.isActive) {
     const err = new Error('User not found');

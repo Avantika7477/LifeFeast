@@ -56,6 +56,7 @@ export const notificationAPI = {
 
 export const socialAPI = {
   friends: () => api.get('/social/friends'),
+  unfriend: (friendId) => api.delete(`/social/friends/${friendId}`),
   people: (q) => api.get('/social/people', { params: { q } }),
   requests: () => api.get('/social/requests'),
   requestFriend: (data) => api.post('/social/requests', data),

@@ -5,9 +5,23 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import Loader from '../components/common/Loader';
 
-function FriendAction({ row, onRequest, onRespond, busy, t }) {
+function FriendAction({ row, onRequest, onRespond, onUnfriend, busy, t }) {
   if (row.isMe || row.relation === 'me') return null;
-  if (row.relation === 'friends') return <span className="pill pill-green">{t('heroes.friendsLabel')}</span>;
+  if (row.relation === 'friends') {
+    return (
+      <div className="hero-actions">
+        <span className="pill pill-green">{t('heroes.friendsLabel')}</span>
+        <button
+          className="btn btn-ghost btn-sm"
+          type="button"
+          disabled={busy}
+          onClick={() => onUnfriend(row)}
+        >
+          {t('heroes.unfriend')}
+        </button>
+      </div>
+    );
+  }
   if (row.relation === 'outgoing') return <span className="pill">{t('heroes.requested')}</span>;
   if (row.relation === 'incoming') {
     return (
@@ -140,6 +154,21 @@ export default function Leaderboard() {
     }
   };
 
+  const unfriend = async (row) => {
+    const name = row.name || t('campfire.yourFriend');
+    if (!window.confirm(t('heroes.unfriendConfirm', { name }))) return;
+    setBusyId(row.id);
+    try {
+      const { data } = await socialAPI.unfriend(row.id);
+      showToast(data.message || t('heroes.unfriended'));
+      await refreshAll();
+    } catch (err) {
+      showToast(err.response?.data?.message || t('common.failed'), 'error');
+    } finally {
+      setBusyId('');
+    }
+  };
+
   const showSearch = query.trim().length >= 2;
 
   return (
@@ -197,7 +226,14 @@ export default function Leaderboard() {
                   <span>{r.xp} XP</span>
                 </div>
               </div>
-              <FriendAction row={r} onRequest={requestById} onRespond={respond} busy={!!busyId} t={t} />
+              <FriendAction
+                row={r}
+                onRequest={requestById}
+                onRespond={respond}
+                onUnfriend={unfriend}
+                busy={!!busyId}
+                t={t}
+              />
             </div>
           ))}
         </div>
@@ -250,7 +286,14 @@ export default function Leaderboard() {
                   <span>🪙 {r.coins}</span>
                 </div>
               </div>
-              <FriendAction row={r} onRequest={requestById} onRespond={respond} busy={!!busyId} t={t} />
+              <FriendAction
+                row={r}
+                onRequest={requestById}
+                onRespond={respond}
+                onUnfriend={unfriend}
+                busy={!!busyId}
+                t={t}
+              />
             </div>
           ))}
           {rows.length === 0 && (
