@@ -20,6 +20,8 @@ const taskSchema = new mongoose.Schema(
       enum: ['todo', 'in-progress', 'completed'],
       default: 'todo',
     },
+    /** Set when status becomes in-progress; siren waits until the next local day. */
+    inProgressAt: { type: Date, default: null },
     deadline: { type: Date },
     dueTime: { type: String, default: '' },
     dueAt: { type: Date },

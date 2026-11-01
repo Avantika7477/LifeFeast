@@ -18,7 +18,19 @@ export default function UnfinishedReminder() {
       .getAll()
       .then(({ data }) => {
         if (cancelled) return;
-        const unfinished = (data || []).filter((t) => t.status === 'todo');
+        const unfinished = (data || []).filter((t) => {
+          if (t.status === 'todo') return true;
+          if (t.status !== 'in-progress') return false;
+          const started = t.inProgressAt || t.updatedAt;
+          if (!started) return true;
+          const d = new Date(started);
+          const today = new Date();
+          const sameDay =
+            d.getFullYear() === today.getFullYear() &&
+            d.getMonth() === today.getMonth() &&
+            d.getDate() === today.getDate();
+          return !sameDay;
+        });
         sessionStorage.setItem(NUDGE_KEY, '1');
         if (unfinished.length) {
           setItems(unfinished.slice(0, 8));

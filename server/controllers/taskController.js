@@ -48,7 +48,13 @@ export const updateTask = async (req, res) => {
       });
     }
 
+    const previousStatus = task.status;
     Object.assign(task, req.body);
+    if (task.status === 'in-progress' && previousStatus !== 'in-progress') {
+      task.inProgressAt = new Date();
+    } else if (task.status !== 'in-progress') {
+      task.inProgressAt = null;
+    }
     await task.save();
     res.json(withCompletable(task));
   } catch (error) {

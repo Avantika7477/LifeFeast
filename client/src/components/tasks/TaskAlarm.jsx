@@ -18,9 +18,32 @@ function readSnooze() {
   }
 }
 
+function localDayKey(value = new Date()) {
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return '';
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+/** In-progress tasks stay quiet the day you start them; they alarm again from the next day. */
+function inProgressIsDue(task) {
+  const started = task.inProgressAt || task.updatedAt;
+  if (!started) return true;
+  const startedDay = localDayKey(started);
+  const today = localDayKey();
+  return Boolean(startedDay) && startedDay < today;
+}
+
 function openTasks(tasks) {
   return (tasks || []).filter((t) => {
-    if (t.status === 'completed' || t.status === 'in-progress') return false;
+    if (t.status === 'completed') return false;
+    if (t.status === 'in-progress') {
+      if (!inProgressIsDue(t)) return false;
+    } else if (t.status !== 'todo') {
+      return false;
+    }
     if (t.dueAt) return Boolean(t.completable);
     return true;
   });
