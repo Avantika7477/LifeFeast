@@ -15,6 +15,23 @@ export const getUnreadCount = async (req, res) => {
   }
 };
 
+/** Small payload for chat toast polling — unread chat only. */
+export const getUnreadChat = async (req, res) => {
+  try {
+    const items = await Notification.find({
+      user: req.user._id,
+      read: false,
+      'meta.kind': 'chat',
+    })
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select('title message meta createdAt read');
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find({ user: req.user._id })

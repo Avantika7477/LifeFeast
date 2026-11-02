@@ -2,6 +2,7 @@ import express from 'express';
 import {
   getNotifications,
   getUnreadCount,
+  getUnreadChat,
   getVapidKey,
   savePushSubscription,
   removePushSubscription,
@@ -19,6 +20,7 @@ router.post('/push-reminders', runPushReminders);
 router.use(protect);
 router.get('/', getNotifications);
 router.get('/unread-count', getUnreadCount);
+router.get('/unread-chat', getUnreadChat);
 router.post('/generate-daily', generateDaily);
 router.post('/subscribe', savePushSubscription);
 router.delete('/subscribe', removePushSubscription);

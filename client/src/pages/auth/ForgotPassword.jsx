@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { authAPI } from '../../api';
 import { useLanguage } from '../../context/LanguageContext';
 import LanguageSelect from '../../components/common/LanguageSelect';
@@ -50,7 +49,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="auth-page">
-      <motion.div className="auth-card glass" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
+      <div className="auth-card glass">
         <div className="auth-lang">
           <LanguageSelect compact id="forgot-language" />
         </div>
@@ -136,7 +135,7 @@ export default function ForgotPassword() {
             <Link to="/">{t('auth.backHome')}</Link>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

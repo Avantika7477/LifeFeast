@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { apiErrorMessage } from '../../api/client';
@@ -32,11 +31,7 @@ export default function Register() {
 
   return (
     <div className="auth-page">
-      <motion.div
-        className="auth-card glass"
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
+      <div className="auth-card glass">
         <div className="auth-lang">
           <LanguageSelect compact id="register-language" />
         </div>
@@ -97,7 +92,7 @@ export default function Register() {
             <Link to="/">{t('auth.backHome')}</Link>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

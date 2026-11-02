@@ -1106,6 +1106,18 @@ textarea.form-control {
   max-width: min(360px, calc(100vw - 2rem));
   background: var(--bg-elevated);
   border: 1px solid var(--border-strong);
+  animation: toast-in 0.22s ease-out;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .toast.success {

@@ -42,11 +42,20 @@ export default function Campfire() {
   useEffect(() => {
     loadMessages().catch(() => {});
     if (!friendId) return undefined;
-    const timer = setInterval(() => {
+    const tick = () => {
+      if (document.visibilityState !== 'visible') return;
       loadFriends().catch(() => {});
       loadMessages().catch(() => {});
-    }, 4000);
-    return () => clearInterval(timer);
+    };
+    const timer = setInterval(tick, 8000);
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') tick();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
   }, [friendId]);
 
   useEffect(() => {

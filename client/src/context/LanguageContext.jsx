@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { authAPI } from '../api';
-import { DEFAULT_LANG, isLang, langMeta, tWithLang } from '../i18n';
+import { DEFAULT_LANG, isLang, langMeta, loadLanguage, tWithLang } from '../i18n';
 
 const LanguageContext = createContext(null);
 
@@ -17,12 +17,28 @@ function readStored() {
 
 export function LanguageProvider({ children }) {
   const { user, updateUserLocal } = useAuth();
-  const [language, setLanguageState] = useState(readStored);
+  const [language, setLanguageState] = useState(DEFAULT_LANG);
 
   useEffect(() => {
-    if (user?.language && isLang(user.language)) {
-      setLanguageState(user.language);
-    }
+    let cancelled = false;
+    const boot = readStored();
+    loadLanguage(boot).then(() => {
+      if (!cancelled) setLanguageState(boot);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!user?.language || !isLang(user.language)) return undefined;
+    let cancelled = false;
+    loadLanguage(user.language).then(() => {
+      if (!cancelled) setLanguageState(user.language);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [user?.language]);
 
   useEffect(() => {
@@ -35,6 +51,7 @@ export function LanguageProvider({ children }) {
   const setLanguage = useCallback(
     async (next) => {
       if (!isLang(next)) return;
+      await loadLanguage(next);
       setLanguageState(next);
       localStorage.setItem('lq_lang', next);
       if (user) {

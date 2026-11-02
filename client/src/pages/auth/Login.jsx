@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { apiErrorMessage } from '../../api/client';
@@ -34,12 +33,7 @@ export default function Login() {
 
   return (
     <div className="auth-page">
-      <motion.div
-        className="auth-card glass"
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <div className="auth-card glass">
         <div className="auth-lang">
           <LanguageSelect compact id="login-language" />
         </div>
@@ -93,7 +87,7 @@ export default function Login() {
             <Link to="/">{t('auth.backHome')}</Link>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

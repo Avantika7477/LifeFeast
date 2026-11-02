@@ -28,7 +28,6 @@ import { useSignals } from '../../context/SignalsContext';
 import Toast from '../common/Toast';
 import LanguageSelect from '../common/LanguageSelect';
 import UnfinishedReminder from '../tasks/UnfinishedReminder';
-import { motion } from 'framer-motion';
 
 const links = [
   { to: '/dashboard', key: 'nav.dashboard', icon: LayoutDashboard },
@@ -142,15 +141,9 @@ export default function AppLayout() {
           </div>
         </header>
 
-        <motion.main
-          className="page-content"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
-          key={location.pathname}
-        >
+        <main className="page-content" key={location.pathname}>
           <Outlet />
-        </motion.main>
+        </main>
       </div>
       <UnfinishedReminder />
       <Toast />

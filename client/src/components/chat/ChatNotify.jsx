@@ -4,9 +4,10 @@ import { notificationAPI } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import { useSignals } from '../../context/SignalsContext';
 import { shoutNotification } from '../../utils/notify';
+import { setVisibleInterval } from '../../utils/visibleInterval';
 
 const SEEN_KEY = 'lq_chat_seen';
-const POLL_MS = 12_000;
+const POLL_MS = 30_000;
 
 function readSeen() {
   try {
@@ -43,8 +44,8 @@ export default function ChatNotify() {
 
     const check = async () => {
       try {
-        const { data } = await notificationAPI.getAll();
-        const chats = (data || []).filter((n) => n.meta?.kind === 'chat' && n.meta?.friendId);
+        const { data } = await notificationAPI.unreadChat();
+        const chats = (data || []).filter((n) => n.meta?.friendId);
         const seen = readSeen();
         let changed = false;
 
@@ -53,9 +54,7 @@ export default function ChatNotify() {
           seen[n._id] = 1;
           changed = true;
 
-          // First poll after login: mark existing as seen, don't spam old messages.
           if (!primed.current) continue;
-          if (n.read) continue;
 
           const friendId = n.meta.friendId;
           const loc = locationRef.current;
@@ -73,7 +72,7 @@ export default function ChatNotify() {
         if (!primed.current) {
           primed.current = true;
           const keep = {};
-          chats.slice(0, 40).forEach((n) => {
+          chats.forEach((n) => {
             keep[n._id] = 1;
           });
           writeSeen(keep);
@@ -86,9 +85,7 @@ export default function ChatNotify() {
       }
     };
 
-    check();
-    const timer = setInterval(check, POLL_MS);
-    return () => clearInterval(timer);
+    return setVisibleInterval(check, POLL_MS, { runImmediately: true });
   }, [user, showToast, refreshUnread]);
 
   return null;
