@@ -107,7 +107,10 @@ app.use('/api', (_req, res) => {
   res.status(404).json({ message: 'API route not found' });
 });
 
-if (hasClient) {
+// On Vercel, the Vite "web" service serves the SPA. Only host static files from
+// Express for single-process deploys (Render / npm start). Express 5 also rejects
+// the old `app.get('*')` pattern and would crash the whole function on import.
+if (hasClient && !process.env.VERCEL) {
   app.use(
     express.static(clientDist, {
       index: false,
@@ -122,7 +125,7 @@ if (hasClient) {
   );
   // SPA fallback for app routes only — never return index.html for missing JS/CSS
   // (that combination causes a blank white screen on phones after a deploy).
-  app.get('*', (req, res, next) => {
+  app.get('/{*path}', (req, res, next) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') return next();
     if (req.path.startsWith('/api')) return next();
     if (req.path.startsWith('/assets/')) {
@@ -141,7 +144,7 @@ app.use((err, _req, res, _next) => {
 
 export default app;
 
-if (!process.env.VERCEL) {
+async function startLocal() {
   try {
     await connectDB();
   } catch (error) {
@@ -158,4 +161,8 @@ if (!process.env.VERCEL) {
   setInterval(() => {
     sendPushReminders().catch((error) => console.warn(`Push reminders: ${error.message}`));
   }, 5 * 60 * 1000);
+}
+
+if (!process.env.VERCEL) {
+  startLocal();
 }

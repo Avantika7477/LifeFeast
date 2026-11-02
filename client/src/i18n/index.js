@@ -1,4 +1,12 @@
 import en from './en.js';
+import hi from './hi.js';
+import es from './es.js';
+import fr from './fr.js';
+import de from './de.js';
+import pt from './pt.js';
+import ar from './ar.js';
+import zh from './zh.js';
+import ja from './ja.js';
 
 export const DEFAULT_LANG = 'en';
 
@@ -16,19 +24,7 @@ export const LANGUAGES = [
 
 export const LANG_CODES = LANGUAGES.map((l) => l.code);
 
-const loaders = {
-  hi: () => import('./hi.js'),
-  es: () => import('./es.js'),
-  fr: () => import('./fr.js'),
-  de: () => import('./de.js'),
-  pt: () => import('./pt.js'),
-  ar: () => import('./ar.js'),
-  zh: () => import('./zh.js'),
-  ja: () => import('./ja.js'),
-};
-
-const cache = { en };
-const pending = {};
+const RAW = { en, hi, es, fr, de, pt, ar, zh, ja };
 
 function deepMerge(base, over) {
   if (!over || typeof over !== 'object') return base;
@@ -44,32 +40,14 @@ function deepMerge(base, over) {
   return out;
 }
 
+const DICTS = Object.fromEntries(LANG_CODES.map((code) => [code, code === 'en' ? en : deepMerge(en, RAW[code] || {})]));
+
 export function isLang(code) {
   return LANG_CODES.includes(code);
 }
 
 export function langMeta(code) {
   return LANGUAGES.find((l) => l.code === code) || LANGUAGES[0];
-}
-
-/** Load a locale pack on demand (English is always ready). */
-export async function loadLanguage(code) {
-  const lang = isLang(code) ? code : DEFAULT_LANG;
-  if (cache[lang]) return cache[lang];
-  if (!loaders[lang]) return en;
-  if (!pending[lang]) {
-    pending[lang] = loaders[lang]()
-      .then((mod) => {
-        cache[lang] = deepMerge(en, mod.default || mod);
-        delete pending[lang];
-        return cache[lang];
-      })
-      .catch(() => {
-        delete pending[lang];
-        return en;
-      });
-  }
-  return pending[lang];
 }
 
 function getPath(obj, path) {
@@ -82,8 +60,7 @@ export function fill(str, vars = {}) {
 
 export function tWithLang(code, key, vars) {
   const lang = isLang(code) ? code : DEFAULT_LANG;
-  const dict = cache[lang] || en;
-  const raw = getPath(dict, key) ?? getPath(en, key) ?? key;
+  const raw = getPath(DICTS[lang], key) ?? getPath(en, key) ?? key;
   return fill(raw, vars);
 }
 

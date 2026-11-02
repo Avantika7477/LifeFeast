@@ -45,7 +45,6 @@ export const journalAPI = {
 export const notificationAPI = {
   getAll: () => api.get('/notifications'),
   unreadCount: () => api.get('/notifications/unread-count'),
-  unreadChat: () => api.get('/notifications/unread-chat'),
   vapidKey: () => api.get('/notifications/vapid-key'),
   subscribe: (subscription) => api.post('/notifications/subscribe', subscription),
   unsubscribe: (endpoint) => api.delete('/notifications/subscribe', { data: { endpoint } }),

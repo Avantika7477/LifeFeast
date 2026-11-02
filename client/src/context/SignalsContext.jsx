@@ -1,7 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { adminAPI, notificationAPI } from '../api';
 import { useAuth } from './AuthContext';
-import { setVisibleInterval } from '../utils/visibleInterval';
 
 const SignalsContext = createContext(null);
 
@@ -47,14 +46,13 @@ export function SignalsProvider({ children }) {
       setFeedbackUnread(0);
       return undefined;
     }
-    return setVisibleInterval(
-      () => {
-        refreshUnread();
-        refreshFeedbackUnread();
-      },
-      45_000,
-      { runImmediately: true }
-    );
+    refreshUnread();
+    refreshFeedbackUnread();
+    const timer = setInterval(() => {
+      refreshUnread();
+      refreshFeedbackUnread();
+    }, 15000);
+    return () => clearInterval(timer);
   }, [user, isAdmin, refreshUnread, refreshFeedbackUnread]);
 
   return (

@@ -1,5 +1,5 @@
-import { lazy, Suspense, useState } from 'react';
 import { NavLink, Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import {
   LayoutDashboard,
   Target,
@@ -27,8 +27,8 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useSignals } from '../../context/SignalsContext';
 import Toast from '../common/Toast';
 import LanguageSelect from '../common/LanguageSelect';
-
-const UnfinishedReminder = lazy(() => import('../tasks/UnfinishedReminder'));
+import UnfinishedReminder from '../tasks/UnfinishedReminder';
+import { motion } from 'framer-motion';
 
 const links = [
   { to: '/dashboard', key: 'nav.dashboard', icon: LayoutDashboard },
@@ -142,13 +142,17 @@ export default function AppLayout() {
           </div>
         </header>
 
-        <main className="page-content" key={location.pathname}>
+        <motion.main
+          className="page-content"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          key={location.pathname}
+        >
           <Outlet />
-        </main>
+        </motion.main>
       </div>
-      <Suspense fallback={null}>
-        <UnfinishedReminder />
-      </Suspense>
+      <UnfinishedReminder />
       <Toast />
     </div>
   );

@@ -19,10 +19,4 @@ export default defineConfig({
     port: 4173,
     proxy: apiProxy,
   },
-  build: {
-    target: 'es2020',
-    cssCodeSplit: true,
-    // Avoid custom manualChunks — splitting recharts previously pulled shared React
-    // helpers into a 400kb "charts" chunk and blanked first paint on phones.
-  },
 })

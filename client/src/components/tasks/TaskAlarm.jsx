@@ -6,7 +6,7 @@ import { shoutNotification, requestNotify, subscribePush } from '../../utils/not
 import { playSiren, unlockAudio } from '../../utils/siren';
 
 const INTERVAL_MS = 5 * 60 * 1000;
-const WATCH_MS = 45 * 1000;
+const WATCH_MS = 20 * 1000;
 const AUDIO_KEY = 'lq_alarm_audio';
 const SNOOZE_KEY = 'lq_alarm_snooze';
 
@@ -143,20 +143,16 @@ export default function TaskAlarm() {
   );
 
   useEffect(() => {
-    const runWatch = () => {
-      if (document.visibilityState !== 'visible') return;
-      scan({ playNew: true, playAll: false });
-    };
-    const runPulse = () => {
-      if (document.visibilityState !== 'visible') return;
+    scan({ playNew: true, playAll: false });
+    const watch = setInterval(() => scan({ playNew: true, playAll: false }), WATCH_MS);
+    const pulse = setInterval(() => {
       seenRef.current = new Set();
       scan({ playNew: false, playAll: true });
-    };
-    runWatch();
-    const watch = setInterval(runWatch, WATCH_MS);
-    const pulse = setInterval(runPulse, INTERVAL_MS);
+    }, INTERVAL_MS);
     const onVisible = () => {
-      if (document.visibilityState === 'visible') runWatch();
+      if (document.visibilityState === 'visible') {
+        scan({ playNew: true, playAll: false });
+      }
     };
     document.addEventListener('visibilitychange', onVisible);
     return () => {
