@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LifeQuest — Interview Guide</title>
+  <style>
+    @page { size: A4; margin: 16mm 16mm 18mm; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #1c1630;
+      font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+      font-size: 11.5pt;
+      line-height: 1.55;
+      background: #fff;
+    }
+    h1, h2, h3, h4 { font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.25; color: #24184a; }
+    h1 { font-size: 28pt; margin: 0 0 0.3em; }
+    h2 { font-size: 16pt; margin: 1.6em 0 0.45em; padding-top: 0.2em; border-top: 2px solid #efe7ff; page-break-after: avoid; }
+    h3 { font-size: 13pt; margin: 1.15em 0 0.35em; page-break-after: avoid; }
+    p { margin: 0.45em 0 0.7em; }
+    ul, ol { margin: 0.3em 0 0.8em; padding-left: 1.2em; }
+    li { margin: 0.2em 0; }
+    code, .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+    table { width: 100%; border-collapse: collapse; margin: 0.6em 0 1em; page-break-inside: avoid; }
+    th, td { border: 1px solid #ddd4ee; padding: 0.4em 0.55em; vertical-align: top; text-align: left; }
+    th { background: #f6f1ff; font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif; font-size: 10pt; }
+    .cover { page-break-after: always; min-height: 250mm; display: flex; flex-direction: column; justify-content: center; }
+    .kicker { letter-spacing: 0.14em; text-transform: uppercase; font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif; font-size: 10pt; color: #7a4dff; font-weight: 700; }
+    .sub { font-size: 14pt; color: #4a4060; }
+    .meta { margin-top: 2em; color: #5c546e; font-size: 11pt; }
+    .callout { background: #f7f4ff; border-left: 4px solid #7a4dff; padding: 0.7em 0.9em; margin: 0.8em 0 1em; page-break-inside: avoid; }
+    .qa { page-break-inside: avoid; margin: 0.85em 0 1em; }
+    .q { font-family: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif; font-weight: 700; color: #24184a; }
+    .a { margin-top: 0.25em; }
+    .small { font-size: 10pt; color: #5c546e; }
+  </style>
+</head>
+<body>
+
+<section class="cover">
+  <p class="kicker">LifeQuest · Interview guide</p>
+  <h1>What this app is, why it exists, and how it is built</h1>
+  <p class="sub">A readable brief you can use before a technical interview. It explains the product, the architecture, every library and why it is there, and short answers you can say out loud.</p>
+  <p class="meta">Separate from the project documentation PDF.<br />App name in the product: LifeQuest. Repository folder: LifeFeast.</p>
+</section>
+
+<h2>1. How to use this in an interview</h2>
+<p>Start with the product, then the architecture, then one feature you know well. Do not open with a list of library names. A strong opening sounds like this:</p>
+<div class="callout">
+  <p>“LifeQuest turns daily habits and tasks into a small quest. You train habits, finish tasks, keep a streak, earn XP, and talk to friends. It is a React single-page app talking to an Express API, with MongoDB for data and JWT for login. It also installs on a phone as a progressive web app.”</p>
+</div>
+<p>If they ask “why this stack?”, answer with a constraint, not a slogan: one language (JavaScript) on both sides, a document database that matches the nested habit and journal shapes, and a web app that works in the phone browser without an app-store release.</p>
+
+<h2>2. What the app is</h2>
+<p>LifeQuest is a gamified habit tracker. A person signs up, builds daily habits, checks them off, writes a journal, and completes tasks. The app turns that work into levels, XP, coins, streaks, badges, and daily missions. Friends can chat and send each other small challenges.</p>
+<p>The people who use it:</p>
+<ul>
+  <li><strong>Player</strong> — tracks habits, tasks, journal, friends, and chat.</li>
+  <li><strong>Admin</strong> — sees users, reports, and private feedback, and can hide a public review.</li>
+</ul>
+<p>The live site is a website first. On Android it can be installed from the browser. On iPhone the person uses Safari, then Share, then Add to Home Screen. There is no separate App Store binary.</p>
+
+<h2>3. Why it was built this way</h2>
+<ul>
+  <li><strong>Habits are easy to skip.</strong> XP, streaks, and a siren for unfinished work make “not done yet” visible.</li>
+  <li><strong>Notes and reminders get lost.</strong> Journal, tasks, and signals live in one account.</li>
+  <li><strong>Doing it alone is harder.</strong> Friends, chat, and challenges add another person.</li>
+  <li><strong>A native app was not required.</strong> A PWA reaches phones from one codebase.</li>
+  <li><strong>English is the default, other languages are optional.</strong> The interface can switch without a new build.</li>
+</ul>
+
+<h2>4. What a person can do</h2>
+<table>
+  <tr><th>Area</th><th>What it does</th></tr>
+  <tr><td>Account</td><td>Register, log in, reset password, change theme and language, export data, delete the account.</td></tr>
+  <tr><td>Training</td><td>Create habits by category and difficulty. Mark today done. See a progress ring.</td></tr>
+  <tr><td>Dashboard</td><td>Greeting, level, XP, streak, coins, today’s progress, a short quote.</td></tr>
+  <tr><td>Quest log</td><td>Daily, weekly, and monthly tasks. Status is to do, in progress, or completed. Optional notes and a due time.</td></tr>
+  <tr><td>Journal</td><td>One mood and note per calendar day. Not a weekly or monthly notebook.</td></tr>
+  <tr><td>Missions</td><td>Bonus challenges for extra gold. Friend challenges too.</td></tr>
+  <tr><td>Heroes</td><td>Leaderboard plus friend search, requests, accept, decline, and unfriend.</td></tr>
+  <tr><td>Chat</td><td>Messages only between accepted friends. A challenge can be sent from the thread.</td></tr>
+  <tr><td>Signals</td><td>In-app notifications: reminders, friend events, chat messages.</td></tr>
+  <tr><td>Feedback</td><td>Public reviews, or a private note that only the admin sees.</td></tr>
+  <tr><td>Alarms</td><td>A siren and a notification for open habits and to-do tasks that are due. In-progress tasks stay quiet until the next day.</td></tr>
+</table>
+
+<h2>5. How a request moves through the system</h2>
+<ol>
+  <li>The person uses the React app in the browser (Vite in development, static files in production).</li>
+  <li>Axios calls <span class="mono">/api/...</span>. In development, Vite proxies that to the API on port 5001. In production the same origin serves both the site and the API.</li>
+  <li>Express matches the route. Protected routes run the <span class="mono">protect</span> middleware.</li>
+  <li>That middleware reads the <span class="mono">Authorization: Bearer</span> JWT, checks it with <span class="mono">JWT_SECRET</span>, and loads the user from MongoDB without the password.</li>
+  <li>The controller reads or writes Mongoose models and returns JSON.</li>
+  <li>React context (auth, theme, language, unread counts) updates the screen.</li>
+</ol>
+<div class="callout">
+  <p><strong>Health check.</strong> <span class="mono">GET /api/health</span> answers even if the database is down. A healthy deploy looks like <span class="mono">{"status":"ok","db":"up"}</span>. If the database is missing, the API returns 503 with a clear message instead of crashing the whole process.</p>
+</div>
+
+<h2>6. Architecture in one picture</h2>
+<p><strong>Client</strong> — React pages, shared layout, contexts, Axios API module, service worker for install and push.</p>
+<p><strong>Server</strong> — Express app, route files, controllers, Mongoose models, JWT middleware.</p>
+<p><strong>Data</strong> — MongoDB. Locally this can be a normal MongoDB, or an embedded database if nothing is on port 27017. Production uses MongoDB Atlas. The embedded database is not used on Vercel.</p>
+<p><strong>Hosting shape.</strong> Vercel runs two services from one project: the Vite site and the Express API. Rewrites send <span class="mono">/api</span> to the API and everything else to the website. The Express app is the default export. It does not call <span class="mono">listen</span> on Vercel.</p>
+
+<h2>7. Libraries and what each one is for</h2>
+<p>These are the packages in the app. “Where” means the part of the project that depends on it.</p>
+
+<h3>Frontend</h3>
+<table>
+  <tr><th>Library</th><th>Purpose</th><th>Why this one</th></tr>
+  <tr><td>React and React DOM</td><td>Build the screens as components and render them in the browser.</td><td>The UI is interactive: forms, lists, and context. Components keep each page small.</td></tr>
+  <tr><td>React Router</td><td>URLs such as <span class="mono">/dashboard</span>, <span class="mono">/habits</span>, and <span class="mono">/campfire</span>. Guards send guests to login.</td><td>The app is a single page. The router swaps pages without a full reload.</td></tr>
+  <tr><td>Axios</td><td>HTTP client for every API call. Attaches the saved token. On 401 it clears the session.</td><td>One place for headers, base URL, and error messages.</td></tr>
+  <tr><td>Framer Motion</td><td>Small entrance animations on the home page, dashboard, habits, and toasts.</td><td>Motion is a detail, not the product. It is not required for the data to work.</td></tr>
+  <tr><td>Lucide React</td><td>Icons in the sidebar and buttons (menu, bell, settings, coins).</td><td>Consistent line icons instead of a mix of image files.</td></tr>
+  <tr><td>Recharts</td><td>Charts on the Chronicle / analytics page.</td><td>Progress over days and weeks is easier to see as a chart than as a table.</td></tr>
+  <tr><td>Vite and the React plugin</td><td>Development server, fast refresh, and the production build.</td><td>The client is plain React, not Next.js. Vite only builds the browser app.</td></tr>
+</table>
+
+<h3>Backend</h3>
+<table>
+  <tr><th>Library</th><th>Purpose</th><th>Why this one</th></tr>
+  <tr><td>Express 5</td><td>HTTP server and routes under <span class="mono">/api</span>.</td><td>A small REST API. Controllers stay separate from the route list.</td></tr>
+  <tr><td>Mongoose</td><td>Models, validation, and queries for users, habits, tasks, journal, messages, and the rest.</td><td>Schemas document the shape of each collection and reject bad writes.</td></tr>
+  <tr><td>MongoDB Memory Server</td><td>Starts a temporary MongoDB on a laptop when no database is running.</td><td>A new developer can run the API without installing MongoDB. Production sets <span class="mono">MONGODB_URI</span> to Atlas instead.</td></tr>
+  <tr><td>jsonwebtoken</td><td>Creates and checks login tokens.</td><td>The API is stateless. The browser stores the token and sends it on later calls.</td></tr>
+  <tr><td>bcryptjs</td><td>Hashes passwords before save and compares them on login. Cost factor 12.</td><td>Passwords are never stored in plain text. A pure-JS hash avoids native build issues.</td></tr>
+  <tr><td>cors</td><td>Allows the Vite dev origin and the deployed site to call the API.</td><td>Browsers block cross-origin calls unless the API says yes. Same-origin production still lists known hosts.</td></tr>
+  <tr><td>dotenv</td><td>Loads <span class="mono">server/.env</span> locally.</td><td>Secrets stay out of source code. On Vercel the same names are project environment variables.</td></tr>
+  <tr><td>web-push</td><td>Sends Web Push messages to browsers that subscribed with a VAPID key.</td><td>Reminders and chat alerts can reach a closed tab when push is allowed. If keys are missing, push is skipped.</td></tr>
+</table>
+
+<h3>Tools around the app, not inside a request</h3>
+<table>
+  <tr><th>Library</th><th>Purpose</th></tr>
+  <tr><td>concurrently</td><td>Runs the API and the Vite app with one <span class="mono">npm run dev</span>.</td></tr>
+  <tr><td>nodemon</td><td>Restarts the API when server files change.</td></tr>
+  <tr><td>oxlint</td><td>Lints the client. It does not ship to users.</td></tr>
+</table>
+<p class="small">The database itself is MongoDB (Atlas in production). It is not an npm package. Mongoose is the library that talks to it.</p>
+
+<h2>8. Data we store</h2>
+<table>
+  <tr><th>Model</th><th>Holds</th></tr>
+  <tr><td>User</td><td>Name, email, password hash, role, XP, level, coins, streaks, badges, friends, theme, language.</td></tr>
+  <tr><td>Habit</td><td>Name, category, difficulty, reminder, and which dates were completed.</td></tr>
+  <tr><td>Task</td><td>Daily, weekly, or monthly. Status, due time, notes, and when it was marked in progress.</td></tr>
+  <tr><td>Journal</td><td>One entry per user per date: mood, text, tags.</td></tr>
+  <tr><td>Mission / Challenge</td><td>Daily missions, and challenges sent between friends.</td></tr>
+  <tr><td>FriendRequest</td><td>Pending, accepted, or declined.</td></tr>
+  <tr><td>Message</td><td>Chat text from one friend to another.</td></tr>
+  <tr><td>Notification</td><td>Signals: reminders, friend events, chat previews. Read or unread.</td></tr>
+  <tr><td>Feedback</td><td>Public review or private improvement note. Admin can hide a review.</td></tr>
+  <tr><td>PushSubscription</td><td>Browser push endpoint and keys for one device.</td></tr>
+</table>
+<p>Level uses a curve: XP needed for the next level is about <span class="mono">100 × (level ^ 1.5)</span>. A level-up also adds 50 coins. Habit XP is 10, 20, or 40 for easy, medium, and hard.</p>
+
+<h2>9. Login, in plain steps</h2>
+<ol>
+  <li>Register sends name, email, and password. The password must be at least 6 characters. Mongoose hashes it on save.</li>
+  <li>Login checks the email and <span class="mono">bcrypt.compare</span>. Inactive accounts are rejected.</li>
+  <li>The API returns a JWT and a user object with no password.</li>
+  <li>The client saves the token and user in <span class="mono">localStorage</span> and sends the token on later requests.</li>
+  <li>A protected page waits until <span class="mono">/api/auth/me</span> finishes. If there is no user, the router sends them to login.</li>
+</ol>
+<p>Forgot-password creates a reset token. In this project the token is returned in the API response so a local demo can finish the reset without email infrastructure. In a production interview answer, say you would email the token and never return it in JSON.</p>
+
+<h2>10. Features worth explaining out loud</h2>
+<h3>In-progress tasks and the siren</h3>
+<p>A task is <span class="mono">todo</span>, <span class="mono">in-progress</span>, or <span class="mono">completed</span>. The alarm ignores completed tasks. If you mark a task in progress, the siren stays quiet for the rest of that local day and can return the next day if it is still not done. The server stores <span class="mono">inProgressAt</span> when the status changes. Habits are separate: they alarm until they are completed today.</p>
+
+<h3>Friends and chat</h3>
+<p>You search Heroes by name or email, send a request, and chat only after it is accepted. Unfriend removes both sides of the friend list, closes open challenges, and notifies the other person. Chat is not a live socket. The open thread refreshes every few seconds. A new message also creates a Signal and, if push is set up, a Web Push. While the app is open, a poll shows a toast if you are not already looking at that thread.</p>
+
+<h3>Journal versus task notes</h3>
+<p>The journal is daily only. Weekly and monthly “notes” are an optional text field on a weekly or monthly task. Nothing auto-writes a weekly summary.</p>
+
+<h3>Languages</h3>
+<p>English is the default. Hindi, Spanish, French, German, Portuguese, Arabic, Chinese, and Japanese are merged on top of English, so a missing phrase falls back to English. Arabic sets the page direction to right-to-left. The choice is saved on the user and in local storage.</p>
+
+<h3>Phones</h3>
+<p>The layout uses a real viewport, safe-area padding, and dynamic viewport height so the iPhone browser bar does not cover the bottom. Inputs are 16px so Safari does not zoom on focus. Login fields have autocomplete. The manifest does not lock portrait, so iPad and Mac can rotate. Push on iPhone works best after Add to Home Screen. If <span class="mono">PushManager</span> is missing, subscribe is skipped.</p>
+
+<h2>11. Security points you should be able to say</h2>
+<ul>
+  <li>Passwords are hashed with bcrypt. The API never sends the hash back.</li>
+  <li>JWT is signed with a server secret. The middleware rejects a bad or expired token.</li>
+  <li>Admin routes check <span class="mono">role === 'admin'</span> after login.</li>
+  <li>Chat and unfriend check that the two users are actually friends.</li>
+  <li>Feedback privacy: public reviews are on the wall; improvement notes are admin-only.</li>
+  <li>Secrets live in environment variables, not in the React bundle. <span class="mono">VITE_</span> variables are public. <span class="mono">JWT_SECRET</span> and <span class="mono">MONGODB_URI</span> are server-only.</li>
+  <li>Do not put a GitHub token inside <span class="mono">git remote</span>. Use SSH or a prompt.</li>
+</ul>
+
+<h2>12. Deploy, short version</h2>
+<p>Production needs <span class="mono">MONGODB_URI</span> (Atlas, network access open to the host), <span class="mono">JWT_SECRET</span>, and <span class="mono">CLIENT_URL</span>. Leave the client API URL unset so the site calls same-origin <span class="mono">/api</span>. On Vercel the API must not call <span class="mono">process.exit</span> if the database is slow, and it must not register an Express 5 route of <span class="mono">app.get('*')</span>. That pattern throws while the module loads and the platform reports a function crash. The SPA is served by the web service. Express only serves the built files when it is a single process, such as Render or <span class="mono">npm start</span>.</p>
+
+<h2>13. Interview questions and answers</h2>
+<p>Say these in your own words. One or two sentences, then offer to go deeper.</p>
+
+<h3>About the project</h3>
+<div class="qa">
+  <p class="q">What did you build?</p>
+  <p class="a">A gamified habit tracker called LifeQuest. Users complete habits and tasks, earn XP and streaks, journal, and chat with friends. It is a React PWA with an Express and MongoDB API.</p>
+</div>
+<div class="qa">
+  <p class="q">Why not a native iOS and Android app?</p>
+  <p class="a">One web codebase already runs on phones. Install is “add to home screen”. Push is limited on iPhone until it is installed, and the UI says that instead of pretending there is an App Store build.</p>
+</div>
+<div class="qa">
+  <p class="q">What was a hard bug?</p>
+  <p class="a">On Vercel the API returned a function crash before login could run. Two causes: connecting to MongoDB at import time and exiting the process, and an Express 5 catch-all route <span class="mono">app.get('*')</span> that throws as soon as the file loads. The fix was a lazy database connect that returns 503, and a route that Express 5 accepts, used only when Express itself serves the website.</p>
+</div>
+<div class="qa">
+  <p class="q">How do phones avoid a blank screen after a deploy?</p>
+  <p class="a">Hashed JavaScript files change every build. If a service worker returns the old HTML, or returns HTML for a missing script, the page stays blank. The worker prefers a fresh HTML document, does not substitute HTML for <span class="mono">/assets</span>, and the server never sends <span class="mono">index.html</span> for a missing asset.</p>
+</div>
+
+<h3>Frontend</h3>
+<div class="qa">
+  <p class="q">Why React context instead of Redux?</p>
+  <p class="a">The shared state is small: the logged-in user, theme, language, and unread counts. Context is enough. I would add a store only if many distant screens started writing the same fast-changing state.</p>
+</div>
+<div class="qa">
+  <p class="q">How does routing protect pages?</p>
+  <p class="a">A wrapper reads the auth context. While the token is being checked it shows a loader. If there is no user it navigates to login and remembers the path. Admin pages also require the admin role.</p>
+</div>
+<div class="qa">
+  <p class="q">Why Axios?</p>
+  <p class="a">Every call needs the same base URL and bearer token. Interceptors do that once. Fetch would work, but I would still wrap it.</p>
+</div>
+<div class="qa">
+  <p class="q">Is chat real-time?</p>
+  <p class="a">No WebSocket. The open chat polls every few seconds. New messages also become notifications, and push is sent if the friend subscribed. Polling is simpler to host. Sockets would be the next step if delay mattered.</p>
+</div>
+<div class="qa">
+  <p class="q">How does language switching work?</p>
+  <p class="a">Each language is an object of strings. Non-English packs are deep-merged over English. A function looks up a dotted key and fills <span class="mono">{{name}}</span> placeholders. The document <span class="mono">lang</span> and <span class="mono">dir</span> update with the choice.</p>
+</div>
+
+<h3>Backend and data</h3>
+<div class="qa">
+  <p class="q">Why MongoDB?</p>
+  <p class="a">Habits store a list of completion dates, users store badges and friend ids, and notifications store a flexible meta object. Documents match that better than a large set of join tables for this size of app.</p>
+</div>
+<div class="qa">
+  <p class="q">Why Mongoose if MongoDB is schemaless?</p>
+  <p class="a">The database is flexible. The app is not. Mongoose enums stop a bad status, required fields stop empty users, and hooks hash the password in one place.</p>
+</div>
+<div class="qa">
+  <p class="q">How is the password stored?</p>
+  <p class="a">A pre-save hook hashes it with bcrypt, 12 rounds, only when the password changed. Login uses compare. The hash is excluded when the user is loaded for a request.</p>
+</div>
+<div class="qa">
+  <p class="q">Why JWT instead of server sessions?</p>
+  <p class="a">The API can run as a serverless function without a shared session store. The token carries the user id. The downside is logout is local: we delete the token in the browser. A stolen token works until it expires, so the secret must stay on the server and the expiry is limited.</p>
+</div>
+<div class="qa">
+  <p class="q">How do you stop one user from reading another user’s tasks?</p>
+  <p class="a">Every query includes the id from the verified token, for example <span class="mono">Task.find({ user: req.user._id })</span>. The client does not choose the owner id.</p>
+</div>
+<div class="qa">
+  <p class="q">What happens if Atlas is down on Vercel?</p>
+  <p class="a">The function still boots. Health returns 503 with <span class="mono">db: down</span>. Login returns the same class of error instead of a platform crash. The connection is cached so warm invocations reuse it.</p>
+</div>
+
+<h3>Product rules</h3>
+<div class="qa">
+  <p class="q">When does the siren run?</p>
+  <p class="a">For habits not done today, and for tasks that are still to do and whose due time has passed. In-progress tasks wait until the next local day. Completed tasks never alarm. The sound also needs the browser to have been unlocked by a tap, because autoplay rules block audio otherwise.</p>
+</div>
+<div class="qa">
+  <p class="q">Can I unfriend someone?</p>
+  <p class="a">Yes, from Heroes and from the chat header. Both friend lists update, open challenges close, and the other person gets a signal.</p>
+</div>
+<div class="qa">
+  <p class="q">Are weekly notes a separate journal?</p>
+  <p class="a">No. The journal is one entry per day. Weekly and monthly are task lists. A task can have a notes field when you create it.</p>
+</div>
+
+<h3>If they push on tradeoffs</h3>
+<div class="qa">
+  <p class="q">What would you change next?</p>
+  <p class="a">Email the password-reset token instead of returning it. Add a short-lived refresh token or a denylist if logout must kill a stolen JWT. Move chat to WebSockets if polling load grows. Add indexes on user id and created time for messages and notifications.</p>
+</div>
+<div class="qa">
+  <p class="q">What would you not claim?</p>
+  <p class="a">I would not call the chat realtime, the PWA a native app, or the embedded MongoDB a production database. I would not say the client can hide secrets.</p>
+</div>
+
+<h2>14. A 60-second walkthrough</h2>
+<ol>
+  <li>Open with the sentence in section 1.</li>
+  <li>Draw three boxes: React, Express, MongoDB. Arrow from browser to <span class="mono">/api</span> with a JWT.</li>
+  <li>Pick one feature. Habits are the easiest: create, complete today, XP and streak update, dashboard reads the summary.</li>
+  <li>Mention one constraint you handled: phones (safe area, install) or deploy (database must not crash the function).</li>
+  <li>Stop and ask what they want next: auth, data model, or a bug.</li>
+</ol>
+
+<p class="small">This guide describes the LifeQuest codebase as built in this repository. It is for explanation. It is not a second copy of the user-facing app.</p>
+
+</body>
+</html>

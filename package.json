@@ -17,7 +17,8 @@
     "build": "npm run build -w lifequest-client",
     "start:web": "npm run build && npm start",
     "lint": "npm run lint -w lifequest-client",
-    "pdf": "npm run pdf -w documentation"
+    "pdf": "npm run pdf -w documentation",
+    "pdf:interview": "npm run pdf:interview -w documentation"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

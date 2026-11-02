@@ -7,6 +7,9 @@ This folder is **outside** `client/` and `server/`. It holds the documentation s
 | `LifeQuest-Documentation.html` | Full documentation content |
 | `generate-pdf.mjs` | Rebuilds the PDF using Chrome/Edge on macOS, Windows, or Linux |
 | `../LifeQuest-Documentation.pdf` | **Final PDF** at the LifeQuest folder root |
+| `LifeQuest-Interview-Guide.html` | Interview brief: what, why, how, libraries, Q&A |
+| `generate-interview-pdf.mjs` | Builds the interview PDF |
+| `../LifeQuest-Interview-Guide.pdf` | **Interview PDF** at the LifeQuest folder root |
 
 ## Regenerate PDF
 
@@ -14,6 +17,7 @@ From the repo root:
 
 ```bash
 npm run pdf
+npm run pdf:interview
 ```
 
 Or:
