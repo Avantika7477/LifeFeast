@@ -30,8 +30,7 @@ const TaskAlarm = lazy(() => import('./components/tasks/TaskAlarm'));
 const ChatNotify = lazy(() => import('./components/chat/ChatNotify'));
 
 function PageFallback() {
-  const { t } = useLanguage();
-  return <Loader text={t('common.loading')} />;
+  return <Loader text="Loading..." />;
 }
 
 function LoggedInBackground() {

@@ -13,9 +13,30 @@
     <meta name="apple-mobile-web-app-title" content="LifeQuest" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>LifeQuest — Gamified Habit Tracker</title>
+    <style>
+      html, body { margin: 0; background: #1a1240; color: #f5f0ff; }
+      #boot {
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        font-family: system-ui, -apple-system, sans-serif;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      #boot strong { display: block; font-size: 1.15rem; margin-bottom: 0.35rem; }
+      #boot span { opacity: 0.75; font-size: 0.95rem; }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="boot">
+        <div>
+          <strong>LifeQuest</strong>
+          <span>Loading…</span>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -1,7 +1,5 @@
-const CACHE = 'lifequest-shell-v2';
+const CACHE = 'lifequest-shell-v3';
 const PRECACHE = [
-  '/',
-  '/index.html',
   '/favicon.svg',
   '/manifest.webmanifest',
   '/pwa-192x192.png',
@@ -82,6 +80,10 @@ self.addEventListener('message', (event) => {
   );
 });
 
+function isNavigate(request) {
+  return request.mode === 'navigate' || (request.headers.get('accept') || '').includes('text/html');
+}
+
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
@@ -90,21 +92,59 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
   if (url.pathname.startsWith('/api')) return;
 
+  // HTML: always prefer network so phones never keep a shell that points at deleted hashed JS.
+  if (isNavigate(request)) {
+    event.respondWith(
+      (async () => {
+        try {
+          const fresh = await fetch(request, { cache: 'no-store' });
+          if (fresh.ok) {
+            const cache = await caches.open(CACHE);
+            cache.put('/index.html', fresh.clone());
+          }
+          return fresh;
+        } catch {
+          return (await caches.match('/index.html')) || Response.error();
+        }
+      })(),
+    );
+    return;
+  }
+
+  // Built assets: cache successful responses only. Never invent a fallback HTML document.
+  if (url.pathname.startsWith('/assets/')) {
+    event.respondWith(
+      (async () => {
+        const cached = await caches.match(request);
+        try {
+          const fresh = await fetch(request);
+          if (fresh.ok) {
+            const cache = await caches.open(CACHE);
+            cache.put(request, fresh.clone());
+          }
+          return fresh;
+        } catch {
+          if (cached) return cached;
+          return new Response('Asset unavailable', { status: 503, statusText: 'Service Unavailable' });
+        }
+      })(),
+    );
+    return;
+  }
+
   event.respondWith(
     (async () => {
+      const cached = await caches.match(request);
       try {
         const fresh = await fetch(request);
-        const cache = await caches.open(CACHE);
-        cache.put(request, fresh.clone());
+        if (fresh.ok) {
+          const cache = await caches.open(CACHE);
+          cache.put(request, fresh.clone());
+        }
         return fresh;
       } catch {
-        const cached = await caches.match(request);
         if (cached) return cached;
-        if (request.mode === 'navigate') {
-          const fallback = await caches.match('/index.html');
-          if (fallback) return fallback;
-        }
-        throw new Error('offline');
+        return Response.error();
       }
     })(),
   );

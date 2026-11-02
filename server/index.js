@@ -80,9 +80,27 @@ app.use('/api', (_req, res) => {
 });
 
 if (hasClient) {
-  app.use(express.static(clientDist));
-  app.use((req, res, next) => {
+  app.use(
+    express.static(clientDist, {
+      index: false,
+      setHeaders(res, filePath) {
+        if (filePath.endsWith('.html')) {
+          res.setHeader('Cache-Control', 'no-cache');
+        } else if (filePath.includes(`${path.sep}assets${path.sep}`)) {
+          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        }
+      },
+    }),
+  );
+  // SPA fallback for app routes only — never return index.html for missing JS/CSS
+  // (that combination causes a blank white screen on phones after a deploy).
+  app.get('*', (req, res, next) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+    if (req.path.startsWith('/api')) return next();
+    if (req.path.startsWith('/assets/')) {
+      return res.status(404).type('text/plain').send('Not found');
+    }
+    res.setHeader('Cache-Control', 'no-cache');
     res.sendFile(clientIndex);
   });
 }
