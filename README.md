@@ -176,7 +176,8 @@ VAPID_PRIVATE_KEY=<same generate command>
 
 Leave `VITE_API_URL` unset so the UI calls same-origin `/api`.
 
-5. Deploy, then run `npm run seed` locally against Atlas (or a one-off machine) if you want demo accounts. Vercel has no persistent shell like Render.
+5. Deploy, then open `/api/health`. You should see `{"status":"ok","db":"up"}`. If `db` is `down`, fix `MONGODB_URI` (Atlas Network Access must allow `0.0.0.0/0` for Vercel).
+6. Run `npm run seed` locally against Atlas (or a one-off machine) if you want demo accounts. Vercel has no persistent shell like Render.
 
 ### Local production check
 

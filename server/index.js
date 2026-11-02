@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import habitRoutes from './routes/habitRoutes.js';
@@ -18,8 +19,6 @@ import socialRoutes from './routes/socialRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 
 dotenv.config();
-await connectDB();
-
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const clientDist = path.resolve(__dirname, '../client/dist');
@@ -36,6 +35,7 @@ const allowedOrigins = new Set(
     process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`,
     process.env.VERCEL_PROJECT_PRODUCTION_URL &&
       `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`,
+    'https://lifefeast.vercel.app',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
   ].filter(Boolean),
@@ -61,19 +61,47 @@ app.use(
 );
 app.use(express.json({ limit: '2mb' }));
 
-app.get('/api/health', (_req, res) => res.json({ status: 'ok', app: 'LifeQuest' }));
+/** Health must not crash the function if Atlas is misconfigured. */
+app.get('/api/health', async (_req, res) => {
+  try {
+    await connectDB();
+    res.json({
+      status: 'ok',
+      app: 'LifeQuest',
+      db: mongoose.connection.readyState === 1 ? 'up' : 'down',
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'degraded',
+      app: 'LifeQuest',
+      db: 'down',
+      message: error.message,
+    });
+  }
+});
 
-app.use('/api/auth', authRoutes);
-app.use('/api/habits', habitRoutes);
-app.use('/api/tasks', taskRoutes);
-app.use('/api/progress', progressRoutes);
-app.use('/api/journal', journalRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/missions', missionRoutes);
-app.use('/api/leaderboard', leaderboardRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/social', socialRoutes);
-app.use('/api/feedback', feedbackRoutes);
+async function requireDb(_req, res, next) {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(503).json({
+      message: error.message || 'Database unavailable. Set MONGODB_URI in Vercel.',
+    });
+  }
+}
+
+app.use('/api/auth', requireDb, authRoutes);
+app.use('/api/habits', requireDb, habitRoutes);
+app.use('/api/tasks', requireDb, taskRoutes);
+app.use('/api/progress', requireDb, progressRoutes);
+app.use('/api/journal', requireDb, journalRoutes);
+app.use('/api/notifications', requireDb, notificationRoutes);
+app.use('/api/missions', requireDb, missionRoutes);
+app.use('/api/leaderboard', requireDb, leaderboardRoutes);
+app.use('/api/admin', requireDb, adminRoutes);
+app.use('/api/social', requireDb, socialRoutes);
+app.use('/api/feedback', requireDb, feedbackRoutes);
 
 app.use('/api', (_req, res) => {
   res.status(404).json({ message: 'API route not found' });
@@ -114,6 +142,13 @@ app.use((err, _req, res, _next) => {
 export default app;
 
 if (!process.env.VERCEL) {
+  try {
+    await connectDB();
+  } catch (error) {
+    console.error(error.message || error);
+    process.exit(1);
+  }
+
   const PORT = process.env.PORT || 5001;
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`LifeQuest API running on port ${PORT}`);

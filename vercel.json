@@ -13,10 +13,17 @@
       "root": "server/",
       "framework": "express",
       "installCommand": "cd .. && npm install --include=dev",
-      "entrypoint": "index.js"
+      "entrypoint": "index.js",
+      "functions": {
+        "index.js": {
+          "maxDuration": 30,
+          "memory": 1024
+        }
+      }
     }
   },
   "rewrites": [
+    { "source": "/api", "destination": { "service": "api" } },
     { "source": "/api/(.*)", "destination": { "service": "api" } },
     { "source": "/(.*)", "destination": { "service": "web" } }
   ]
