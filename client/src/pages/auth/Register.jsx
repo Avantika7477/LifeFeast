@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { apiErrorMessage } from '../../api/client';
 import LanguageSelect from '../../components/common/LanguageSelect';
+import LogoMark from '../../components/common/LogoMark';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -41,7 +42,7 @@ export default function Register() {
           <LanguageSelect compact id="register-language" />
         </div>
         <div className="brand">
-          <div className="logo-mark">⚔️</div>
+          <LogoMark />
           <h1>LifeQuest</h1>
           <p>{t('auth.registerLead')}</p>
         </div>

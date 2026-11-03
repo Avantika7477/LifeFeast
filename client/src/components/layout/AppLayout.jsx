@@ -25,6 +25,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useSignals } from '../../context/SignalsContext';
+import LogoMark from '../common/LogoMark';
 import Toast from '../common/Toast';
 import LanguageSelect from '../common/LanguageSelect';
 import UnfinishedReminder from '../tasks/UnfinishedReminder';
@@ -65,7 +66,7 @@ export default function AppLayout() {
       <div className={`sidebar-overlay ${open ? 'open' : ''}`} onClick={() => setOpen(false)} />
       <aside className={`sidebar ${open ? 'open' : ''}`}>
         <Link to="/" className="sidebar-brand">
-          <div className="logo-mark">⚔️</div>
+          <LogoMark />
           <h1>LifeQuest</h1>
         </Link>
         <nav className="nav-links">

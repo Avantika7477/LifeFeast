@@ -7,6 +7,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSelect from '../components/common/LanguageSelect';
 import CampFlame from '../components/camp/CampFlame';
+import LogoMark from '../components/common/LogoMark';
 
 export default function Home() {
   const { user } = useAuth();
@@ -40,7 +41,7 @@ export default function Home() {
     <div className="landing">
       <header className="landing-nav">
         <Link to="/" className="landing-brand">
-          <span className="logo-mark">⚔️</span>
+          <LogoMark />
           <span>LifeQuest</span>
         </Link>
         <div className="landing-nav-actions">

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { authAPI } from '../../api';
 import { useLanguage } from '../../context/LanguageContext';
 import LanguageSelect from '../../components/common/LanguageSelect';
+import LogoMark from '../../components/common/LogoMark';
 
 export default function ForgotPassword() {
   const { t } = useLanguage();
@@ -55,7 +56,7 @@ export default function ForgotPassword() {
           <LanguageSelect compact id="forgot-language" />
         </div>
         <div className="brand">
-          <div className="logo-mark">⚔️</div>
+          <LogoMark />
           <h1>LifeQuest</h1>
           <p>{t('auth.forgotLead')}</p>
         </div>

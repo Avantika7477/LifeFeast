@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { apiErrorMessage } from '../../api/client';
 import LanguageSelect from '../../components/common/LanguageSelect';
+import LogoMark from '../../components/common/LogoMark';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -44,7 +45,7 @@ export default function Login() {
           <LanguageSelect compact id="login-language" />
         </div>
         <div className="brand">
-          <div className="logo-mark">⚔️</div>
+          <LogoMark />
           <h1>LifeQuest</h1>
           <p>{t('auth.loginLead')}</p>
         </div>
