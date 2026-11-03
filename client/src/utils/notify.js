@@ -52,8 +52,8 @@ export async function shoutNotification({ title, body, url = '/dashboard' }) {
 
   const payload = {
     body,
-    icon: '/pwa-192x192.png',
-    badge: '/pwa-192x192.png',
+    icon: '/logo-192.png',
+    badge: '/logo-192.png',
     tag: 'lifequest-unfinished',
     renotify: true,
     requireInteraction: true,

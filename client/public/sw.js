@@ -1,10 +1,11 @@
-const CACHE = 'lifequest-shell-v3';
+const CACHE = 'lifequest-shell-v4';
 const PRECACHE = [
   '/favicon.svg',
   '/manifest.webmanifest',
-  '/pwa-192x192.png',
-  '/pwa-512x512.png',
-  '/apple-touch-icon.png',
+  '/logo-180.png',
+  '/logo-192.png',
+  '/logo-512.png',
+  '/logo-512-maskable.png',
 ];
 
 self.addEventListener('install', (event) => {
@@ -35,8 +36,8 @@ self.addEventListener('push', (event) => {
   event.waitUntil(
     self.registration.showNotification(data.title || 'LifeQuest', {
       body: data.body || 'You still have unfinished work.',
-      icon: '/pwa-192x192.png',
-      badge: '/pwa-192x192.png',
+      icon: '/logo-192.png',
+      badge: '/logo-192.png',
       tag: 'lifequest-unfinished',
       renotify: true,
       requireInteraction: true,
@@ -69,8 +70,8 @@ self.addEventListener('message', (event) => {
   event.waitUntil(
     self.registration.showNotification(event.data.title || 'LifeQuest', {
       body: event.data.body || 'You still have unfinished work.',
-      icon: '/pwa-192x192.png',
-      badge: '/pwa-192x192.png',
+      icon: '/logo-192.png',
+      badge: '/logo-192.png',
       tag: 'lifequest-unfinished',
       renotify: true,
       requireInteraction: true,
