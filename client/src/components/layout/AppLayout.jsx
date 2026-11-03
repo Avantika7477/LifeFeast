@@ -13,7 +13,6 @@ import {
   MessagesSquare,
   Bell,
   Settings,
-  MessageSquareHeart,
   Shield,
   Menu,
   X,
@@ -43,7 +42,6 @@ const links = [
   { to: '/tasks', key: 'nav.questLog', icon: ListTodo },
   { to: '/journal', key: 'nav.journal', icon: BookOpen },
   { to: '/notifications', key: 'nav.signals', icon: Bell },
-  { to: '/feedback', key: 'nav.feedback', icon: MessageSquareHeart },
   { to: '/settings', key: 'nav.settings', icon: Settings },
 ];
 

@@ -57,7 +57,7 @@ const en = {
     alreadyPath: 'I already have a path',
     ctaTitle: 'Training stays locked until you enter.',
     ctaText:
-      'Habits, missions, journal, chat, feedback, and the hall of heroes require an account. The home gate is open to all.',
+      'Habits, missions, journal, chat, and the hall of heroes require an account. The home gate is open to all.',
     continueTraining: "Continue today's training",
     signUpTraining: 'Sign up to start training',
     foot: 'Small days. Big legend.',

@@ -34,7 +34,6 @@ export default function Home() {
     { icon: '🏆', title: t('home.f5t'), text: t('home.f5d') },
     { icon: '📖', title: t('home.f6t'), text: t('home.f6d') },
     { icon: '💬', title: t('home.f7t'), text: t('home.f7d') },
-    { icon: '⭐', title: t('home.f8t'), text: t('home.f8d') },
   ];
 
   return (

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useCelebrate } from '../context/CelebrateContext';
@@ -149,9 +149,6 @@ export default function Settings() {
               {t('settings.visitPortfolio')}
             </a>
             .
-          </p>
-          <p className="install-help">
-            {t('settings.feedbackHint')} <Link to="/feedback">{t('settings.feedbackLink')}</Link>. {t('settings.privateNotes')}
           </p>
         </div>
 

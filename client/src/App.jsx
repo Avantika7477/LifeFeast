@@ -23,7 +23,6 @@ import Notifications from './pages/Notifications';
 import Campfire from './pages/Campfire';
 import Hall from './pages/Hall';
 import Settings from './pages/Settings';
-import Feedback from './pages/Feedback';
 import Admin from './pages/Admin';
 import Home from './pages/Home';
 import InstallBanner from './components/common/InstallBanner';
@@ -100,7 +99,7 @@ export default function App() {
                 <Route path="/tasks" element={<Tasks />} />
                 <Route path="/journal" element={<Journal />} />
                 <Route path="/notifications" element={<Notifications />} />
-                <Route path="/feedback" element={<Feedback />} />
+                <Route path="/feedback" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/settings" element={<Settings />} />
               </Route>
             </Route>
