@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Plus, Trash2 } from 'lucide-react';
 import { taskAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { useCelebrate } from '../context/CelebrateContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useSignals } from '../context/SignalsContext';
 import { combineDueAt, formatDue } from '../utils/constants';
@@ -22,6 +23,7 @@ const empty = {
 
 export default function Tasks() {
   const { showToast } = useAuth();
+  const { celebrate } = useCelebrate();
   const { t, locale } = useLanguage();
   const { refreshUnread } = useSignals();
   const [searchParams] = useSearchParams();
@@ -88,6 +90,7 @@ export default function Tasks() {
     }
     try {
       await taskAPI.update(task._id, { status });
+      if (status === 'completed' && task.status !== 'completed') celebrate();
       load();
     } catch (err) {
       showToast(err.response?.data?.message || t('tasks.updateFail'), 'error');

@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { habitAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { useCelebrate } from '../context/CelebrateContext';
 import { useLanguage } from '../context/LanguageContext';
 import HabitCard from '../components/habits/HabitCard';
 import HabitFormModal from '../components/habits/HabitFormModal';
@@ -12,6 +13,7 @@ import Modal from '../components/common/Modal';
 
 export default function Habits() {
   const { showToast, updateUserLocal, refreshUser } = useAuth();
+  const { celebrate } = useCelebrate();
   const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const focusId = searchParams.get('habit');
@@ -58,6 +60,7 @@ export default function Habits() {
     try {
       const { data } = await habitAPI.complete(id);
       if (data.completed) {
+        celebrate();
         showToast(`+${data.xpGained} XP · +${data.coinsGained} ${t('dash.coins').toLowerCase()}`, 'xp');
         updateUserLocal({
           xp: data.newXp,

@@ -1417,6 +1417,67 @@ textarea.form-control {
   text-shadow: 0 2px 0 var(--primary-deep);
 }
 
+.celebrate-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 560;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  isolation: isolate;
+  background: radial-gradient(circle at 50% 45%, rgba(255, 209, 102, 0.22), transparent 55%);
+}
+
+.celebrate-stage {
+  position: relative;
+  width: min(320px, 86vw);
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.celebrate-bit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.celebrate-card {
+  text-align: center;
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #4a3488, #2e2263);
+  border: 1px solid rgba(255, 209, 102, 0.55);
+  box-shadow: 0 0 0 1px rgba(255, 209, 102, 0.18), 0 16px 40px rgba(10, 6, 28, 0.55), 0 0 48px rgba(255, 183, 3, 0.28);
+  min-width: 200px;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.celebrate-emoji {
+  display: block;
+  font-size: 1.8rem;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.celebrate-card strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--primary-soft);
+}
+
+.celebrate-card p {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
 /* —— Mobile —— */
 .mobile-toggle {
   display: none;
@@ -1696,6 +1757,8 @@ textarea.form-control {
 
 .copy-card {
   padding: clamp(1rem, 3.6vw, 1.5rem);
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .copy-card h3 {

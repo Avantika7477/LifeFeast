@@ -141,6 +141,12 @@ const en = {
     feedbackHint: 'Have a review or an idea for what we should update?',
     feedbackLink: 'Share it on the Feedback page',
     privateNotes: 'Private notes go only to the admin.',
+    celebrations: 'Celebrations',
+    celebrationsHelp:
+      'A short cheer and spark burst when you finish a habit, task, mission, or friend challenge. It lasts about a second and does not loop.',
+    celebrationsOn: 'Turn celebrations on',
+    celebrationsOff: 'Turn celebrations off',
+    celebrationsTry: 'Play a sample',
     appearance: 'Appearance',
     currentTheme: 'Current theme:',
     switchTo: 'Switch to {{mode}} Mode',
@@ -555,6 +561,10 @@ const en = {
       'You still have tasks open. After the due time you can mark them done — anytime after that is fine.',
     after: 'After {{when}}',
     gotIt: 'Got it',
+  },
+  celebrate: {
+    title: 'Quest done!',
+    line: 'Nice work. Keep the streak warm.',
   },
 };
 

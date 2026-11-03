@@ -3,6 +3,8 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { SignalsProvider } from './context/SignalsContext';
+import { CelebrateProvider } from './context/CelebrateContext';
+import CelebrateBurst from './components/common/CelebrateBurst';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AppLayout from './components/layout/AppLayout';
 import Loader from './components/common/Loader';
@@ -53,8 +55,10 @@ export default function App() {
         <LanguageProvider>
         <ThemeProvider>
           <SignalsProvider>
+          <CelebrateProvider>
           <InstallBanner />
           <LoggedInAlarms />
+          <CelebrateBurst />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
@@ -107,6 +111,7 @@ export default function App() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </CelebrateProvider>
           </SignalsProvider>
         </ThemeProvider>
         </LanguageProvider>

@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { missionAPI, socialAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { useCelebrate } from '../context/CelebrateContext';
 import { useLanguage } from '../context/LanguageContext';
 import Loader from '../components/common/Loader';
 import LevelUpOverlay from '../components/common/LevelUpOverlay';
 
 export default function Missions() {
   const { user, showToast, updateUserLocal } = useAuth();
+  const { celebrate } = useCelebrate();
   const { t } = useLanguage();
   const [missions, setMissions] = useState([]);
   const [challenges, setChallenges] = useState([]);
@@ -27,6 +29,7 @@ export default function Missions() {
   const complete = async (id) => {
     try {
       const { data } = await missionAPI.complete(id);
+      celebrate();
       showToast(`+${data.coinsGained} coins · +${data.xpGained} XP`, 'xp');
       updateUserLocal(data.user);
       setMissions((prev) => prev.map((m) => (m._id === id ? data.mission : m)));
@@ -49,6 +52,7 @@ export default function Missions() {
   const finishChallenge = async (id) => {
     try {
       const { data } = await socialAPI.completeChallenge(id);
+      celebrate();
       showToast(`+${data.coinsGained} coins · +${data.xpGained} XP`, 'xp');
       updateUserLocal(data.user);
       setChallenges((prev) => prev.map((c) => (c._id === id ? data.challenge : c)));

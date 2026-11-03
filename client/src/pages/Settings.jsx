@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { useCelebrate } from '../context/CelebrateContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import { usePwaInstall } from '../hooks/usePwaInstall';
@@ -11,6 +12,7 @@ import LanguageSelect from '../components/common/LanguageSelect';
 
 export default function Settings() {
   const { user, showToast, updateUserLocal, logout } = useAuth();
+  const { enabled: cheerOn, setCelebrations, celebrate } = useCelebrate();
   const { theme, toggleTheme } = useTheme();
   const { t } = useLanguage();
   const { installed, canInstall, showIosHelp, install } = usePwaInstall();
@@ -151,6 +153,23 @@ export default function Settings() {
           <p className="install-help">
             {t('settings.feedbackHint')} <Link to="/feedback">{t('settings.feedbackLink')}</Link>. {t('settings.privateNotes')}
           </p>
+        </div>
+
+        <div className="glass copy-card">
+          <h3>{t('settings.celebrations')}</h3>
+          <p className="install-help">{t('settings.celebrationsHelp')}</p>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button
+              className="btn btn-ghost"
+              type="button"
+              onClick={() => setCelebrations(!cheerOn)}
+            >
+              {cheerOn ? t('settings.celebrationsOff') : t('settings.celebrationsOn')}
+            </button>
+            <button className="btn btn-primary" type="button" onClick={celebrate} disabled={!cheerOn}>
+              {t('settings.celebrationsTry')}
+            </button>
+          </div>
         </div>
 
         <div className="glass copy-card">
