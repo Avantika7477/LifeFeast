@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSelect from '../components/common/LanguageSelect';
+import CampFlame from '../components/camp/CampFlame';
 
 export default function Home() {
   const { user } = useAuth();
@@ -71,6 +72,7 @@ export default function Home() {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
       >
+        <CampFlame days={7} size="lg" />
         <p className="quest-kicker">{t('home.kicker')}</p>
         <h1>{t('home.title')}</h1>
         <p className="landing-lead">{t('home.lead')}</p>

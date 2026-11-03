@@ -191,6 +191,8 @@ const sanitize = (user) => ({
   currentStreak: user.currentStreak,
   longestStreak: user.longestStreak,
   badges: user.badges,
+  companions: user.companions?.length ? user.companions : ['ember'],
+  equippedCompanion: user.equippedCompanion || 'ember',
   theme: user.theme,
   language: user.language || 'en',
   createdAt: user.createdAt,

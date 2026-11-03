@@ -54,6 +54,15 @@ export const notificationAPI = {
   generateDaily: () => api.post('/notifications/generate-daily'),
 };
 
+export const hallAPI = {
+  feed: () => api.get('/hall'),
+  share: (text) => api.post('/hall', { text }),
+  react: (id, kind) => api.post(`/hall/${id}/react`, { kind }),
+  shop: () => api.get('/hall/shop'),
+  buy: (id) => api.post('/hall/shop/buy', { id }),
+  equip: (id) => api.post('/hall/shop/equip', { id }),
+};
+
 export const socialAPI = {
   friends: () => api.get('/social/friends'),
   unfriend: (friendId) => api.delete(`/social/friends/${friendId}`),

@@ -5,6 +5,7 @@ import { habitAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useCelebrate } from '../context/CelebrateContext';
 import { useLanguage } from '../context/LanguageContext';
+import CampFlame from '../components/camp/CampFlame';
 import HabitCard from '../components/habits/HabitCard';
 import HabitFormModal from '../components/habits/HabitFormModal';
 import LevelUpOverlay from '../components/common/LevelUpOverlay';
@@ -100,6 +101,7 @@ export default function Habits() {
     <div>
       <div className="page-header">
         <div>
+          <CampFlame days={habits.filter((h) => h.completedToday).length} size="sm" />
           <h2>{t('habits.title')}</h2>
           <p>{t('habits.lead')}</p>
         </div>

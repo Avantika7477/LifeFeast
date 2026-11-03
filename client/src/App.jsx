@@ -21,6 +21,7 @@ import Tasks from './pages/Tasks';
 import Journal from './pages/Journal';
 import Notifications from './pages/Notifications';
 import Campfire from './pages/Campfire';
+import Hall from './pages/Hall';
 import Settings from './pages/Settings';
 import Feedback from './pages/Feedback';
 import Admin from './pages/Admin';
@@ -95,6 +96,7 @@ export default function App() {
                 <Route path="/missions" element={<Missions />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
                 <Route path="/campfire" element={<Campfire />} />
+                <Route path="/hall" element={<Hall />} />
                 <Route path="/tasks" element={<Tasks />} />
                 <Route path="/journal" element={<Journal />} />
                 <Route path="/notifications" element={<Notifications />} />

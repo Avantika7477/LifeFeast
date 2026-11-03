@@ -26,7 +26,7 @@ export default function HabitCard({ habit, onComplete, onEdit, onDelete, complet
   return (
     <motion.div
       id={`habit-${habit._id}`}
-      className={`habit-card glass ${focused ? 'focus-task' : ''}`}
+      className={`habit-card lantern-card glass ${focused ? 'focus-task' : ''}`}
       layout
       whileHover={{ y: -2 }}
       initial={{ opacity: 0, y: 12 }}

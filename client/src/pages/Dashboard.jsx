@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import { progressAPI } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import CampCompanion from '../components/camp/CampCompanion';
+import CampFlame from '../components/camp/CampFlame';
 import Loader from '../components/common/Loader';
-import ProgressRing from '../components/common/ProgressRing';
 import { displayDate, firstName } from '../utils/constants';
 
 function greeting(t, name) {
@@ -54,71 +55,71 @@ export default function Dashboard() {
   const done = data?.habitsCompletedToday ?? 0;
   const total = data?.habitsTotal ?? 0;
   const hasHabits = total > 0;
+  const stones = Array.from({ length: 12 }, (_, i) => i < Math.round((xpProgress / 100) * 12));
 
   const stats = [
-    { label: t('dash.level'), value: level, icon: '⚔️', hint: t('dash.legendGrows') },
-    { label: t('dash.xp'), value: xp, icon: '✨', hint: xpLeft ? t('dash.xpNext', { n: xpLeft }) : t('dash.keepWins') },
-    { label: t('dash.streak'), value: `${streak} 🔥`, icon: '🔥', hint: streakHint(t, streak) },
-    { label: t('dash.coins'), value: coins, icon: '🪙', hint: t('dash.coinsHint') },
-    { label: t('dash.today'), value: `${daily}%`, icon: '📅', hint: hasHabits ? t('dash.todayHint', { done, total }) : t('dash.forgeFirst') },
-    { label: t('dash.month'), value: `${monthly}%`, icon: '📊', hint: t('dash.longGame') },
+    { label: t('dash.level'), value: level, hint: t('dash.legendGrows') },
+    { label: t('dash.xp'), value: xp, hint: xpLeft ? t('dash.xpNext', { n: xpLeft }) : t('dash.keepWins') },
+    { label: t('dash.streak'), value: streak, hint: streakHint(t, streak) },
+    { label: t('dash.coins'), value: coins, hint: t('dash.coinsHint') },
+    { label: t('dash.today'), value: `${daily}%`, hint: hasHabits ? t('dash.todayHint', { done, total }) : t('dash.forgeFirst') },
+    { label: t('dash.month'), value: `${monthly}%`, hint: t('dash.longGame') },
   ];
 
   return (
     <div>
-      <motion.section
-        className="hero-quest glass"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="hero-quest-copy">
-          <p className="quest-kicker">{greet.kicker}</p>
-          <h2>{greet.title}</h2>
-          <p className="hero-quest-date">{displayDate(new Date(), locale)}</p>
+      <motion.section className="camp-ground" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+        <div className="camp-embers" aria-hidden />
+        <div className="camp-ring">
+          <div className="camp-figures">
+            <CampFlame days={streak} size="lg" />
+            <CampCompanion id={user?.equippedCompanion || 'ember'} size="md" />
+          </div>
+          <div className="camp-copy">
+            <p className="quest-kicker">{greet.kicker}</p>
+            <h2>{greet.title}</h2>
+            <p className="hero-quest-date">{displayDate(new Date(), locale)}</p>
+            <p>
+              {xpLeft > 0 ? t('dash.xpUntil', { n: xpLeft, level: level + 1 }) : t('dash.nextChapter')}
+            </p>
+          </div>
         </div>
-
-        <div className="quest-bar-wrap">
+        <div className="camp-path">
           <div className="quest-bar-meta">
             <span>{t('dash.levelLabel', { level })}</span>
             <span>
               {xp} / {xpForNext} {t('dash.xp')}
             </span>
           </div>
-          <div className="quest-bar" role="progressbar" aria-valuenow={xpProgress} aria-valuemin={0} aria-valuemax={100}>
-            <span style={{ width: `${xpProgress}%` }} />
+          <div className="camp-stones" role="progressbar" aria-valuenow={xpProgress} aria-valuemin={0} aria-valuemax={100}>
+            {stones.map((on, i) => (
+              <span key={i} className={`camp-stone ${on ? 'on' : ''}`} />
+            ))}
           </div>
-          <p className="quest-bar-hint">
-            {xpLeft > 0 ? t('dash.xpUntil', { n: xpLeft, level: level + 1 }) : t('dash.nextChapter')}
-          </p>
         </div>
-
-        <div className="hero-quest-actions">
+        <div className="camp-actions">
           <Link to="/habits" className="btn btn-primary">
             {hasHabits ? t('dash.continueToday') : t('dash.beginFirst')}
           </Link>
-          <Link to="/missions" className="btn btn-ghost">
-            {t('dash.viewMissions')}
+          <Link to="/hall" className="btn btn-ghost">
+            {t('dash.viewHall')}
           </Link>
         </div>
       </motion.section>
 
       {quote && (
-        <motion.blockquote
-          className="quote-banner glass"
-          initial={{ opacity: 0, x: -12 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
+        <motion.blockquote className="quote-banner lantern-card glass" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}>
           <p className="quote-kicker">{t('dash.prophecy')}</p>
           <p className="quote-text">&ldquo;{quote.quote}&rdquo;</p>
           <cite>— {quote.author}</cite>
         </motion.blockquote>
       )}
 
-      <div className="stats-grid">
+      <div className="lantern-grid">
         {stats.map((s, i) => (
           <motion.div
             key={s.label}
-            className="stat-card glass"
+            className="stat-card lantern-card glass"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
@@ -126,16 +127,15 @@ export default function Dashboard() {
             <div className="stat-label">{s.label}</div>
             <div className="stat-value">{s.value}</div>
             <p className="stat-hint">{s.hint}</p>
-            <span className="stat-icon">{s.icon}</span>
           </motion.div>
         ))}
       </div>
 
       <div className="charts-grid">
-        <div className="glass chart-card">
+        <div className="glass lantern-card chart-card">
           <h3>{t('dash.todayProgress')}</h3>
           <div className="today-progress">
-            <ProgressRing progress={daily} size={100} stroke={8} color="#06D6A0" />
+            <CampFlame days={done} size="sm" />
             <div>
               <p className="today-progress-count">
                 {done}/{total}
@@ -146,7 +146,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="glass chart-card">
+        <div className="glass lantern-card chart-card">
           <h3>{t('dash.yourBadges')}</h3>
           {(data?.badges?.length || 0) === 0 ? (
             <p className="empty-inline">{t('dash.noBadgesYet')}</p>

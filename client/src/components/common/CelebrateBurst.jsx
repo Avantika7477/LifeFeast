@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCelebrate } from '../../context/CelebrateContext';
 import { useLanguage } from '../../context/LanguageContext';
+import CampFlame from '../camp/CampFlame';
 
 const COLORS = ['#ffd166', '#ffb703', '#06d6a0', '#ff5d8f', '#ead6ff', '#5eead4'];
 
@@ -61,9 +62,7 @@ export default function CelebrateBurst() {
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 260, damping: 16 }}
             >
-              <span className="celebrate-emoji" aria-hidden>
-                ✨
-              </span>
+              <CampFlame days={3} size="sm" />
               <strong>{t('celebrate.title')}</strong>
               <p>{t('celebrate.line')}</p>
             </motion.div>

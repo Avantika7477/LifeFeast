@@ -137,7 +137,7 @@ export default function Tasks() {
           <p>{t('tasks.empty', { tab: tabLabel(tab) })}</p>
         </div>
       ) : (
-        <div className="glass">
+        <div className="glass task-log">
           {tasks.map((task) => {
             const when = formatDue(task, locale);
             return (
@@ -148,6 +148,10 @@ export default function Tasks() {
                   !task.completable && task.status !== 'completed' ? 'locked' : ''
                 }`}
               >
+                <span
+                  className={`wax-seal ${task.status === 'completed' ? 'stamped' : ''}`}
+                  aria-hidden
+                />
                 <select
                   className="form-control select-control task-status"
                   value={task.status}

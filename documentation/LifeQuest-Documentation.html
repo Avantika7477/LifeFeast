@@ -186,6 +186,7 @@
       <tr><td>Rewards for consistency</td><td>Coins and badges</td></tr>
       <tr><td>Daily goals</td><td>Missions</td></tr>
       <tr><td>Comparing with friends</td><td>Leaderboard</td></tr>
+      <tr><td>Sharing today’s win</td><td>Hall (friends-only camp)</td></tr>
       <tr><td>To-do list</td><td>Tasks (daily / weekly / monthly)</td></tr>
       <tr><td>Diary + how you feel</td><td>Journal with mood tracker</td></tr>
       <tr><td>Reminders and achievements</td><td>Notifications</td></tr>
@@ -261,7 +262,7 @@ Routes  →  Controllers (business rules)
   <table>
     <thead><tr><th>Layer</th><th>Technologies</th></tr></thead>
     <tbody>
-      <tr><td>Frontend</td><td>React 19, Vite, React Router, Axios, Framer Motion, Recharts, Lucide icons</td></tr>
+      <tr><td>Frontend</td><td>React 19, Vite, React Router, Axios, Framer Motion, Recharts, Lucide icons. Hall / camp UI adds <strong>no extra npm package</strong> — CSS + inline SVG + Web Audio.</td></tr>
       <tr><td>Backend</td><td>Node.js, Express 5, Mongoose, bcryptjs, jsonwebtoken, cors, dotenv</td></tr>
       <tr><td>Database</td><td>MongoDB</td></tr>
       <tr><td>Auth</td><td>JWT (JSON Web Token) stored in browser localStorage</td></tr>
@@ -323,6 +324,8 @@ npm run dev:client     →  http://localhost:5173
       <tr><td>Tasks</td><td>pages/Tasks.jsx</td><td>taskRoutes, taskController</td></tr>
       <tr><td>Journal + mood</td><td>pages/Journal.jsx</td><td>journalRoutes</td></tr>
       <tr><td>Notifications</td><td>pages/Notifications.jsx</td><td>notificationRoutes</td></tr>
+      <tr><td>Hall (daily wins, cheers, companions)</td><td>pages/Hall.jsx, components/camp/*, CelebrateBurst</td><td>hallRoutes, hallController, Achievement model</td></tr>
+      <tr><td>Chat / Campfire</td><td>pages/Campfire.jsx</td><td>socialRoutes, socialController</td></tr>
       <tr><td>Settings / theme</td><td>Settings.jsx, ThemeContext</td><td>auth profile endpoints</td></tr>
       <tr><td>Admin panel</td><td>pages/Admin.jsx</td><td>adminRoutes + admin middleware</td></tr>
     </tbody>
@@ -344,7 +347,7 @@ npm run dev:client     →  http://localhost:5173
       <tr><td>20</td><td>app.use(cors(…))</td><td>Allow the React app (port 5173) to call this API</td></tr>
       <tr><td>21</td><td>express.json({ limit: '2mb' })</td><td>Accept JSON request bodies up to 2 MB</td></tr>
       <tr><td>23</td><td>GET /api/health</td><td>Health check: “Is the API alive?”</td></tr>
-      <tr><td>25–33</td><td>app.use('/api/…')</td><td>Mount auth, habits, tasks, progress, journal, notifications, missions, leaderboard, admin</td></tr>
+      <tr><td>25–33</td><td>app.use('/api/…')</td><td>Mount auth, habits, tasks, progress, journal, notifications, missions, leaderboard, social, hall, admin</td></tr>
       <tr><td>35–38</td><td>error middleware</td><td>Catch crashes → return HTTP 500 + message</td></tr>
       <tr><td>40–41</td><td>app.listen(PORT)</td><td>Start listening (default <strong>5000</strong>)</td></tr>
     </tbody>
@@ -450,6 +453,8 @@ npm run dev:client     →  http://localhost:5173
       <tr><td>Mission</td><td>Daily quest with coinReward / xpReward / completed flag</td></tr>
       <tr><td>Notification</td><td>Inbox: reminder, motivation, achievement, missed, system</td></tr>
       <tr><td>Progress</td><td>Daily snapshot for charts: completionRate, xpEarned, coinsEarned</td></tr>
+      <tr><td>Achievement</td><td>Hall win: one per user per date, reactions, companion snapshot</td></tr>
+      <tr><td>Message / Challenge / FriendRequest</td><td>Friends-only chat, challenges, and requests</td></tr>
     </tbody>
   </table>
 
@@ -466,6 +471,8 @@ npm run dev:client     →  http://localhost:5173
       <tr><td>missionController.js</td><td>Ensure daily missions exist; complete for rewards</td></tr>
       <tr><td>leaderboardController.js</td><td>Global &amp; friends rankings; add friend by email</td></tr>
       <tr><td>adminController.js</td><td>Manage users, platform analytics, badge overview, reports</td></tr>
+      <tr><td>hallController.js</td><td>Friends-only win feed, react, companion shop buy/equip</td></tr>
+      <tr><td>socialController.js</td><td>Friends, requests, chat messages, challenges</td></tr>
     </tbody>
   </table>
 
@@ -529,7 +536,7 @@ npm run dev:client     →  http://localhost:5173
       <tr><td>PublicOnly</td><td>If already logged in, don’t show login/register — go to dashboard</td></tr>
       <tr><td>/login, /register, /forgot-password</td><td>Public auth screens</td></tr>
       <tr><td>ProtectedRoute + AppLayout</td><td>Must be logged in; shows sidebar shell</td></tr>
-      <tr><td>Inner routes</td><td>dashboard, habits, calendar, analytics, missions, leaderboard, tasks, journal, notifications, settings</td></tr>
+      <tr><td>Inner routes</td><td>dashboard, habits, calendar, analytics, missions, leaderboard, campfire, hall, tasks, journal, notifications, settings</td></tr>
       <tr><td>/admin + adminOnly</td><td>Administrators only</td></tr>
       <tr><td>/ and *</td><td>Default / unknown URLs → dashboard</td></tr>
     </tbody>
@@ -616,7 +623,9 @@ npm run dev:client     →  http://localhost:5173
       <tr><td>Tasks</td><td>Daily/weekly/monthly task board</td></tr>
       <tr><td>Journal</td><td>Diary + mood + tags</td></tr>
       <tr><td>Notifications</td><td>Inbox read/unread/delete</td></tr>
-      <tr><td>Settings</td><td>Profile, theme, password, export, delete account</td></tr>
+      <tr><td>Settings</td><td>Profile, theme, password, export, delete account, celebration toggle</td></tr>
+      <tr><td>Hall</td><td>Share one daily win, cheer friends, unlock camp companions with a 7-day streak + coins</td></tr>
+      <tr><td>Chat</td><td>Friends-only messages and challenges</td></tr>
       <tr><td>Admin</td><td>Users, analytics, badges, reports</td></tr>
       <tr><td>Login / Register / ForgotPassword</td><td>Public authentication flows</td></tr>
     </tbody>
@@ -627,10 +636,27 @@ npm run dev:client     →  http://localhost:5173
 
   <h3>8.13 styles/global.css</h3>
   <p>
-    Large design-system stylesheet (~1000+ lines): CSS variables for dark/light themes,
-    glassmorphism panels, layout, buttons, cards used for interactive forms, sidebar, charts wrappers.
+    Large design-system stylesheet: CSS variables for dark/light themes,
+    glass panels, layout, buttons, cards, and the night-camp language (flame, lantern cards, wax seals, embers).
+    Companions are inline SVG in <code>CampCompanion.jsx</code>, not an icon font or 3D kit.
     Non-tech view: this file is the “look and feel” of the whole app.
   </p>
+
+  <h3>8.14 Hall, camp UI, and celebrations — libraries</h3>
+  <p>No new npm dependency was added for these features. They reuse the existing frontend and backend libraries.</p>
+  <table>
+    <thead><tr><th>Need</th><th>Library / API</th><th>Our code</th></tr></thead>
+    <tbody>
+      <tr><td>Hall screen and route</td><td>React, React Router, Axios</td><td><code>Hall.jsx</code>, <code>hallAPI</code>, <code>/hall</code></td></tr>
+      <tr><td>Hall API</td><td>Express, Mongoose, JWT <code>protect</code></td><td><code>hallRoutes.js</code>, <code>hallController.js</code>, <code>Achievement</code></td></tr>
+      <tr><td>Camp flame / lantern / wax seal</td><td>Plain CSS (no Tailwind, no CSS-in-JS)</td><td><code>CampFlame.jsx</code>, <code>global.css</code> camp block</td></tr>
+      <tr><td>Animated characters</td><td>Inline SVG + CSS keyframes</td><td><code>CampCompanion.jsx</code> (ember, fox, knight, owl)</td></tr>
+      <tr><td>Quest-done overlay</td><td>Framer Motion <code>AnimatePresence</code></td><td><code>CelebrateBurst.jsx</code>, <code>CelebrateContext</code></td></tr>
+      <tr><td>Cheer music</td><td>Web Audio API (browser built-in)</td><td><code>client/src/utils/cheer.js</code></td></tr>
+      <tr><td>Hall nav icon</td><td>Lucide React <code>Flame</code></td><td><code>AppLayout.jsx</code></td></tr>
+    </tbody>
+  </table>
+  <p>Unlock rule: starter companion Ember is free. A 7-day streak (current or longest) opens the shop. Extra companions cost 80 / 120 / 200 coins on the user document.</p>
 </div>
 
 <!-- 9 -->
@@ -654,6 +680,7 @@ npm run dev:client     →  http://localhost:5173
     <li>Complete something on consecutive calendar days → streak grows.</li>
     <li>Miss a day → streak resets to 1 on next activity.</li>
     <li>Longest streak is remembered separately.</li>
+    <li>A 7-day streak (now or longest) also opens the Hall companion shop.</li>
   </ul>
 
   <h3>Badges (examples)</h3>
@@ -729,6 +756,8 @@ npm run dev:client     →  http://localhost:5173
     <li><strong>Leaderboard:</strong> GET /global, GET /friends, POST /friends { email }</li>
     <li><strong>Admin:</strong> users list/toggle/delete, analytics, badges, reports (admin role)</li>
     <li><strong>Health:</strong> GET /health → { status: ok }</li>
+    <li><strong>Hall:</strong> GET/POST /, POST /:id/react, GET /shop, POST /shop/buy, POST /shop/equip</li>
+    <li><strong>Social:</strong> friends, requests, messages, challenges</li>
   </ul>
 </div>
 
@@ -743,6 +772,7 @@ User ──&lt; Habit
   ├──&lt; Mission (unique per date+title)
   ├──&lt; Notification
   ├──&lt; Progress (unique per date)
+  ├──&lt; Achievement (Hall win, unique per date)
   └──  friends[] → other Users
   </pre>
   <p>All user-owned documents store <code>user: ObjectId</code> so one person cannot edit another person’s data.</p>
@@ -794,6 +824,9 @@ VITE_API_URL=http://localhost:5000/api
       <tr><td>XP / Level / Badge</td><td>Game-style progress, rank, and achievement</td></tr>
       <tr><td>Streak</td><td>Number of days in a row you stayed active</td></tr>
       <tr><td>REST</td><td>Common style of API using GET/POST/PUT/DELETE</td></tr>
+      <tr><td>Hall</td><td>Friends-only place to share one daily win and receive cheers</td></tr>
+      <tr><td>Web Audio API</td><td>Browser feature that plays sound from code, without an MP3 file</td></tr>
+      <tr><td>Framer Motion</td><td>React library for short UI animations (not a game engine)</td></tr>
     </tbody>
   </table>
 

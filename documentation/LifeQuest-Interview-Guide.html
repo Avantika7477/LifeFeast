@@ -48,12 +48,12 @@
 <h2>1. How to use this in an interview</h2>
 <p>Start with the product, then the architecture, then one feature you know well. Do not open with a list of library names. A strong opening sounds like this:</p>
 <div class="callout">
-  <p>“LifeQuest turns daily habits and tasks into a small quest. You train habits, finish tasks, keep a streak, earn XP, and talk to friends. It is a React single-page app talking to an Express API, with MongoDB for data and JWT for login. It also installs on a phone as a progressive web app.”</p>
+  <p>“LifeQuest turns daily habits and tasks into a small quest. You train habits, finish tasks, keep a streak, earn XP, and talk to friends. Friends can share one daily win in the Hall. It is a React single-page app talking to an Express API, with MongoDB for data and JWT for login. It also installs on a phone as a progressive web app.”</p>
 </div>
 <p>If they ask “why this stack?”, answer with a constraint, not a slogan: one language (JavaScript) on both sides, a document database that matches the nested habit and journal shapes, and a web app that works in the phone browser without an app-store release.</p>
 
 <h2>2. What the app is</h2>
-<p>LifeQuest is a gamified habit tracker. A person signs up, builds daily habits, checks them off, writes a journal, and completes tasks. The app turns that work into levels, XP, coins, streaks, badges, and daily missions. Friends can chat and send each other small challenges.</p>
+<p>LifeQuest is a gamified habit tracker. A person signs up, builds daily habits, checks them off, writes a journal, and completes tasks. The app turns that work into levels, XP, coins, streaks, badges, and daily missions. Friends can chat, send challenges, and sit in the Hall to share one daily win and cheer each other.</p>
 <p>The people who use it:</p>
 <ul>
   <li><strong>Player</strong> — tracks habits, tasks, journal, friends, and chat.</li>
@@ -81,6 +81,8 @@
   <tr><td>Missions</td><td>Bonus challenges for extra gold. Friend challenges too.</td></tr>
   <tr><td>Heroes</td><td>Leaderboard plus friend search, requests, accept, decline, and unfriend.</td></tr>
   <tr><td>Chat</td><td>Messages only between accepted friends. A challenge can be sent from the thread.</td></tr>
+  <tr><td>Hall</td><td>Friends-only daily win wall. Cheer / keep going / you got this. Animated camp companions unlock after a 7-day streak and cost coins.</td></tr>
+  <tr><td>Celebrations</td><td>A short cheer sound and burst when a habit, task, mission, or challenge is completed. Optional in Settings.</td></tr>
   <tr><td>Signals</td><td>In-app notifications: reminders, friend events, chat messages.</td></tr>
   <tr><td>Feedback</td><td>Public reviews, or a private note that only the admin sees.</td></tr>
   <tr><td>Alarms</td><td>A siren and a notification for open habits and to-do tasks that are due. In-progress tasks stay quiet until the next day.</td></tr>
@@ -114,8 +116,8 @@
   <tr><td>React and React DOM</td><td>Build the screens as components and render them in the browser.</td><td>The UI is interactive: forms, lists, and context. Components keep each page small.</td></tr>
   <tr><td>React Router</td><td>URLs such as <span class="mono">/dashboard</span>, <span class="mono">/habits</span>, and <span class="mono">/campfire</span>. Guards send guests to login.</td><td>The app is a single page. The router swaps pages without a full reload.</td></tr>
   <tr><td>Axios</td><td>HTTP client for every API call. Attaches the saved token. On 401 it clears the session.</td><td>One place for headers, base URL, and error messages.</td></tr>
-  <tr><td>Framer Motion</td><td>Small entrance animations on the home page, dashboard, habits, and toasts.</td><td>Motion is a detail, not the product. It is not required for the data to work.</td></tr>
-  <tr><td>Lucide React</td><td>Icons in the sidebar and buttons (menu, bell, settings, coins).</td><td>Consistent line icons instead of a mix of image files.</td></tr>
+  <tr><td>Framer Motion</td><td>Entrance motion, the Quest-done overlay (AnimatePresence), and companion idle / cheer motion. Also used on dashboard cards and toasts.</td><td>Motion is a detail, not the product. We did not add Lottie, Three.js, or a game engine for the camp characters.</td></tr>
+  <tr><td>Lucide React</td><td>Icons in the sidebar and buttons (menu, bell, settings, coins, flame for Hall).</td><td>Consistent line icons instead of a mix of image files.</td></tr>
   <tr><td>Recharts</td><td>Charts on the Chronicle / analytics page.</td><td>Progress over days and weeks is easier to see as a chart than as a table.</td></tr>
   <tr><td>Vite and the React plugin</td><td>Development server, fast refresh, and the production build.</td><td>The client is plain React, not Next.js. Vite only builds the browser app.</td></tr>
 </table>
@@ -124,7 +126,7 @@
 <table>
   <tr><th>Library</th><th>Purpose</th><th>Why this one</th></tr>
   <tr><td>Express 5</td><td>HTTP server and routes under <span class="mono">/api</span>.</td><td>A small REST API. Controllers stay separate from the route list.</td></tr>
-  <tr><td>Mongoose</td><td>Models, validation, and queries for users, habits, tasks, journal, messages, and the rest.</td><td>Schemas document the shape of each collection and reject bad writes.</td></tr>
+  <tr><td>Mongoose</td><td>Models, validation, and queries for users, habits, tasks, journal, messages, Hall wins, and the rest.</td><td>Schemas document the shape of each collection and reject bad writes.</td></tr>
   <tr><td>MongoDB Memory Server</td><td>Starts a temporary MongoDB on a laptop when no database is running.</td><td>A new developer can run the API without installing MongoDB. Production sets <span class="mono">MONGODB_URI</span> to Atlas instead.</td></tr>
   <tr><td>jsonwebtoken</td><td>Creates and checks login tokens.</td><td>The API is stateless. The browser stores the token and sends it on later calls.</td></tr>
   <tr><td>bcryptjs</td><td>Hashes passwords before save and compares them on login. Cost factor 12.</td><td>Passwords are never stored in plain text. A pure-JS hash avoids native build issues.</td></tr>
@@ -145,13 +147,14 @@
 <h2>8. Data we store</h2>
 <table>
   <tr><th>Model</th><th>Holds</th></tr>
-  <tr><td>User</td><td>Name, email, password hash, role, XP, level, coins, streaks, badges, friends, theme, language.</td></tr>
+  <tr><td>User</td><td>Name, email, password hash, role, XP, level, coins, streaks, badges, friends, companions owned, equipped companion, theme, language.</td></tr>
   <tr><td>Habit</td><td>Name, category, difficulty, reminder, and which dates were completed.</td></tr>
   <tr><td>Task</td><td>Daily, weekly, or monthly. Status, due time, notes, and when it was marked in progress.</td></tr>
   <tr><td>Journal</td><td>One entry per user per date: mood, text, tags.</td></tr>
   <tr><td>Mission / Challenge</td><td>Daily missions, and challenges sent between friends.</td></tr>
   <tr><td>FriendRequest</td><td>Pending, accepted, or declined.</td></tr>
   <tr><td>Message</td><td>Chat text from one friend to another.</td></tr>
+  <tr><td>Achievement</td><td>One Hall win per user per day: short text, habit snapshot, companion, reactions.</td></tr>
   <tr><td>Notification</td><td>Signals: reminders, friend events, chat previews. Read or unread.</td></tr>
   <tr><td>Feedback</td><td>Public review or private improvement note. Admin can hide a review.</td></tr>
   <tr><td>PushSubscription</td><td>Browser push endpoint and keys for one device.</td></tr>
@@ -175,6 +178,23 @@
 <h3>Friends and chat</h3>
 <p>You search Heroes by name or email, send a request, and chat only after it is accepted. Unfriend removes both sides of the friend list, closes open challenges, and notifies the other person. Chat is not a live socket. The open thread refreshes every few seconds. A new message also creates a Signal and, if push is set up, a Web Push. While the app is open, a poll shows a toast if you are not already looking at that thread.</p>
 
+<h3>Hall, camp UI, and celebrations — libraries used (interview talking point)</h3>
+<p>These features did <strong>not</strong> add a new npm package. They reuse the stack already in the project. That is a good interview line: we chose not to pull in Three.js, Lottie, Socket.IO, or a social SDK.</p>
+<table>
+  <tr><th>What you see</th><th>Library or browser API</th><th>What we wrote ourselves</th></tr>
+  <tr><td>Hall page, feed, shop</td><td>React, React Router (<span class="mono">/hall</span>), Axios (<span class="mono">hallAPI</span>)</td><td><span class="mono">Hall.jsx</span>, <span class="mono">/api/hall</span>, <span class="mono">Achievement</span> model</td></tr>
+  <tr><td>Cheer / keep going / you got this</td><td>React state + Express + Mongoose</td><td>One reaction per user per post; Signal with <span class="mono">meta.kind = hall-cheer</span></td></tr>
+  <tr><td>Living camp flame and lantern cards</td><td>CSS (keyframes, gradients). No extra CSS library.</td><td><span class="mono">CampFlame.jsx</span> and camp rules in <span class="mono">global.css</span></td></tr>
+  <tr><td>Stained-glass companions</td><td>Inline SVG in React. Framer Motion is not required for the drawing.</td><td><span class="mono">CampCompanion.jsx</span> — Ember, Fox, Knight, Owl</td></tr>
+  <tr><td>Companion idle / wave</td><td>CSS animation + a Framer Motion overlay on complete</td><td>Mood class <span class="mono">is-cheer</span>; reduced-motion media query</td></tr>
+  <tr><td>Quest-done burst</td><td>Framer Motion <span class="mono">AnimatePresence</span></td><td><span class="mono">CelebrateBurst.jsx</span>, <span class="mono">CelebrateContext</span></td></tr>
+  <tr><td>Cheer sound</td><td>Web Audio API (browser). No Howler, no MP3 file.</td><td><span class="mono">cheer.js</span> — short triangle fanfare on the same AudioContext as the siren</td></tr>
+  <tr><td>Hall icon</td><td>Lucide React <span class="mono">Flame</span></td><td>Nav entry in <span class="mono">AppLayout.jsx</span></td></tr>
+  <tr><td>Unlocks</td><td>Mongoose user fields + coins already on the user</td><td>7-day streak (current or longest) opens the shop; 80 / 120 / 200 coins buy extras</td></tr>
+</table>
+<p>Routes: <span class="mono">GET/POST /api/hall</span>, <span class="mono">POST /api/hall/:id/react</span>, <span class="mono">GET /api/hall/shop</span>, <span class="mono">POST /api/hall/shop/buy</span>, <span class="mono">POST /api/hall/shop/equip</span>. Feed is friends plus you. One post per calendar day.</p>
+<p>If they ask “why not a new library?”, say: a camp flame and four SVG silhouettes are cheaper and more unique than a 3D kit that looks like every other app. The sound is generated so there is no audio asset to host. Chat stays polling; Hall is request/response because a daily win does not need a socket.</p>
+
 <h3>Journal versus task notes</h3>
 <p>The journal is daily only. Weekly and monthly “notes” are an optional text field on a weekly or monthly task. Nothing auto-writes a weekly summary.</p>
 
@@ -189,7 +209,7 @@
   <li>Passwords are hashed with bcrypt. The API never sends the hash back.</li>
   <li>JWT is signed with a server secret. The middleware rejects a bad or expired token.</li>
   <li>Admin routes check <span class="mono">role === 'admin'</span> after login.</li>
-  <li>Chat and unfriend check that the two users are actually friends.</li>
+  <li>Chat, unfriend, and Hall reactions check that the two users are actually friends. A Hall post is one short string per day, not an open comment thread.</li>
   <li>Feedback privacy: public reviews are on the wall; improvement notes are admin-only.</li>
   <li>Secrets live in environment variables, not in the React bundle. <span class="mono">VITE_</span> variables are public. <span class="mono">JWT_SECRET</span> and <span class="mono">MONGODB_URI</span> are server-only.</li>
   <li>Do not put a GitHub token inside <span class="mono">git remote</span>. Use SSH or a prompt.</li>
@@ -204,7 +224,7 @@
 <h3>About the project</h3>
 <div class="qa">
   <p class="q">What did you build?</p>
-  <p class="a">A gamified habit tracker called LifeQuest. Users complete habits and tasks, earn XP and streaks, journal, and chat with friends. It is a React PWA with an Express and MongoDB API.</p>
+  <p class="a">A gamified habit tracker called LifeQuest. Users complete habits and tasks, earn XP and streaks, journal, chat with friends, and share one daily win in the Hall. It is a React PWA with an Express and MongoDB API.</p>
 </div>
 <div class="qa">
   <p class="q">Why not a native iOS and Android app?</p>
@@ -235,6 +255,14 @@
 <div class="qa">
   <p class="q">Is chat real-time?</p>
   <p class="a">No WebSocket. The open chat polls every few seconds. New messages also become notifications, and push is sent if the friend subscribed. Polling is simpler to host. Sockets would be the next step if delay mattered.</p>
+</div>
+<div class="qa">
+  <p class="q">What libraries did you add for the Hall and the camp look?</p>
+  <p class="a">None. Hall uses React, React Router, Axios, Express, and Mongoose — already in the project. The flame and lanterns are CSS. Companions are inline SVG. The cheer sound is the Web Audio API. Framer Motion already handled overlays, so the Quest-done card uses that. We did not add Three.js, Lottie, Howler, or Socket.IO.</p>
+</div>
+<div class="qa">
+  <p class="q">How do companions unlock?</p>
+  <p class="a">Everyone gets Ember. A 7-day streak, current or longest, opens the shop. Extra companions cost 80, 120, or 200 coins already stored on the user. The API rejects a buy if the week gate is closed or coins are short.</p>
 </div>
 <div class="qa">
   <p class="q">How does language switching work?</p>

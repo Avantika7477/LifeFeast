@@ -64,6 +64,10 @@ export default function Notifications() {
       navigate(`/campfire?friend=${n.meta.friendId}`);
       return;
     }
+    if (n.meta?.kind === 'hall-cheer') {
+      navigate('/hall');
+      return;
+    }
     if (n.meta?.kind === 'feedback') {
       navigate('/admin?tab=feedback');
       return;

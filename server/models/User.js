@@ -24,6 +24,8 @@ const userSchema = new mongoose.Schema(
     lastActiveDate: { type: String, default: '' },
     badges: [badgeSchema],
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    companions: { type: [String], default: () => ['ember'] },
+    equippedCompanion: { type: String, default: 'ember' },
     theme: { type: String, enum: ['dark', 'light'], default: 'dark' },
     language: { type: String, default: 'en', trim: true },
     resetPasswordToken: String,

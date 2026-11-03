@@ -16,6 +16,7 @@ import missionRoutes from './routes/missionRoutes.js';
 import leaderboardRoutes from './routes/leaderboardRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import socialRoutes from './routes/socialRoutes.js';
+import hallRoutes from './routes/hallRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 
 dotenv.config();
@@ -103,6 +104,7 @@ app.use('/api/missions', requireDb, missionRoutes);
 app.use('/api/leaderboard', requireDb, leaderboardRoutes);
 app.use('/api/admin', requireDb, adminRoutes);
 app.use('/api/social', requireDb, socialRoutes);
+app.use('/api/hall', requireDb, hallRoutes);
 app.use('/api/feedback', requireDb, feedbackRoutes);
 
 app.use('/api', (_req, res) => {
