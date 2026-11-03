@@ -29,7 +29,7 @@ export default function CelebrateBurst() {
   useEffect(() => {
     if (!burst || !enabled) return undefined;
     setShow(true);
-    const timer = setTimeout(() => setShow(false), 1500);
+    const timer = setTimeout(() => setShow(false), 3000);
     return () => clearTimeout(timer);
   }, [burst, enabled]);
 

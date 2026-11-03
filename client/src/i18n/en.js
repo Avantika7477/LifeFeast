@@ -143,7 +143,7 @@ const en = {
     privateNotes: 'Private notes go only to the admin.',
     celebrations: 'Celebrations',
     celebrationsHelp:
-      'A short cheer and spark burst when you finish a habit, task, mission, or friend challenge. It lasts about a second and does not loop.',
+      'A short cheer and spark burst when you finish a habit, task, mission, or friend challenge. The message stays a few seconds and does not loop.',
     celebrationsOn: 'Turn celebrations on',
     celebrationsOff: 'Turn celebrations off',
     celebrationsTry: 'Play a sample',
