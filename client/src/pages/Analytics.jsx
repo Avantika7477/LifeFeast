@@ -85,7 +85,7 @@ export default function Analytics() {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
               <XAxis dataKey="label" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" fontSize={12} domain={[0, 100]} />
-              <Tooltip contentStyle={{ background: '#3a3148', border: 'none', borderRadius: 16 }} />
+              <Tooltip contentStyle={{ background: '#5c4752', border: 'none', borderRadius: 16 }} />
               <Line type="monotone" dataKey="completion" stroke="#FFB703" strokeWidth={2} dot={{ fill: '#06D6A0' }} />
             </LineChart>
           </ResponsiveContainer>
@@ -98,7 +98,7 @@ export default function Analytics() {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
               <XAxis dataKey="label" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" fontSize={12} domain={[0, 100]} />
-              <Tooltip contentStyle={{ background: '#3a3148', border: 'none', borderRadius: 16 }} />
+              <Tooltip contentStyle={{ background: '#5c4752', border: 'none', borderRadius: 16 }} />
               <Bar dataKey="completion" fill="#FFB703" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -111,7 +111,7 @@ export default function Analytics() {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
               <XAxis dataKey="label" stroke="#94a3b8" fontSize={12} />
               <YAxis stroke="#94a3b8" fontSize={12} domain={[0, 100]} />
-              <Tooltip contentStyle={{ background: '#3a3148', border: 'none', borderRadius: 16 }} />
+              <Tooltip contentStyle={{ background: '#5c4752', border: 'none', borderRadius: 16 }} />
               <Bar dataKey="completion" fill="#06D6A0" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -123,7 +123,7 @@ export default function Analytics() {
             <BarChart data={data.yearly.length ? data.yearly : [{ year: new Date().getFullYear(), count: 0 }]}>
               <XAxis dataKey="year" stroke="#94a3b8" />
               <YAxis stroke="#94a3b8" />
-              <Tooltip contentStyle={{ background: '#3a3148', border: 'none', borderRadius: 16 }} />
+              <Tooltip contentStyle={{ background: '#5c4752', border: 'none', borderRadius: 16 }} />
               <Bar dataKey="count" fill="#FF7B54" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -141,7 +141,7 @@ export default function Analytics() {
                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: '#3a3148', border: 'none', borderRadius: 16 }} />
+                <Tooltip contentStyle={{ background: '#5c4752', border: 'none', borderRadius: 16 }} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>

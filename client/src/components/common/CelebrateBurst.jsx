@@ -4,7 +4,7 @@ import { useCelebrate } from '../../context/CelebrateContext';
 import { useLanguage } from '../../context/LanguageContext';
 import CampFlame from '../camp/CampFlame';
 
-const COLORS = ['#f3c38a', '#e8a06a', '#6fbf9a', '#d46a86', '#ebd3c0', '#8fd4b3'];
+const COLORS = ['#ffd09a', '#ffb070', '#7ed9b0', '#f08aa8', '#fff0e4', '#a6ebc8'];
 
 export default function CelebrateBurst() {
   const { burst, enabled } = useCelebrate();

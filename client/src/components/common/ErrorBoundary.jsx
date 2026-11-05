@@ -31,8 +31,8 @@ export default class ErrorBoundary extends Component {
           padding: '1.5rem',
           fontFamily: 'system-ui, sans-serif',
           textAlign: 'center',
-          background: '#32263c',
-          color: '#fff4ea',
+          background: '#4a3842',
+          color: '#fff7f0',
         }}
       >
         <div style={{ maxWidth: 360 }}>
@@ -48,7 +48,7 @@ export default class ErrorBoundary extends Component {
               borderRadius: 999,
               padding: '0.75rem 1.25rem',
               fontWeight: 700,
-              background: '#e8a06a',
+              background: '#ffb070',
               color: '#3b2414',
             }}
           >
