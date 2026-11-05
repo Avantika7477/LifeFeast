@@ -56,9 +56,9 @@ export default function Calendar() {
   const weekdays = [t('calendar.sun'), t('calendar.mon'), t('calendar.tue'), t('calendar.wed'), t('calendar.thu'), t('calendar.fri'), t('calendar.sat')];
 
   const heatColor = (pct) => {
-    if (pct >= 80) return '#06d6a0';
+    if (pct >= 80) return '#6fbf9a';
     if (pct >= 50) return '#ffd166';
-    if (pct >= 25) return '#ffb703';
+    if (pct >= 25) return '#e8a06a';
     if (pct > 0) return '#ff7b54';
     return 'var(--text-dim)';
   };

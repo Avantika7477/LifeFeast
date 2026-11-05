@@ -30,9 +30,9 @@ function Fox({ gid }) {
       </defs>
       <path fill={`url(#${gid})`} d="M10 22 24 8l8 10 8-10 14 14-6 8H16z" />
       <ellipse cx="32" cy="46" rx="18" ry="16" fill={`url(#${gid})`} />
-      <circle cx="26" cy="44" r="2.2" fill="#1a1240" />
-      <circle cx="38" cy="44" r="2.2" fill="#1a1240" />
-      <path d="M28 52h8" stroke="#1a1240" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="26" cy="44" r="2.2" fill="#2a2236" />
+      <circle cx="38" cy="44" r="2.2" fill="#2a2236" />
+      <path d="M28 52h8" stroke="#2a2236" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -47,7 +47,7 @@ function Knight({ gid }) {
         </linearGradient>
       </defs>
       <path fill={`url(#${gid})`} d="M18 18h28l4 10-6 6v8l-12 16-12-16v-8l-6-6z" />
-      <path fill="#1a1240" d="M26 30h12v6H26z" opacity="0.55" />
+      <path fill="#2a2236" d="M26 30h12v6H26z" opacity="0.55" />
       <rect x="28" y="14" width="8" height="8" fill={`url(#${gid})`} />
     </svg>
   );
@@ -65,8 +65,8 @@ function Owl({ gid }) {
       <ellipse cx="32" cy="40" rx="20" ry="22" fill={`url(#${gid})`} />
       <circle cx="24" cy="36" r="7" fill="#fff7ea" />
       <circle cx="40" cy="36" r="7" fill="#fff7ea" />
-      <circle cx="24" cy="36" r="2.4" fill="#1a1240" />
-      <circle cx="40" cy="36" r="2.4" fill="#1a1240" />
+      <circle cx="24" cy="36" r="2.4" fill="#2a2236" />
+      <circle cx="40" cy="36" r="2.4" fill="#2a2236" />
       <path d="M30 46h4l-2 5z" fill="#ffd166" />
     </svg>
   );
